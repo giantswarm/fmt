@@ -4,5 +4,5 @@
 
 ## Kubernetes
 
-- [Annotations and Labels][kubernetes/annotations_and_labels.md]
+- [Annotations and Labels](kubernetes/annotations_and_labels.md)
 

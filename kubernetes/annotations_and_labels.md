@@ -11,6 +11,12 @@
 - `giantswarm.io/managed-by` - value should contain repository name of the
   operator managing the object. E.g. `giantswarm.io/managed-by=kvm-operator`.
 
+## Finalizers
+
+- Operator specific finalizers for custom objects shoud be named
+  `OPERATOR_REPO.giantswarm.io/custom-object-cleanup`. E.g.
+  `ingress-operator.giantswarm.io/custom-object-cleanup`.
+
 ## Naming
 
 - Names should consist of lowercase letters, numbers, dashes and at most one

@@ -15,6 +15,8 @@
 
 - Names should consist of lowercase letters, numbers, dashes and at most one
   slash (this is enforced by the Kubernetes API).
+- Company specific annotations and labels should be prefixed with
+  `giantswarm.io/`. E.g `giantswarm.io/cluster-id`.
 - Operator specific annotations and labels should be prefixed with
   `OPERATOR_REPO.giantswarm.io/`. E.g.
   `endpoint-operator.giantswarm.io/service`.

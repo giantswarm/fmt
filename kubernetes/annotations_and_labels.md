@@ -2,14 +2,17 @@
 
 ## Common Labels
 
-- Deployments should have `app` label. This label should be a selector for
-  number of replicas.
-- All Kubernetes object managed by an operator should be labeled with
-  `giantswarm.io/managed-by` with value set to the operator repository name.
+- `app` - value should contain the name of the application. Should be applied
+  to Deployments and Pods. This should be also used as replicas selector.
+- `giantswarm.io/cluster-id` - value should contain guest cluster ID which this
+  object is part of. E.g. `giantswarm.io/cluster-id=eggs2`.
+- `giantswarm.io/customer-id` - value should contain guest cluster's customer
+  ID. `giantswarm.io/cluster-id=track-hunter`.
+- `giantswarm.io/managed-by` - value should contain repository name of the
+  operator managing the object. E.g. `giantswarm.io/managed-by=kvm-operator`.
 
 ## Naming
 
-- Operator specific labels should be prefixed with
-  `OPERATOR_REPO.giantswarm.io/`. E.g. `kvm-operator.giantswarm.io/cluster-id`.
-- Operator specific annotations should be prefixed with
-  `OPERATOR_REPO.giantswarm.io/`. E.g. `endpoint-operator.giantswarm.io/service`.
+- Operator specific annotations and labels should be prefixed with
+  `OPERATOR_REPO.giantswarm.io/`. E.g.
+  `endpoint-operator.giantswarm.io/service`.

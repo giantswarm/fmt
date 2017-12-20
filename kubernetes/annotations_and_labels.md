@@ -3,7 +3,8 @@
 ## Common Labels
 
 - `app` - value should contain the name of the application. Should be applied
-  to Deployments and Pods. This should be also used as replicas selector.
+  to every Kubernetes resource associated with an application. This should be
+  also used as replicas selector. E.g. `app=kvm-operator`.
 - `giantswarm.io/cluster-id` - value should contain guest cluster ID which this
   object is part of. E.g. `giantswarm.io/cluster-id=eggs2`.
 - `giantswarm.io/customer-id` - value should contain guest cluster's customer

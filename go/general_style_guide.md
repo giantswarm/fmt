@@ -41,11 +41,13 @@ return microerror.Maskf(err, "Additional information")
 
 **Pros:**
 
-- We always get stack traces when debugging and know immediately where errors have been going through.
+- We always get stack traces when debugging and know immediately where errors 
+  have been going through.
 
 **Cons:**
 
-- We have to be very consistent with this. The human effort we have to put into it is notable but neglectible once familar with the concept. 
+- We have to be very consistent with this. The human effort we have to put into
+  it is notable but neglectible once familar with the concept. 
 
 
 ### Custom Errors
@@ -136,6 +138,22 @@ it received from C. Then B returns its own error to A, where A can match against
 B's error. A should never match against an error of C. As soon as A imports C
 for error handling this code smells and we should think about what we are doing
 and why. 
+
+Example: 
+
+```go
+// pkg.F may return pkg.timeoutError.
+err := pkg.F()
+
+// When pkg.F returns pkg.timeoutError, do not mask it blindly but return
+// timeoutError from current package instead, if the receiving caller is
+// interested in matching a timeout error explicity.
+if pkg.IsTimeout(err) {
+	return microerror.Maskf(timeoutError, "calling pkg.F")
+} else if err != nil {
+	return microerror.Mask(err)
+}
+```
 
 **Pros:**
 

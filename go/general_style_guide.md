@@ -41,11 +41,13 @@ return microerror.Maskf(err, "Additional information")
 
 **Pros:**
 
-- TBD
+- We always get stack traces when debugging and know immediately where errors 
+  have been going through.
 
 **Cons:**
 
-- TBD
+- We have to be very consistent with this. The human effort we have to put into
+  it is notable but neglectible once familar with the concept. 
 
 
 ### Custom Errors
@@ -120,6 +122,47 @@ var invalidConfigError = microerror.New("Invalid config")
 - Doesn't lean nicely to a `switch`/`case` notation
 
 [microkit]: https://github.com/giantswarm/microkit
+
+### Matching Errors
+
+When code flows through a chain of multiple packages a best practise is to work
+against the package interfaces. Keeping communication between packages simple
+keeps the code simple and makes it easier to understand. Lets assume we have
+three packages: A, B and C. A calls B. B calls C. A real life example can be
+found in our microservices where the server package calls the endpoint package
+and the endpoint package calls the service package. Error handling here should
+be done from package to package without skipping a neighbour. When an error is
+thrown in C and propagated back to B, B should handle that error and act
+accordingly. In some cases B wants to mask its own error depending on the error
+it received from C. Then B returns its own error to A, where A can match against
+B's error. A should never match against an error of C. As soon as A imports C
+for error handling this code smells and we should think about what we are doing
+and why. 
+
+Example: 
+
+```go
+// pkg.F may return pkg.timeoutError.
+err := pkg.F()
+
+// When pkg.F returns pkg.timeoutError, do not mask it blindly but return
+// timeoutError from current package instead, if the receiving caller is
+// interested in matching a timeout error explicity.
+if pkg.IsTimeout(err) {
+	return microerror.Maskf(timeoutError, "calling pkg.F")
+} else if err != nil {
+	return microerror.Mask(err)
+}
+```
+
+**Pros:**
+
+- Straight and simple design. 
+- Error handling of complex projects is easy to understand.
+
+**Cons:**
+
+- There is a notable overhead of repeated errors to keep the contract up. 
 
 ## Imports
 

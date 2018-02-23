@@ -304,3 +304,106 @@ import (
 - imports are easier to read
 
 **Cons:**
+
+
+## Unit Tests
+
+Unit tests should be written when it makes sense. 100% coverage is not something
+that should be targeted, but critical logic that mutates state or is part of
+larger logic that mutates state should be tested. Writing unit test also makes
+sense when facing bug that could have been prevented by having a test for the
+relevant code in question.
+
+Use table-driven tests instead of separate test methods when possible. Each test
+case in table-driven test should be executed as a sub-test with
+[t.Run](https://golang.org/pkg/testing/#T.Run) as following output of `go test`
+is then easier and one can execute a single specific test case from within table
+if needed.
+
+In table-driven tests the fields of test case struct must be private because
+semantically it doesn't make sense to expose them.
+
+All test validations must be included in `t.Run(...) { }` block as technically
+each test case in table is a single test.
+
+Example function to be tested:
+```go
+
+func ClusterID(obj interface{}) (string, error) {
+	customObject, ok := obj.(SpecificType)
+	if !ok {
+		return "", microerror.Maskf(wrongTypeError, "obj must be SpecificType")
+	}
+
+	return customObject.Spec.ID, nil
+}
+```
+
+Example test:
+```go
+
+func Test_ClusterID(t *testing.T) {
+	testCases := []struct {
+		description       string
+		inputObj          interface{}
+		expectedClusterID string
+		expectedError     error
+	}{
+		{
+			description: "clusterID returned from valid object",
+			inputObj: SpecificType{
+				Spec: Spec{
+					ID: "foobar",
+				},
+			},
+			expectedClusterID: "foobar",
+			expectedError:     nil,
+		},
+		{
+			description:       "wrongTypeError returned when nil passed as obj",
+			inputObj:          nil,
+			expectedClusterID: "",
+			expectedError:     wrongTypeError,
+		},
+		{
+			description: "wrongTypeError returned when wrong type passed as obj",
+			inputObj: struct {
+				foo string
+				bar int
+			}{
+				foo: "wrong type",
+				bar: -1,
+			},
+			expectedClusterID: "",
+			expectedError:     wrongTypeError,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.description, func(t *testing.T) {
+			clusterID, err := ClusterID(tc.inputObj)
+
+			if microerror.Cause(err) != tc.expectedError {
+				// No t.Fatal() here because next validation is also necessary when handling errors.
+				t.Errorf("wrong error returned: %#v - expected: %#v", err, tc.expectedError)
+			}
+
+			if clusterID != tc.expectedClusterID {
+				t.Errorf("wrong clusterID returned: '%s' - expected: '%s'", clusterID, tc.expectedClusterID)
+			}
+		})
+	}
+}
+```
+
+**Pros:**
+
+- consistent style in tests
+- one can run single test case in table-driven tests
+- single test cases identifiers in test run are always in sync
+
+**Cons:**
+
+- description writing might occasionally require creativity
+- description gets normalized when transformed to test name -> search in code
+  doesn't match the one in `go test` output.

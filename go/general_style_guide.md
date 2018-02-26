@@ -320,8 +320,14 @@ case in table-driven test should be executed as a sub-test with
 is then easier and one can execute a single specific test case from within table
 if needed.
 
-In table-driven tests the fields of test case struct must be private because
-semantically it doesn't make sense to expose them.
+In table-driven tests the fields of test case struct must be exported for
+improved readability.
+
+Description field must start with `case n` where `n` is the index of the test
+starting from 0.
+
+Error matchers `func(error) bool` should be used to assert errors. This makes it
+easier to match errors returned from other packages.
 
 All test validations must be included in `t.Run(...) { }` block as technically
 each test case in table is a single test.
@@ -344,52 +350,56 @@ Example test:
 
 func Test_ClusterID(t *testing.T) {
 	testCases := []struct {
-		description       string
-		inputObj          interface{}
-		expectedClusterID string
-		expectedError     error
+		Description       string
+		InputObj          interface{}
+		ExpectedClusterID string
+		ErrorMatcher      func(err error) bool
 	}{
 		{
-			description: "clusterID returned from valid object",
-			inputObj: SpecificType{
+			Description: "case 0: clusterID returned from valid object",
+			InputObj: SpecificType{
 				Spec: Spec{
 					ID: "foobar",
 				},
 			},
-			expectedClusterID: "foobar",
-			expectedError:     nil,
+			ExpectedClusterID: "foobar",
+			ErrorMatcher:      nil,
 		},
 		{
-			description:       "wrongTypeError returned when nil passed as obj",
-			inputObj:          nil,
-			expectedClusterID: "",
-			expectedError:     wrongTypeError,
+			Description:       "case 1: wrongTypeError returned when nil passed as obj",
+			InputObj:          nil,
+			ExpectedClusterID: "",
+			ErrorMatcher:      IsWrongTypeError,
 		},
 		{
-			description: "wrongTypeError returned when wrong type passed as obj",
-			inputObj: struct {
+			Description: "case 2: wrongTypeError returned when wrong type passed as obj",
+			InputObj: struct {
 				foo string
 				bar int
 			}{
 				foo: "wrong type",
 				bar: -1,
 			},
-			expectedClusterID: "",
-			expectedError:     wrongTypeError,
+			ExpectedClusterID: "",
+			ErrorMatcher:      IsWrongTypeError,
 		},
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.description, func(t *testing.T) {
-			clusterID, err := ClusterID(tc.inputObj)
+		t.Run(tc.Description, func(t *testing.T) {
+			clusterID, err := ClusterID(tc.InputObj)
 
-			if microerror.Cause(err) != tc.expectedError {
-				// No t.Fatal() here because next validation is also necessary when handling errors.
-				t.Errorf("wrong error returned: %#v - expected: %#v", err, tc.expectedError)
+			if err != nil {
+				if tc.ErrorMatcher == nil {
+					t.Errorf("expected nil error, got %#v", err)
+				} else if !tc.ErrorMatcher(err) {
+					// No t.Fatal() here because next validation is also necessary when handling errors.
+					t.Errorf("Returned error doesn't match. Got: %#v", err)
+				}
 			}
 
-			if clusterID != tc.expectedClusterID {
-				t.Errorf("wrong clusterID returned: '%s' - expected: '%s'", clusterID, tc.expectedClusterID)
+			if clusterID != tc.ExpectedClusterID {
+				t.Errorf("Wrong clusterID returned: '%s' - expected: '%s'", clusterID, tc.ExpectedClusterID)
 			}
 		})
 	}

@@ -404,6 +404,5 @@ func Test_ClusterID(t *testing.T) {
 
 **Cons:**
 
-- description writing might occasionally require creativity
 - description gets normalized when transformed to test name -> search in code
   doesn't match the one in `go test` output.

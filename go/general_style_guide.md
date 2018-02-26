@@ -350,13 +350,13 @@ Example test:
 
 func Test_ClusterID(t *testing.T) {
 	testCases := []struct {
-		Description       string
+		Name              string
 		InputObj          interface{}
 		ExpectedClusterID string
 		ErrorMatcher      func(err error) bool
 	}{
 		{
-			Description: "case 0: clusterID returned from valid object",
+			Name: "case 0: clusterID returned from valid object",
 			InputObj: SpecificType{
 				Spec: Spec{
 					ID: "foobar",
@@ -366,13 +366,13 @@ func Test_ClusterID(t *testing.T) {
 			ErrorMatcher:      nil,
 		},
 		{
-			Description:       "case 1: wrongTypeError returned when nil passed as obj",
+			Name:              "case 1: wrongTypeError returned when nil passed as obj",
 			InputObj:          nil,
 			ExpectedClusterID: "",
 			ErrorMatcher:      IsWrongTypeError,
 		},
 		{
-			Description: "case 2: wrongTypeError returned when wrong type passed as obj",
+			Name: "case 2: wrongTypeError returned when wrong type passed as obj",
 			InputObj: struct {
 				foo string
 				bar int
@@ -385,21 +385,24 @@ func Test_ClusterID(t *testing.T) {
 		},
 	}
 
-	for _, tc := range testCases {
-		t.Run(tc.Description, func(t *testing.T) {
-			clusterID, err := ClusterID(tc.InputObj)
+	for _, tt := range testCases {
+		t.Run(tt.Name, func(t *testing.T) {
+			clusterID, err := ClusterID(tt.InputObj)
 
-			if err != nil {
-				if tc.ErrorMatcher == nil {
-					t.Errorf("expected nil error, got %#v", err)
-				} else if !tc.ErrorMatcher(err) {
-					// No t.Fatal() here because next validation is also necessary when handling errors.
-					t.Errorf("Returned error doesn't match. Got: %#v", err)
+			switch {
+			case err == nil && tt.ErrorMatcher == nil: // correct; carry on
+			case err != nil && tt.ErrorMatcher != nil:
+				if !tt.ErrorMatcher(err) {
+					t.Errorf("returned error doesn't match expected one; got: %#v", err)
 				}
+			case err != nil && tt.ErrorMatcher == nil:
+				t.Errorf("unexpected error returned: %#v", err)
+			case err == nil && tt.ErrorMatcher != nil:
+				t.Error("expected error but got nil")
 			}
 
-			if clusterID != tc.ExpectedClusterID {
-				t.Errorf("Wrong clusterID returned: '%s' - expected: '%s'", clusterID, tc.ExpectedClusterID)
+			if clusterID != tt.ExpectedClusterID {
+				t.Errorf("ClusterID returned: '%s'; expected: '%s'", clusterID, tt.ExpectedClusterID)
 			}
 		})
 	}

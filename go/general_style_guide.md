@@ -311,7 +311,7 @@ import (
 Unit tests should be written when it makes sense. 100% coverage is not something
 that should be targeted, but critical logic that mutates state or is part of
 larger logic that mutates state should be tested. Writing unit test also makes
-sense when facing bug that could have been prevented by having a test for the
+sense when facing a bug that could have been prevented by having a test for the
 relevant code in question.
 
 Use table-driven tests instead of separate test methods when possible. Each test
@@ -399,7 +399,7 @@ func Test_ClusterID(t *testing.T) {
 **Pros:**
 
 - consistent style in tests
-- one can run single test case in table-driven tests
+- one can run single test cases in table-driven tests
 - single test cases identifiers in test run are always in sync
 
 **Cons:**

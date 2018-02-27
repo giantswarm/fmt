@@ -393,16 +393,16 @@ func Test_ClusterID(t *testing.T) {
 			case err == nil && tt.ErrorMatcher == nil: // correct; carry on
 			case err != nil && tt.ErrorMatcher != nil:
 				if !tt.ErrorMatcher(err) {
-					t.Errorf("returned error doesn't match expected one; got: %#v", err)
+					t.Fatalf("error == %#v, want matching", err)
 				}
 			case err != nil && tt.ErrorMatcher == nil:
-				t.Errorf("unexpected error returned: %#v", err)
+				t.Fatalf("error == %#v, want nil", err)
 			case err == nil && tt.ErrorMatcher != nil:
-				t.Error("expected error but got nil")
+				t.Fatalf("error == nil, want non-nil")
 			}
 
 			if clusterID != tt.ExpectedClusterID {
-				t.Errorf("ClusterID returned: '%s'; expected: '%s'", clusterID, tt.ExpectedClusterID)
+				t.Fatalf("ClusterID == %q, want %q", clusterID, tt.ExpectedClusterID)
 			}
 		})
 	}

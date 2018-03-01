@@ -308,11 +308,16 @@ import (
 
 ## Unit Tests
 
-Unit tests should be written when it makes sense. 100% coverage is not something
-that should be targeted, but critical logic that mutates state or is part of
-larger logic that mutates state should be tested. Writing unit test also makes
-sense when facing a bug that could have been prevented by having a test for the
-relevant code in question.
+Unit tests should be written when it makes sense. Writing tests first often
+helps designing new component if its shape is not enforced by framework
+requirements. Unit tests also help to verify that state mutating critical logic
+behaves correctly in both various success cases and also in error situations.
+Simple logic is not that important but sometimes it makes sense to have a simple
+test validating correct construction of bigger object so that if one forgets to
+pass configuration parameter, the validation error is caught during development
+and not in the deployment. 100% code-coverage is not something that should be
+targeted. Writing unit test also makes sense when facing a bug that could have
+been prevented by having a test for the relevant code in question.
 
 Use table-driven tests instead of separate test methods when possible. Each test
 case in table-driven test should be executed as a sub-test with

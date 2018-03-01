@@ -5,10 +5,10 @@
 - `app` - value should contain the name of the application. Should be applied
   to every Kubernetes resource associated with an application. This should be
   also used as replicas selector. E.g. `app=kvm-operator`.
-- `giantswarm.io/cluster-id` - value should contain guest cluster ID which this
-  object is part of. E.g. `giantswarm.io/cluster-id=eggs2`.
 - `giantswarm.io/customer-id` - value should contain guest cluster's customer
   ID. `giantswarm.io/customer-id=track-hunter`.
+- `giantswarm.io/cluster` - value should contain guest cluster ID which this
+  object is part of. E.g. `giantswarm.io/cluster=eggs2`.
 - `giantswarm.io/managed-by` - value should contain repository name of the
   operator managing the object. E.g. `giantswarm.io/managed-by=kvm-operator`.
 

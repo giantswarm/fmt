@@ -325,8 +325,9 @@ case in table-driven test should be executed as a sub-test with
 is then easier and one can execute a single specific test case from within table
 if needed.
 
-In table-driven tests the fields of test case struct must be exported for
-improved readability.
+In table-driven tests the fields of test case struct must be unexported as it's
+common practice and makes semantically more sense. When iterating test cases,
+it's common pattern to use `tc` as variable name for current element.
 
 Description field must start with `case n` where `n` is the index of the test
 starting from 0.
@@ -355,59 +356,58 @@ Example test:
 
 func Test_ClusterID(t *testing.T) {
 	testCases := []struct {
-		Name              string
-		InputObj          interface{}
-		ExpectedClusterID string
-		ErrorMatcher      func(err error) bool
+		name              string
+		inputObj          interface{}
+		expectedClusterID string
+		errorMatcher      func(err error) bool
 	}{
 		{
-			Name: "case 0: clusterID returned from valid object",
-			InputObj: SpecificType{
+			name: "case 0: clusterID returned from valid object",
+			inputObj: SpecificType{
 				Spec: Spec{
 					ID: "foobar",
 				},
 			},
-			ExpectedClusterID: "foobar",
-			ErrorMatcher:      nil,
+			expectedClusterID: "foobar",
+			errorMatcher:      nil,
 		},
 		{
-			Name:              "case 1: wrongTypeError returned when nil passed as obj",
-			InputObj:          nil,
-			ExpectedClusterID: "",
-			ErrorMatcher:      IsWrongTypeError,
+			name:              "case 1: wrongTypeError returned when nil passed as obj",
+			inputObj:          nil,
+			expectedClusterID: "",
+			errorMatcher:      IsWrongTypeError,
 		},
 		{
-			Name: "case 2: wrongTypeError returned when wrong type passed as obj",
-			InputObj: struct {
+			name: "case 2: wrongTypeError returned when wrong type passed as obj",
+			inputObj: struct {
 				foo string
 				bar int
 			}{
 				foo: "wrong type",
 				bar: -1,
 			},
-			ExpectedClusterID: "",
-			ErrorMatcher:      IsWrongTypeError,
+			expectedClusterID: "",
+			errorMatcher:      IsWrongTypeError,
 		},
 	}
 
-	for _, tt := range testCases {
-		t.Run(tt.Name, func(t *testing.T) {
-			clusterID, err := ClusterID(tt.InputObj)
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			clusterID, err := ClusterID(tc.inputObj)
 
 			switch {
-			case err == nil && tt.ErrorMatcher == nil: // correct; carry on
-			case err != nil && tt.ErrorMatcher != nil:
-				if !tt.ErrorMatcher(err) {
-					t.Fatalf("error == %#v, want matching", err)
-				}
-			case err != nil && tt.ErrorMatcher == nil:
+			case err == nil && tc.errorMatcher == nil:
+				// correct; carry on
+			case err != nil && tc.errorMatcher == nil:
 				t.Fatalf("error == %#v, want nil", err)
-			case err == nil && tt.ErrorMatcher != nil:
+			case err == nil && tc.errorMatcher != nil:
 				t.Fatalf("error == nil, want non-nil")
+			case !tc.errorMatcher(err):
+				t.Fatalf("error == %#v, want matching", err)
 			}
 
-			if clusterID != tt.ExpectedClusterID {
-				t.Fatalf("ClusterID == %q, want %q", clusterID, tt.ExpectedClusterID)
+			if clusterID != tc.expectedClusterID {
+				t.Fatalf("ClusterID == %q, want %q", clusterID, tc.expectedClusterID)
 			}
 		})
 	}

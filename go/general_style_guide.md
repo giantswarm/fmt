@@ -335,6 +335,15 @@ starting from 0.
 Error matchers `func(error) bool` should be used to assert errors. This makes it
 easier to match errors returned from other packages.
 
+Suggested ordering for test case struct fields is following:
+
+  1. `name`
+  2. Setup config
+  3. Input Parameters
+  4. Expected output
+  5. Validators
+  6. Error matchers
+
 All test validations must be included in `t.Run(...) { }` block as technically
 each test case in table is a single test.
 

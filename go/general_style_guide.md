@@ -80,11 +80,11 @@ func IsInvalidConfig(err error) bool {
 	return microerror.Cause(err) == invalidConfigError
 }
 
-var initializationTimeout = microerror.New("initialization timeout")
+var initializationTimeoutError = microerror.New("initialization timeout")
 
 // IsInitializationTimeout asserts initializationTimeoutError.
 func IsTPRInitTimeout(err error) bool {
-	return microerror.Cause(err) == initializationTimeout
+	return microerror.Cause(err) == initializationTimeoutError
 }
 ```
 

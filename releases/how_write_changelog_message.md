@@ -33,7 +33,7 @@ Follow this common structure to make the messages and the entire release have a 
 `Imperative + subject + reason`
 
 Imperative list inspired by [keepachangelog.com](http://keepachangelog.com/en/1.0.0/)
-`Added` `Changed` `Removed` `Fixed` `Security`
+`Added` `Changed` `Removed` `Fixed` 
 
 ## Examples
 

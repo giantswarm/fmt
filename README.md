@@ -8,7 +8,7 @@
 
 ## Releases
 
-- [How to write a change log message](releases/how_write_changelog_message.md)
+- [How to write a changelog](releases/how_write_changelog_message.md)
 
 ## Kubernetes
 

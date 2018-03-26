@@ -30,9 +30,9 @@ would be great to add the link to upstream changelogs or release page.
 
 Follow this common structure to make the messages and the entire release have a consistent style
 
-`Imperative + subject + reason`
+`Past tense + subject + reason`
 
-Imperative list inspired by [keepachangelog.com](http://keepachangelog.com/en/1.0.0/)
+Action list inspired by [keepachangelog.com](http://keepachangelog.com/en/1.0.0/)
 `Added` `Changed` `Removed` `Fixed` 
 
 ## Examples
@@ -52,5 +52,5 @@ For single third party updates
 BAD
 docker: Bump version to 1.12
 GOOD
-Docker: Updated to 1.12.
+Docker: Updated to 1.12. [Changelog here](https://docs.docker.com/enterprise/17.03/release-notes/)
 ```

@@ -7,11 +7,14 @@
   also used as replicas selector. E.g. `app=kvm-operator`.
 - `giantswarm.io/cluster` - value should contain guest cluster ID which this
   object is part of. E.g. `giantswarm.io/cluster=eggs2`.
+  operator managing the object. E.g. `giantswarm.io/managed-by=kvm-operator`.
+- `giantswarm.io/managed-by` - value should contain repository name of the
 - `giantswarm.io/organization` - value should contain guest cluster's
 organization ID as displayed in the front-end
 `giantswarm.io/organization=track-hunter`.
-- `giantswarm.io/managed-by` - value should contain repository name of the
-  operator managing the object. E.g. `giantswarm.io/managed-by=kvm-operator`.
+- `giantswarm.io/randomkey` - value should contain type of the randomkey stored
+  in secret. E.g. `giantswarm.io/randomkey=encryption` for guest API -> etcd
+  encryption at rest.
 
 ## Finalizers
 

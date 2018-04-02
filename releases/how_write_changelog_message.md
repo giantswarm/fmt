@@ -6,6 +6,27 @@ The intention of this document is to help engineers to write useful changelog me
 delivered to customers. Project changelogs are out of the scope here. The main goal is to use a same style across the team and
 highlight the gist of the change at customer level. 
  
+## Scope
+
+Changelogs live inside the code repositories of our components. They have a common structure defined in [versionbundle](https://godoc.org/github.com/giantswarm/versionbundle#Bundle). There are a component name, a description and a kind 
+property for every changelog. As example, they look:
+
+```
+Changelogs: []versionbundle.Changelog{
+			{
+				Component:   "cloudconfig",
+				Description: "Removed set-ownership-etcd-data-dir.service.",
+				Kind:        versionbundle.KindChanged,
+			},
+            ...
+			{
+				Component:   "containerlinux",
+				Description: "Updated to version 1632.3.0.",
+				Kind:        versionbundle.KindFixed,
+			},
+		},
+```
+
 ## Rules
 
 ### Owned components
@@ -13,12 +34,12 @@ highlight the gist of the change at customer level.
 As a result of building features and fixing bugs we change our components. Here there are some patterns about how to describe the changes:
 
 - A changelog message describes a single change (bug fix or feature). Don't try to define more than one fix or feature per changelog message.    
-- Don't use the component name as the phrase subject. It is unnecessary, it heads the line already automatically. It does not add value: `AWS operator: Fixed AWS operator for ELB creation`.
+- Don't use the component name as the phrase subject. It is unnecessary, it heads the line already automatically. It does not add value: `aws-operator: Fixed AWS operator for ELB creation`.
 - Avoid writing dates or times in the message. It is already part of the release.
 - For readability, group messages of one component together.
 - Avoid redundant or unenriching details.
-- Use title case for component names.
-- Not only say what is done, but why and how it affects the customer.
+- Use lower case for component names.
+- Not only say what is done, but why and how it affects the customer (In case it is clear, you can always ask SEs).
 
 ### Third party components
 
@@ -35,22 +56,46 @@ Follow this common structure to make the messages and the entire release have a 
 Action list inspired by [keepachangelog.com](http://keepachangelog.com/en/1.0.0/)
 `Added` `Changed` `Removed` `Fixed` 
 
+The kinds `Security` and `Deprecated` has been discarded as they are not really descriptive or does not aligned with the format.
+Alternatively, you can define a security addition or modification using `Added`, `Fixed` or `Changed` providing more coherence customer-facing.
+
 ## Examples
 
 Let's stand out some good created changelogs messages
 
 ```
-BAD (redundant component name, bad verb tense and no focus in what improves for the client)
-aws-operator: Fix aws operator ELB tags.
+BAD (redundant component name, bad verb tense and no focus in what improves for the client, final dot)
+{
+    Component:   "aws-operator",
+    Description: "Fix aws operator ELB tags",
+    Kind:        versionbundle.KindChanged,
+}
+Output -> aws-operator: Fix aws operator ELB tags
+
 GOOD
-AWS Operator: Fixed limitation getting ELB tags that affected cluster creation.
+{
+    Component:   "aws-operator",
+    Description: "Fixed limitation getting ELB tags that affected cluster creation.",
+    Kind:        versionbundle.KindFixed,
+}
+Output -> aws-operator: Fixed limitation getting ELB tags that affected cluster creation.
 ```
 
 For single third party updates
 
 ```
-BAD
-docker: Bump version to 1.12
+BAD (Wrong verb tense, chossing wrong verb, provide link to release notes if it is possible)
+{
+    Component:   "Docker",
+    Description: "Bump version to 1.12.",
+    Kind:        versionbundle.KindChanged,
+}
+Output -> docker: Bump version to 1.12
 GOOD
-Docker: Updated to 1.12. [Changelog here](https://docs.docker.com/enterprise/17.03/release-notes/)
+{
+    Component:   "docker",
+    Description: "Updated to 1.12. https://docs.docker.com/enterprise/17.03/release-notes/",
+    Kind:        versionbundle.KindChanged,
+}
+Output -> docker: Updated to 1.12. https://docs.docker.com/enterprise/17.03/release-notes/
 ```

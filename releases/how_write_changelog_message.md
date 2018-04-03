@@ -11,7 +11,7 @@ highlight the gist of the change at customer level.
 Changelogs live inside the code repositories of our components. They have a common structure defined in [versionbundle](https://godoc.org/github.com/giantswarm/versionbundle#Bundle). There are a component name, a description and a kind 
 property for every changelog. As example, they look:
 
-```
+```golang
 Changelogs: []versionbundle.Changelog{
 			{
 				Component:   "cloudconfig",
@@ -61,41 +61,77 @@ Alternatively, you can define a security addition or modification using `Added`,
 
 ## Examples
 
-Let's stand out some good created changelogs messages
+Let's point out some Dos and Don'ts.
 
-```
-BAD (redundant component name, bad verb tense and no focus in what improves for the client, final dot)
+### 1. Why you should not repeat the component name in the message
+
+#### Bad
+
+There is a redundant component name, bad verb tense and no focus in what improves for the client, final dot)
+
+```golang
 {
     Component:   "aws-operator",
     Description: "Fix aws operator ELB tags",
     Kind:        versionbundle.KindChanged,
 }
-Output -> aws-operator: Fix aws operator ELB tags
+```
 
-GOOD
+Output in our user interfaces:
+
+```
+aws-operator: Fix aws operator ELB tags
+```
+
+#### Good
+
+```golang
 {
     Component:   "aws-operator",
     Description: "Fixed limitation getting ELB tags that affected cluster creation.",
     Kind:        versionbundle.KindFixed,
 }
-Output -> aws-operator: Fixed limitation getting ELB tags that affected cluster creation.
 ```
 
-For single third party updates
+Output in our user interfaces:
 
 ```
-BAD (Wrong verb tense, chossing wrong verb, provide link to release notes if it is possible)
+aws-operator: Fixed limitation getting ELB tags that affected cluster creation.
+```
+
+### 2. When a third party library is updated
+
+#### Bad
+
+Wrong verb tense, chossing wrong verb, provide link to release notes if it is possible)
+
+```golang
 {
     Component:   "Docker",
     Description: "Bump version to 1.12.",
     Kind:        versionbundle.KindChanged,
 }
-Output -> docker: Bump version to 1.12
-GOOD
+```
+
+Output:
+
+```
+docker: Bump version to 1.12
+```
+
+#### Good
+
+```golang
 {
     Component:   "docker",
     Description: "Updated to 1.12. https://docs.docker.com/enterprise/17.03/release-notes/",
     Kind:        versionbundle.KindChanged,
 }
-Output -> docker: Updated to 1.12. https://docs.docker.com/enterprise/17.03/release-notes/
 ```
+
+Output in our user interfaces:
+
+```
+docker: Updated to 1.12. https://docs.docker.com/enterprise/17.03/release-notes/
+```
+

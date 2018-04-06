@@ -18,9 +18,13 @@ organization ID as displayed in the front-end
 
 ## Finalizers
 
-- Operator specific finalizers for custom objects shoud be named
-  `OPERATOR_REPO.giantswarm.io/custom-object-cleanup`. E.g.
-  `ingress-operator.giantswarm.io/custom-object-cleanup`.
+- Operatorkit sets a finalizer for custom objects that are watched by the
+  framework named `operatorkit.giantswarm.io/NAME`.
+- `NAME` is configured by the operator and should be the operator name. E.g.
+  `kvm-operator`.
+- If one operator implements multiple frameworks, then `NAME` should include
+  the framework name. E.g `aws-operator-cluster` and
+  `aws-operator-drainer`.
 
 ## Naming
 

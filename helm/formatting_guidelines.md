@@ -17,8 +17,13 @@ data:
 In comparison to this:
 
 ```yaml
-# No spaces makes it harder to see the templating call
-name: {{.Release.Name}}-configmap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  # No spaces makes it harder to see the templating call
+  name: {{.Release.Name}}-configmap
+data:
+  myvalue: "Hello World"
 ```
 
 ## Indentation

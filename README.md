@@ -11,6 +11,6 @@
 - [Annotations and Labels](kubernetes/annotations_and_labels.md)
 
 
-## Helm
+## Helm Charts
 
 - [Formatting Guidelines](helm/formatting_guidelines.md)

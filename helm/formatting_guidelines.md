@@ -1,4 +1,4 @@
-# Helm Formatting Guidelines
+# Helm Chart Formatting Guidelines
 
 ## Templating
 

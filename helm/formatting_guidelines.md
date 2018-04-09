@@ -24,7 +24,9 @@ name: {{.Release.Name}}-configmap
 ## Indendation
 
 The indendation of our helm chart yaml files should be 2 spaces.
-Moreover we do not indend yaml lists, hyphens of each list member act as indentation.
+Moreover we do not indend yaml lists, hyphens of the list members act as indentation.
+
+Example:
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole

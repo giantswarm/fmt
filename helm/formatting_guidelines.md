@@ -21,10 +21,10 @@ In comparison to this:
 name: {{.Release.Name}}-configmap
 ```
 
-## Indendation
+## Indentation
 
-The indendation of our helm chart yaml files should be 2 spaces.
-Moreover we do not indend yaml lists, hyphens of the list members act as indentation.
+The indentation of our helm chart yaml files should be 2 spaces.
+Moreover we do not indent yaml lists, hyphens of the list members act as indentation.
 
 Example:
 ```yaml

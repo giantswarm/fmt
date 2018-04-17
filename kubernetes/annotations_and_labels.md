@@ -1,20 +1,32 @@
 # Kubernetes Annotations and Labels
 
-## Common Labels
+## Common Labels (for host cluster services)
 
 - `app` - value should contain the name of the application. Should be applied
-  to every Kubernetes resource associated with an application. This should be
-  also used as replicas selector. E.g. `app=kvm-operator`.
+  to every Kubernetes resource associated with an application. This should
+  also be used as replicas selector. E.g. `app=kvm-operator`.
 - `giantswarm.io/cluster` - value should contain guest cluster ID which this
   object is part of. E.g. `giantswarm.io/cluster=eggs2`.
-  operator managing the object. E.g. `giantswarm.io/managed-by=kvm-operator`.
 - `giantswarm.io/managed-by` - value should contain repository name of the
+  operator managing the object. E.g. `giantswarm.io/managed-by=kvm-operator`.
 - `giantswarm.io/organization` - value should contain guest cluster's
-organization ID as displayed in the front-end
-`giantswarm.io/organization=track-hunter`.
+  organization ID as displayed in the front-end
+  `giantswarm.io/organization=track-hunter`.
 - `giantswarm.io/randomkey` - value should contain type of the randomkey stored
   in secret. E.g. `giantswarm.io/randomkey=encryption` for guest API -> etcd
   encryption at rest.
+
+## Common Labels (for guest cluster services)
+
+- `app` - value should contain the name of the application. Should be applied
+  to every Kubernetes resource associated with an application. This should 
+  also be used as replicas selector. E.g. `app=nginx-ingress-controller`.
+  Exceptions can be made to accomodate for adherence to existing selectors
+  upstream.
+- `giantswarm.io/type` - value should be either `system` for core system
+  services (i.e. K8s components) or `managed` for Giant Swarm managed services
+  (i.e. networking, DNS, monitoring, ingress controller, etc.). Latter would be
+  usually managed by `chart-operator`.
 
 ## Finalizers
 

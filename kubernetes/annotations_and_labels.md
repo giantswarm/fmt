@@ -23,10 +23,10 @@
   also be used as replicas selector. E.g. `app=nginx-ingress-controller`.
   Exceptions can be made to accomodate for adherence to existing selectors
   upstream.
-- `giantswarm.io/type` - value should be either `system` for core system
+- `giantswarm.io/service-type` - value should be either `system` for core system
   services (i.e. K8s components) or `managed` for Giant Swarm managed services
   (i.e. networking, DNS, monitoring, ingress controller, etc.). Latter would be
-  usually managed by `chart-operator`.
+  managed by `chart-operator`.
 
 ## Finalizers
 

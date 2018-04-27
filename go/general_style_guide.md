@@ -41,13 +41,13 @@ return microerror.Maskf(err, "Additional information")
 
 **Pros:**
 
-- We always get stack traces when debugging and know immediately where errors 
+- We always get stack traces when debugging and know immediately where errors
   have been going through.
 
 **Cons:**
 
 - We have to be very consistent with this. The human effort we have to put into
-  it is notable but neglectible once familar with the concept. 
+  it is notable but neglectible once familar with the concept.
 
 
 ### Custom Errors
@@ -94,6 +94,37 @@ Then in code returning error:
 return microerror.Maskf(invalidConfigError, "name must not be empty")
 ```
 
+Dealing with errors from outside packages
+
+We usually want to align with our error handling conventions, so we might encounter errors like this one in Prometheus:
+```go
+type AlreadyRegisteredError struct {
+	ExistingCollector, NewCollector Collector
+}
+
+func (err AlreadyRegisteredError) Error() string {
+	return "duplicate metrics collector registration attempted"
+}
+```
+Which we can align with our pattern easily like this:
+```go
+var alreadyRegisteredError = microerror.New("already registered")
+
+// IsAlreadyRegisteredError asserts alreadyRegisteredError.
+func IsAlreadyRegisteredError(err error) bool {
+	c := microerror.Cause(err)
+	_, ok := c.(prometheus.AlreadyRegisteredError)
+	if ok {
+		return true
+	}
+	if c == alreadyRegisteredError {
+		return true
+	}
+
+	return false
+}
+```
+
 Some anti-patterns:
 
 ```go
@@ -137,9 +168,9 @@ accordingly. In some cases B wants to mask its own error depending on the error
 it received from C. Then B returns its own error to A, where A can match against
 B's error. A should never match against an error of C. As soon as A imports C
 for error handling this code smells and we should think about what we are doing
-and why. 
+and why.
 
-Example: 
+Example:
 
 ```go
 // pkg.F may return pkg.timeoutError.
@@ -157,12 +188,12 @@ if pkg.IsTimeout(err) {
 
 **Pros:**
 
-- Straight and simple design. 
+- Straight and simple design.
 - Error handling of complex projects is easy to understand.
 
 **Cons:**
 
-- There is a notable overhead of repeated errors to keep the contract up. 
+- There is a notable overhead of repeated errors to keep the contract up.
 
 ## Struct Initialization
 
@@ -264,7 +295,7 @@ func run() error {
 	{
 		c := Config{
 			Logger: logger,
-			
+
 			Name:    "Helicopter",
 			Order:   1,
 			Timeout: 15,

@@ -19,7 +19,7 @@
 ## Common Labels (for guest cluster services)
 
 - `app` - value should contain the name of the application. Should be applied
-  to every Kubernetes resource associated with an application. This should 
+  to every Kubernetes resource associated with an application. This should
   also be used as replicas selector. E.g. `app=nginx-ingress-controller`.
   Exceptions can be made to accomodate for adherence to existing selectors
   upstream.
@@ -27,6 +27,18 @@
   services (i.e. K8s components) or `managed` for Giant Swarm managed services
   (i.e. networking, DNS, monitoring, ingress controller, etc.). Latter would be
   managed by `chart-operator`.
+
+## Common Labels (for guest cluster nodes)
+
+- `release.giantswarm.io/version` - value should be the used Giant Swarm release
+  version, e.g. `2.3.0`. Should be applied to all Kubernetes nodes, regardless
+  of their role.
+- `OPERATOR.giantswarm.io/version` - value should be the used operator
+  version bundle version, e.g. `1.0.0`. `OPERATOR` might be `kvm-operator`.
+  Should be applied to all Kubernetes nodes, regardless of their role.
+- `giantswarm.io/provider` - value should be the installation's provider, e.g.
+  `kvm`, `aws`, or `azure`. Should be applied to all Kubernetes nodes,
+  regardless of their role.
 
 ## Finalizers
 

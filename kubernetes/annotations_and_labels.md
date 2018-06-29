@@ -27,15 +27,19 @@
   services (i.e. K8s components) or `managed` for Giant Swarm managed services
   (i.e. networking, DNS, monitoring, ingress controller, etc.). Latter would be
   managed by `chart-operator`.
+
+## Common Labels (for guest cluster nodes)
+
 - `release.giantswarm.io/version` - value should be the used Giant Swarm release
   version, e.g. `2.3.0`. Should be applied to all Kubernetes nodes, regardless
-  their role.
-- `operator.giantswarm.io/version` - value should be the used operator version
-  bundle version, e.g. `1.0.0`. Should be applied to all Kubernetes nodes,
-  regardless their role.
-- `operator.giantswarm.io/provider` - value should be the installation's
-  provider, e.g. `kvm`, `aws`, or `azure`. Should be applied to all Kubernetes
-  nodes, regardless their role.
+  of their role.
+- `NAME.operator.giantswarm.io/version` - value should be the used operator
+  version bundle version, e.g. `1.0.0`. `NAME` might be `kvm` for the
+  `kvm-operator`. Should be applied to all Kubernetes nodes, regardless of their
+  role.
+- `giantswarm.io/provider` - value should be the installation's provider, e.g.
+  `kvm`, `aws`, or `azure`. Should be applied to all Kubernetes nodes,
+  regardless of their role.
 
 ## Finalizers
 

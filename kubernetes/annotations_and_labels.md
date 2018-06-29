@@ -33,10 +33,9 @@
 - `release.giantswarm.io/version` - value should be the used Giant Swarm release
   version, e.g. `2.3.0`. Should be applied to all Kubernetes nodes, regardless
   of their role.
-- `NAME.operator.giantswarm.io/version` - value should be the used operator
-  version bundle version, e.g. `1.0.0`. `NAME` might be `kvm` for the
-  `kvm-operator`. Should be applied to all Kubernetes nodes, regardless of their
-  role.
+- `OPERATOR.giantswarm.io/version` - value should be the used operator
+  version bundle version, e.g. `1.0.0`. `OPERATOR` might be `kvm-operator`.
+  Should be applied to all Kubernetes nodes, regardless of their role.
 - `giantswarm.io/provider` - value should be the installation's provider, e.g.
   `kvm`, `aws`, or `azure`. Should be applied to all Kubernetes nodes,
   regardless of their role.

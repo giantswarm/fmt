@@ -63,9 +63,9 @@ var err error
 
 	err = pkg.APICall(ctx, systemFact)
 	if IsDeletionInProgress(err) {
-		// Did not ensure log. Note "did not ensure" here. "deletion"
+		// Did not ensure log. Note "did not ensure" here. "deletion of"
 		// should be present in case of delete event.
-		r.logger.LogCtx(ctx, "level", "debug", "message", "did not ensure [deletion] managed resource")
+		r.logger.LogCtx(ctx, "level", "debug", "message", "did not ensure [deletion of] managed resource")
 		// Reason log should be separate free form log explaining why
                 // the managed resource can't be ensured.
 		r.logger.LogCtx(ctx, "level", "debug", "message", "waiting for the API call to finish")

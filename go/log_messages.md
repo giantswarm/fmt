@@ -31,7 +31,7 @@ var systemFact string
 		// Not found log. Note "did not find" here.
 		r.logger.LogCtx(ctx, "level", "debug", "message", "did not find system fact")
 		// Reason log should be separate free form log explaining why
-                // the system fact can't be found.
+		// the system fact can't be found.
 		r.logger.LogCtx(ctx, "level", "debug", "message", "waiting for system fact to be created")
 		// Canceling resource log should be separate.
 		r.logger.LogCtx(ctx, "level", "debug", "message", "canceling resource")

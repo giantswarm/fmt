@@ -15,9 +15,8 @@
 - `giantswarm.io/organization` - value should contain guest cluster's
   organization ID as displayed in the front-end
   `giantswarm.io/organization=track-hunter`.
-- `giantswarm.io/randomkey` - value should contain type of the randomkey stored
-  in secret. E.g. `giantswarm.io/randomkey=encryption` for guest API -> etcd
-  encryption at rest.
+- `giantswarm.io/randomkey` - value should contain randomkey name as defined in
+  github.com/giantswarm/randomkeys repo. This is used in encryption Secrets.
 
 ## Common Labels (for guest cluster services)
 

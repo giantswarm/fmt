@@ -1,7 +1,7 @@
-## Errors
+# Errors
 
 
-### Wrapped Errors
+## Wrapped Errors
 
 We use [microkit] to enrich **all** errors with stack traces.
 
@@ -40,7 +40,7 @@ return microerror.Maskf(err, "Additional information")
   it is notable but neglectible once familar with the concept.
 
 
-### Custom Errors
+## Custom Errors
 
 We only use typed errors. **Don't do this**:
 
@@ -144,7 +144,7 @@ var invalidConfigError = microerror.New("Invalid config")
 
 [microkit]: https://github.com/giantswarm/microkit
 
-### Matching Errors
+## Matching Errors
 
 When code flows through a chain of multiple packages a best practise is to work
 against the package interfaces. Keeping communication between packages simple

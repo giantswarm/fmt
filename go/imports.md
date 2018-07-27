@@ -1,4 +1,4 @@
-## Imports
+# Imports
 
 The import block should be split into 3 separate blocks in this order.
 

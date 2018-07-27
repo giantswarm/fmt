@@ -1,4 +1,4 @@
-## Unit Tests
+# Unit Tests
 
 Unit tests should be written when it makes sense. Writing tests first often
 helps designing new component if its shape is not enforced by framework

@@ -1,4 +1,4 @@
-## Struct Initialization
+# Struct Initialization
 
 Structs doing a business logic (non-data structures) should be initialized with
 corresponding Config structure. The Config structure is a pure data structure.

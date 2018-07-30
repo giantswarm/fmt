@@ -63,17 +63,21 @@ error definition in the file along with *matcher function*.
 Example:
 
 ```go
-var invalidConfigError = microerror.New("invalid config")
+var invalidConfigError = &microerror.Error{
+	Kind: "invalidConfigError",
+}
 
 // IsInvalidConfig asserts invalidConfigError.
 func IsInvalidConfig(err error) bool {
 	return microerror.Cause(err) == invalidConfigError
 }
 
-var initializationTimeoutError = microerror.New("initialization timeout")
+var initializationTimeoutError = &microerror.Error{
+	Kind: "initializationTimeoutError",
+}
 
 // IsInitializationTimeout asserts initializationTimeoutError.
-func IsTPRInitTimeout(err error) bool {
+func IsInitializationTimeout(err error) bool {
 	return microerror.Cause(err) == initializationTimeoutError
 }
 ```
@@ -87,6 +91,7 @@ return microerror.Maskf(invalidConfigError, "name must not be empty")
 Dealing with errors from outside packages
 
 We usually want to align with our error handling conventions, so we might encounter errors like this one in Prometheus:
+
 ```go
 type AlreadyRegisteredError struct {
 	ExistingCollector, NewCollector Collector
@@ -96,7 +101,10 @@ func (err AlreadyRegisteredError) Error() string {
 	return "duplicate metrics collector registration attempted"
 }
 ```
+
+
 Which we can align with our pattern easily like this:
+
 ```go
 var alreadyRegisteredError = microerror.New("already registered")
 

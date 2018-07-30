@@ -1,6 +1,6 @@
-## Log Messages
+# Log Messages
 
-### Resource Reconciliation
+## Resource Reconciliation
 
 When doing resource reconciliation action we often have to find out the current
 state, and apply changes to bring it towards desired state. This often means
@@ -9,6 +9,8 @@ align this logs to become more comfortable when reading them and find problems
 faster. Also we should aim for them to be understandable not only by developers
 but also by SREs, SEs and any other people who look at them and not
 necessarily contribute to the codebase.
+
+### Fact Gathering
 
 Usually the reconciling code discovers some facts about the system in order to
 figure out what actions it needs to take in order to push the current state
@@ -44,6 +46,8 @@ var systemFact string
 	r.logger.LogCtx(ctx, "level", "debug", "message", "found system fact")
 }
 ```
+
+### Ensuring State
 
 After all the facts are gathered there is usually a reconciliation action which
 is ensuring the resource is created and up to date or deleted depending on the
@@ -86,5 +90,41 @@ var err error
 	// End message. Note "ensured" here. "deletion of" should be present in
 	// case of delete event.
 	r.logger.LogCtx(ctx, "level", "debug", "message", "ensured [deletion of] managed resource is created")
+}
+```
+
+### Control Flow
+
+We use `*context` packages for control flow of the reconciliation loop. Here are
+log messages associated with specific actions.
+
+```go
+r.logger.LogCtx(ctx, "level", "debug", "message", "keeping finalizers")
+finalizerskeptcontext.SetKept(ctx)
+
+r.logger.LogCtx(ctx, "level", "debug", "message", "canceling reconciliation")
+reconciliationcanceledcontext.SetCanceled(ctx)
+
+r.logger.LogCtx(ctx, "level", "debug", "message", "canceling resource")
+resourcecanceledcontext.SetCanceled(ctx)
+```
+
+### Resource Intercommunication
+
+We use `controllercontext` package to pass information between resources.
+Because of asynchronous nature of resources the information is not available
+immediately. If not, the resource should log that and cancel itself.
+
+```go
+controllerCtx, err := controllercontext.FromContext(ctx)
+if err != nil {
+	return microerror.Mask(err)
+}
+
+workerASGName := controllerCtx.Status.Drainer.WorkerASGName
+if workerASGName == "" {
+	r.logger.LogCtx(ctx, "level", "debug", "message", "worker ASG name is not available yet")
+	r.logger.LogCtx(ctx, "level", "debug", "message", "canceling resource")
+	return nil
 }
 ```

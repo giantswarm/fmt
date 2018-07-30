@@ -7,6 +7,7 @@
 - [General Style Guide](go/general_style_guide.md)
   - [Errors](go/errors.md)
   - [Imports](go/imports.md)
+  - [Log Messages](go/log_messages.md)
   - [Struct Initialization](go/struct_initialization.md)
   - [Unit Tests](go/unit_tests.md)
 

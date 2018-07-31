@@ -102,11 +102,12 @@ func (err AlreadyRegisteredError) Error() string {
 }
 ```
 
-
 Which we can align with our pattern easily like this:
 
 ```go
-var alreadyRegisteredError = microerror.New("already registered")
+var alreadyRegisteredError = &microerror.Error{
+	Kind: "alreadyRegisteredError",
+}
 
 // IsAlreadyRegisteredError asserts alreadyRegisteredError.
 func IsAlreadyRegisteredError(err error) bool {

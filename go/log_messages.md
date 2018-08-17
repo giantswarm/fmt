@@ -40,7 +40,7 @@ var systemFact string
 		return nil
 	} else if err != nil {
 		// Not found log in error. Note it doesn't log the error on
-                // purpose. this should be done by the caller.
+		// purpose. this should be done by the caller.
 		r.logger.LogCtx(ctx, "level", "debug", "message", "did not find system fact")
 		return microerror.Mask(err)
 	}
@@ -80,8 +80,8 @@ var err error
 		r.logger.LogCtx(ctx, "level", "debug", "message", "canceling resource")
 		return nil
 	} else if err != nil {
-                // Did not ensure log. Note it doesn't log the error on
-                // purpose. this should be done by the caller.
+		// Did not ensure log. Note it doesn't log the error on
+		// purpose. this should be done by the caller.
 		r.logger.LogCtx(ctx, "level", "debug", "message", "did not ensure [deletion of] managed resource")
 		return microerror.Mask(err)
 	}
@@ -90,8 +90,8 @@ var err error
 	if IsDeletionInProgress(err) {
 		// Fall trough.
 	} else if err != nil {
-                // Did not ensure log. Note it doesn't log the error on
-                // purpose. this should be done by the caller.
+		// Did not ensure log. Note it doesn't log the error on
+		// purpose. this should be done by the caller.
 		r.logger.LogCtx(ctx, "level", "debug", "message", "did not ensure [deletion of] managed resource")
 		return microerror.Mask(err)
 	}

@@ -1,24 +1,24 @@
 # Kubernetes Annotations and Labels
 
-## Common Labels (for host cluster services)
+## Common Labels (for control plane services)
 
 - `app` - value should contain the name of the application. Should be applied
   to every Kubernetes resource associated with an application. This should
   also be used as replicas selector. E.g. `app=kvm-operator`.
-- `giantswarm.io/cluster` - value should contain guest cluster ID which this
+- `giantswarm.io/cluster` - value should contain tenant cluster ID which this
   object is part of. E.g. `giantswarm.io/cluster=eggs2`.
 - `giantswarm.io/certificate` - value should contain certificate name as
   defined in github.com/giantswarm/certs repo. This is used in certificate
   Secrets and CertConfigs.
 - `giantswarm.io/managed-by` - value should contain repository name of the
   operator managing the object. E.g. `giantswarm.io/managed-by=kvm-operator`.
-- `giantswarm.io/organization` - value should contain guest cluster's
+- `giantswarm.io/organization` - value should contain tenant cluster's
   organization ID as displayed in the front-end
   `giantswarm.io/organization=track-hunter`.
 - `giantswarm.io/randomkey` - value should contain randomkey name as defined in
   github.com/giantswarm/randomkeys repo. This is used in encryption Secrets.
 
-## Common Labels (for guest cluster services)
+## Common Labels (for tenant cluster services)
 
 - `app` - value should contain the name of the application. Should be applied
   to every Kubernetes resource associated with an application. This should
@@ -30,7 +30,7 @@
   (i.e. networking, DNS, monitoring, ingress controller, etc.). Latter would be
   managed by `chart-operator`.
 
-## Common Labels (for guest cluster nodes)
+## Common Labels (for tenant cluster nodes)
 
 - `release.giantswarm.io/version` - value should be the used Giant Swarm release
   version, e.g. `2.3.0`. Should be applied to all Kubernetes nodes, regardless

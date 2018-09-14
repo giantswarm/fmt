@@ -26,6 +26,14 @@ data:
   myvalue: "Hello World"
 ```
 
+When helm templating calls access values with hyphens in the name you need to
+use the `index` function. Otherwise the error `bad character U+002D '-'` will
+be returned by helm when installing the chart.
+
+```yaml
+proxy-buffers-size: "{{ index .Values.configmap "proxy-buffers-size" }}"
+```
+
 ## Indentation
 
 The indentation of our helm chart yaml files should be 2 spaces.

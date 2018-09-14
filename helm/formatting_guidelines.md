@@ -26,8 +26,8 @@ data:
   myvalue: "Hello World"
 ```
 
-When helm templating calls access values with underscores in the name you need
-to use the `index` function. Otherwise the error `bad character U+002D '-'` will
+When helm templating calls access values with hyphens in the name you need to
+use the `index` function. Otherwise the error `bad character U+002D '-'` will
 be returned by helm when installing the chart.
 
 ```yaml

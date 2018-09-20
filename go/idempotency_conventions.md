@@ -13,7 +13,7 @@ behaviors from our APIs.
 
 ## Idempotent API
 
-- Name of the function should be a past tense verb prefixed with `Ensured`,
+- Name of the function should be a past tense verb prefixed with `Ensure`,
   e.g. `EnsureCreated` or `EnsureDeleted` (note `EnsureUpdated` makes little
   sense in idempotent APIs).
 - Such APIs should return errors only in exceptional circumstances like

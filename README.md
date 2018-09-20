@@ -6,6 +6,7 @@
 
 - [General Style Guide](go/general_style_guide.md)
   - [Errors](go/errors.md)
+  - [Idempotency Conventions](go/idempotency_conventions.md)
   - [Imports](go/imports.md)
   - [Log Messages](go/log_messages.md)
   - [Struct Initialization](go/struct_initialization.md)

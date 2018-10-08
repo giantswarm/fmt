@@ -1,5 +1,10 @@
 # Log Messages
 
+# General Guidelines
+
+- We use `%#q` for string formatting in our log & error messages. This prevents
+  from escaping when they are embedded in JSON string value.
+
 ## Resource Reconciliation
 
 When doing resource reconciliation action we often have to find out the current

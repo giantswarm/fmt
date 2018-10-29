@@ -4,13 +4,14 @@
 
 ## Go
 
+- [Errors](go/errors.md)
 - [General Style Guide](go/general_style_guide.md)
-  - [Errors](go/errors.md)
-  - [Idempotency Conventions](go/idempotency_conventions.md)
-  - [Imports](go/imports.md)
-  - [Log Messages](go/log_messages.md)
-  - [Struct Initialization](go/struct_initialization.md)
-  - [Unit Tests](go/unit_tests.md)
+- [Idempotency Conventions](go/idempotency_conventions.md)
+- [Imports](go/imports.md)
+- [Log Messages](go/log_messages.md)
+- [Struct Initialization](go/struct_initialization.md)
+- [TODO Comments](go/todo_comments.md)
+- [Unit Tests](go/unit_tests.md)
 
 
 

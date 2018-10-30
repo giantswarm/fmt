@@ -14,7 +14,7 @@
 When doing resource reconciliation action we often have to find out the current
 state, and apply changes to bring it towards desired state. This often means
 calling some API and then emitting debug logs about that. We should try to align
-this logs to become more comfortable when reading them and find problems faster.
+these logs to become more comfortable when reading them so we can find problems faster.
 Also we should aim for them to be understandable not only by developers but also
 by SREs, SEs and any other people who look at them and not necessarily
 contribute to the codebase.

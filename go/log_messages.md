@@ -85,7 +85,7 @@ for _, c := range s.collectors {
 	}
 }
 
-s.logger.Log("level", "debug", "message", "collected metrics")
+s.logger.LogCtx(ctx, "level", "debug", "message", "collected metrics")
 ```
 
 

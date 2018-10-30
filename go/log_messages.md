@@ -68,7 +68,7 @@ original caller, errors have to be logged. We try to format such logs in the way
 as described in the example below.
 
 ```go
-s.logger.Log("level", "error", "message", "failed collecting metrics", "stack", fmt.Sprintf("%#v", microerror.Mask(err)))
+s.logger.LogCtx(ctx, "level", "error", "message", "failed to collect metrics", "stack", fmt.Sprintf("%#v", microerror.Mask(err)))
 ```
 
 The fact gathering statement expresses what happens and in case the action fails

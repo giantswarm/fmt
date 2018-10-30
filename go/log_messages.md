@@ -65,7 +65,7 @@ if workerASGName == "" {
 
 At the root of error handling code when there is no error to be returned to the
 original caller, errors have to be logged. We try to format such logs in the way
-as described below in the example.
+as described in the example below.
 
 ```go
 s.logger.Log("level", "error", "message", "failed collecting metrics", "stack", fmt.Sprintf("%#v", microerror.Mask(err)))

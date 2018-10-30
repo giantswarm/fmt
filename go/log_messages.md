@@ -81,7 +81,7 @@ s.logger.Log("level", "debug", "message", "collecting metrics")
 for _, c := range s.collectors {
 	err := c.Collect(ch)
 	if err != nil {
-		s.logger.Log("level", "error", "message", "failed collecting metrics", "stack", fmt.Sprintf("%#v", microerror.Mask(err)))
+		s.logger.LogCtx(ctx, "level", "error", "message", "failed to collect metrics", "stack", fmt.Sprintf("%#v", microerror.Mask(err)))
 	}
 }
 

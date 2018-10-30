@@ -42,7 +42,7 @@ resourcecanceledcontext.SetCanceled(ctx)
 ### Resource Intercommunication
 
 We use the `controllercontext` package to pass information between resources.
-Because of asynchronous nature of resources the information is not available
+Because of the asynchronous nature of resources the information is not available
 immediately. If not, the resource should log that and cancel itself.
 
 ```go

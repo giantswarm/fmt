@@ -1,5 +1,12 @@
 # Kubernetes Annotations and Labels
 
+## Common Annotations
+
+- `giantswarm.io/docs` - value should be an URL to a common documentation
+  location. For now this should be in our `giantswarm/giantswarm` repository in
+  which we crosslink all pages to create a reasonable documentation of all kinds
+  of Kubernetes resources, their functionality and relationships.
+
 ## Common Labels (for control plane services)
 
 - `app` - value should contain the name of the application. Should be applied

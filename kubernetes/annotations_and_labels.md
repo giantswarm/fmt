@@ -51,8 +51,8 @@
 
 ## Finalizers
 
-- Operatorkit sets a finalizer for custom objects that are watched by the
-  framework named `operatorkit.giantswarm.io/NAME`.
+- Operatorkit sets a finalizer for objects that are watched by the framework
+  named `operatorkit.giantswarm.io/NAME`.
 - `NAME` is configured by the operator and should be the operator name. E.g.
   `kvm-operator`.
 - If one operator implements multiple frameworks, then `NAME` should include

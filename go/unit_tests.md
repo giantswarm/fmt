@@ -43,12 +43,12 @@ Example function to be tested:
 ```go
 
 func ClusterID(obj interface{}) (string, error) {
-	customObject, ok := obj.(SpecificType)
+	customResource, ok := obj.(SpecificType)
 	if !ok {
 		return "", microerror.Maskf(wrongTypeError, "obj must be SpecificType")
 	}
 
-	return customObject.Spec.ID, nil
+	return customResource.Spec.ID, nil
 }
 ```
 

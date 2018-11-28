@@ -6,7 +6,7 @@ This allows us to:
 - Use `micrologger.Logger.LogCtx`.
 - Make sure we pass the `context.Context` down the stack if we happen to
   distribute information in it.
-- Allows use to handle cancellation and deadlines without changing the API.
+- Allows us to handle cancellation and deadlines without changing the API.
 
 Guidelines:
 
@@ -15,6 +15,6 @@ Guidelines:
 - Don't use `context.TODO()` in tests. It is not TODO. We are not going to
   change that.
 - Otherwise always make `ctx context.Context` a first argument to the exported
-  function of method.
+  function or method.
 
 [context]: https://golang.org/pkg/context/

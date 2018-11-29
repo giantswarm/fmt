@@ -4,6 +4,7 @@
 
 ## Go
 
+- [Context](go/context.md)
 - [Errors](go/errors.md)
 - [General Style Guide](go/general_style_guide.md)
 - [Idempotency Conventions](go/idempotency_conventions.md)

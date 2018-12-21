@@ -2,6 +2,12 @@
 
 (Not only) coding guidelines and best practices hub.
 
+## Azure
+
+- [Naming Resources](azure/naming_resources.md)
+
+
+
 ## Go
 
 - [Context](go/context.md)
@@ -16,9 +22,9 @@
 
 
 
-## Releases
+## Helm Charts
 
-- [How to write a changelog](releases/how_write_changelog_message.md)
+- [Formatting Guidelines](helm/formatting_guidelines.md)
 
 
 
@@ -28,6 +34,6 @@
 
 
 
-## Helm Charts
+## Releases
 
-- [Formatting Guidelines](helm/formatting_guidelines.md)
+- [How to write a changelog](releases/how_write_changelog_message.md)

@@ -6,6 +6,9 @@
   location. For now this should be in our `giantswarm/giantswarm` repository in
   which we crosslink all pages to create a reasonable documentation of all kinds
   of Kubernetes resources, their functionality and relationships.
+- `giantswarm.io/version-bundle` - for CRs exposed to customers we will use
+  this annotation instead of having it in the spec. As this is an implementation
+  detail for our operators.
 
 ## Common Labels (for control plane services)
 

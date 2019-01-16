@@ -18,6 +18,9 @@ This page defines common annotations and labels we set in Kubernetes objects.
   to every Kubernetes resource associated with an application. This should also
   be used as replicas selector. E.g. `app=kvm-operator`. Exceptions can be made
   to accomodate for adherence to existing selectors upstream.
+- `giantswarm.io/certificate` - value should contain certificate name as
+  defined in github.com/giantswarm/certs repo. This is used in certificate
+  Secrets and CertConfigs.
 - `giantswarm.io/cluster` - value should contain tenant cluster ID which this
   object is part of. E.g. `giantswarm.io/cluster=eggs2`.
 - `giantswarm.io/managed-by` - value should contain repository name of the
@@ -37,9 +40,6 @@ This page defines common annotations and labels we set in Kubernetes objects.
   bundle version, e.g. `kvm-operator.giantswarm.io/version=1.0.0`.
 - `giantswarm.io/provider` - value should be the installation's provider, e.g.
   `kvm`, `aws`, or `azure`.
-- `giantswarm.io/certificate` - value should contain certificate name as
-  defined in github.com/giantswarm/certs repo. This is used in certificate
-  Secrets and CertConfigs.
 
 ### Labels Set In Tenant Cluster Nodes
 

@@ -41,25 +41,51 @@ This page defines common annotations and labels we set in Kubernetes objects.
 - `giantswarm.io/provider` - value should be the installation's provider, e.g.
   `kvm`, `aws`, or `azure`.
 
-### Labels Set In Tenant Cluster Nodes
+### Labels Set In Nodes
 
-- `release.giantswarm.io/version`
-- `OPERATOR.giantswarm.io/version`
-- `giantswarm.io/provider`
+#### Control Plane
 
-### Labels Set In Control Plane Objects
+#### Tenant Cluster
 
-- `app`
-- `giantswarm.io/cluster`
-- `giantswarm.io/certificate`
-- `giantswarm.io/managed-by`
-- `giantswarm.io/organization`
-- `giantswarm.io/randomkey`
+- `release.giantswarm.io/version` - Should be applied to all Kubernetes nodes,
+  regardless of their role.
+- `OPERATOR.giantswarm.io/version` - Should be applied to all Kubernetes nodes,
+  regardless of their role.
+- `giantswarm.io/provider` - Should be applied to all Kubernetes nodes,
+  regardless of their role.
 
-### Labels Set In Tenant Cluster Objects
+### Labels Set In Objects Created With Managed Services
+
+#### Control Plane
+
+#### Tenant Cluster 
 
 - `app`
 - `giantswarm.io/service-type`
+
+### Labels Set In Objects Created With Operators
+
+#### Control Plane
+
+- `giantswarm.io/cluster`
+- `giantswarm.io/managed-by`
+- `giantswarm.io/organization`
+
+#### Tenant Cluster
+
+- `giantswarm.io/managed-by`
+
+### Labels Set In Secrets
+
+#### Control Plane
+
+- `giantswarm.io/cluster`
+- `giantswarm.io/certificate` - Only when `giantswarm.io/randomkey` is not set.
+- `giantswarm.io/managed-by`
+- `giantswarm.io/organization`
+- `giantswarm.io/randomkey` - Only when `giantswarm.io/certificate` is not set.
+
+#### Tenant Cluster
 
 ## Finalizers
 

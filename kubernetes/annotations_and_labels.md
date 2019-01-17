@@ -27,7 +27,7 @@ This page defines common annotations and labels we set in Kubernetes objects.
   operator managing the object. E.g. `giantswarm.io/managed-by=kvm-operator`.
 - `giantswarm.io/organization` - value should contain tenant cluster's
   organization ID as displayed in the front-end
-  `giantswarm.io/organization=adidas`.
+  `giantswarm.io/organization=dev`.
 - `giantswarm.io/randomkey` - value should contain randomkey name as defined in
   github.com/giantswarm/randomkeys repo. This is used in encryption Secrets.
 - `giantswarm.io/service-type` - value should be either `system` for core system

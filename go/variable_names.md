@@ -2,7 +2,7 @@
 
 Here we want to provide suggestions and best practises about variable names we
 tend to use in our code. Aligning with the suggestions below makes our code
-usually easier to scan and code in general easier to write because it is a
+easier to scan and code in general easier to write because it is a
 no-brainer how to call things, so we can concentrate on what actually matters.
 
 ### Custom Resource

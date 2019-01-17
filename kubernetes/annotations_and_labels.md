@@ -8,9 +8,6 @@ This page defines common annotations and labels we set in Kubernetes objects.
   location. For now this should be in our `giantswarm/giantswarm` repository in
   which we crosslink all pages to create a reasonable documentation of all kinds
   of Kubernetes resources, their functionality and relationships.
-- `giantswarm.io/version-bundle` - for CRs exposed to customers we will use
-  this annotation instead of having it in the spec. As this is an implementation
-  detail for our operators.
 
 ## Common Labels
 
@@ -34,12 +31,28 @@ This page defines common annotations and labels we set in Kubernetes objects.
   services (i.e. K8s components) or `managed` for Giant Swarm managed services
   (i.e. networking, DNS, monitoring, ingress controller, etc.). Latter would be
   managed by `chart-operator`.
-- `release.giantswarm.io/version` - value should be the used Giant Swarm release
-  version, e.g. `2.3.0`.
-- `OPERATOR.giantswarm.io/version` - value should be the used operator version
-  bundle version, e.g. `kvm-operator.giantswarm.io/version=1.0.0`.
+- `release.giantswarm.io/version` - value should be Giant Swarm release
+  version, e.g. `release.giantswarm.io/version=2.3.0`.
+- `OPERATOR.giantswarm.io/version` - value should be an operator version, e.g.
+  `kvm-operator.giantswarm.io/version=1.0.0`. This is not the same as release
+  version. This value can be the same in multiple releases. This label is used
+  by the operator to recognize which object it should reconcile.
 - `giantswarm.io/provider` - value should be the installation's provider, e.g.
   `kvm`, `aws`, or `azure`.
+
+### Labels Set In Custom Resources
+
+#### Control Plane
+
+- `giantswarm.io/managed-by`
+- `OPERATOR.giantswarm.io/version`
+- `release.giantswarm.io/version`
+
+#### Tenant Cluster
+
+- `giantswarm.io/managed-by`
+- `OPERATOR.giantswarm.io/version`
+- `release.giantswarm.io/version`
 
 ### Labels Set In Nodes
 

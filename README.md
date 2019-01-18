@@ -19,6 +19,7 @@
 - [Struct Initialization](go/struct_initialization.md)
 - [TODO Comments](go/todo_comments.md)
 - [Unit Tests](go/unit_tests.md)
+- [Variable Names](go/variable_names.md)
 
 
 

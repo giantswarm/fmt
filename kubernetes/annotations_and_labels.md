@@ -36,7 +36,9 @@ This page defines common annotations and labels we set in Kubernetes objects.
 - `OPERATOR.giantswarm.io/version` - value should be an operator version, e.g.
   `kvm-operator.giantswarm.io/version=1.0.0`. This is not the same as release
   version. This value can be the same in multiple releases. This label is used
-  by the operator to recognize which object it should reconcile.
+  by the operator to recognize which object it should reconcile. When set on
+  nodes it is used to set that information in the status with the
+  statusresource.
 - `giantswarm.io/provider` - value should be the installation's provider, e.g.
   `kvm`, `aws`, or `azure`.
 
@@ -63,7 +65,8 @@ This page defines common annotations and labels we set in Kubernetes objects.
 - `release.giantswarm.io/version` - Should be applied to all Kubernetes nodes,
   regardless of their role.
 - `OPERATOR.giantswarm.io/version` - Should be applied to all Kubernetes nodes,
-  regardless of their role.
+  regardless of their role. This should be set by the operator itself and never
+  change during the node lifetime.
 - `giantswarm.io/provider` - Should be applied to all Kubernetes nodes,
   regardless of their role.
 

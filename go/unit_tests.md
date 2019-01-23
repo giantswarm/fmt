@@ -11,6 +11,35 @@ and not in the deployment. 100% code-coverage is not something that should be
 targeted. Writing unit test also makes sense when facing a bug that could have
 been prevented by having a test for the relevant code in question.
 
+
+
+### Diff Comparison
+
+Unit tests tend to operate on complex structures. Simply printing two versions
+makes it really hard to identify a particular diff causing issues. We want to
+encourage the use of a diff library like `cmp`. See also
+https://godoc.org/github.com/google/go-cmp/cmp. Example output looks like the
+following. Also see the example test where there is made use of `cmp` when
+asserting test results.
+
+```
+$ go test ./service/cluster/creator
+--- FAIL: Test_Service_Cluster_Creator_defaultAWS (0.00s)
+    --- FAIL: Test_Service_Cluster_Creator_defaultAWS/case_0_ensures_that_AZ_value_is_defaulted_correctly (0.00s)
+        default_test.go:241: want matching
+
+            {creator.Request}.Scaling.Max:
+              -: 3
+              +: 4
+
+FAIL
+FAIL	github.com/giantswarm/api/service/cluster/creator	0.033s
+```
+
+
+
+### Table Driven Tests
+
 Use table-driven tests instead of separate test methods when possible. Each test
 case in table-driven test should be executed as a sub-test with
 [t.Run](https://golang.org/pkg/testing/#T.Run) as following output of `go test`
@@ -108,7 +137,7 @@ func Test_ClusterID(t *testing.T) {
 			}
 
 			if clusterID != tc.expectedClusterID {
-				t.Fatalf("ClusterID == %q, want %q", clusterID, tc.expectedClusterID)
+				t.Fatalf("want matching\n\n%s\n", cmp.Diff(clusterID, tc.expectedClusterID))
 			}
 		})
 	}
@@ -120,6 +149,7 @@ func Test_ClusterID(t *testing.T) {
 - consistent style in tests
 - one can run single test cases in table-driven tests
 - single test cases identifiers in test run are always in sync
+- useful diff comparison
 
 **Cons:**
 

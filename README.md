@@ -28,6 +28,9 @@
 - [Formatting Guidelines](helm/formatting_guidelines.md)
 
 
+## Javascript
+
+- [General Style Guide](javascript/general_style_guide.md)
 
 ## Kubernetes
 

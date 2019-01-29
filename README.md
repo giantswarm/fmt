@@ -31,6 +31,7 @@
 ## Javascript
 
 - [General Style Guide](javascript/general_style_guide.md)
+- [Imports](javascript/imports.md)
 
 ## Kubernetes
 

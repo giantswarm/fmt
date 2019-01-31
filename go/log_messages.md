@@ -37,13 +37,13 @@ We use `*context` packages for control flow of the reconciliation loop. Here are
 log messages associated with specific actions.
 
 ```go
-r.logger.LogCtx(ctx, "level", "debug", "action": "...", "message", "keeping finalizers")
+r.logger.LogCtx(ctx, "level", "debug", "message", "keeping finalizers")
 finalizerskeptcontext.SetKept(ctx)
 
-r.logger.LogCtx(ctx, "level", "debug", "action": "...", "message", "canceling reconciliation")
+r.logger.LogCtx(ctx, "level", "debug", "message", "canceling reconciliation")
 reconciliationcanceledcontext.SetCanceled(ctx)
 
-r.logger.LogCtx(ctx, "level", "debug", "action": "...", "message", "canceling resource")
+r.logger.LogCtx(ctx, "level", "debug", "message", "canceling resource")
 resourcecanceledcontext.SetCanceled(ctx)
 ```
 
@@ -86,16 +86,19 @@ The fact gathering statement expresses what happens and in case the action fails
 field is added to get some tracing information from the carried error.
 
 ```go
-s.logger.Log("level", "debug", "action", "collecting metrics", "message", "start")
+{
+	actionLogger := r.loggger.With("action", "collecting metrics")
+	s.logger.LogCtx(ctx, "level", "debug", "message", "start")
 
-for _, c := range s.collectors {
-	err := c.Collect(ch)
-	if err != nil {
-		s.logger.LogCtx(ctx, "level", "error", "action", "collecting metrics", "message", fmt.Sprintf("collector %#q failed", c.name), "stack", fmt.Sprintf("%#v", microerror.Mask(err)))
+	for _, c := range s.collectors {
+		err := c.Collect(ch)
+		if err != nil {
+			actionLogger.LogCtx(ctx, "level", "error", "message", fmt.Sprintf("collector %#q failed", c.name), "stack", fmt.Sprintf("%#v", microerror.Mask(err)))
+		}
 	}
-}
 
-s.logger.Log("level", "debug", "action", "collecting metrics", "message", "end")
+	s.logger.LogCtx(ctx, "level", "debug", "message", "end")
+}
 ```
 
 
@@ -113,9 +116,10 @@ var err error
 
 var elbs []aws.ELB
 {
-	r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("finding ELBs with name prefix %#q", prefix), "message": "start")
+	actionLogger := r.loggger.With("action", fmt.Sprintf("finding ELBs with name prefix %#q", prefix))
+	actionLogger.LogCtx(ctx, "level", "debug", "message": "start")
 
-	r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("finding ELBs with name prefix %#q", prefix), "message": "listing all ELBs")
+	actionLogger.LogCtx(ctx, "level", "debug", "message": "listing all ELBs")
 
 	elbs, err = aws.ListELBs(ctx)
 	if aws.IsNotFound(err) {
@@ -124,16 +128,16 @@ var elbs []aws.ELB
 		return microerror.Mask(err)
 	}
 
-	r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("finding ELBs with name prefix %#q", prefix), "message": fmt.Sprintf("filtering prefixed ELBs from total %d", len(elbs)))
+	actionLogger.LogCtx(ctx, "level", "debug", "message": fmt.Sprintf("filtering prefixed ELBs from total %d", len(elbs)))
 
         elbs, err = filterELBs(elbs, prefix)
 	if err != nil {
 		return microerror.Mask(err)
 	}
 
-	r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("finding ELBs with name prefix %#q", prefix), "message", fmt.Sprintf("found %d ELBs", len(elbs)))
+	actionLogger.LogCtx(ctx, "level", "debug", "message": fmt.Sprintf("found %d ELBs", len(elbs)))
 
-	r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("finding ELBs with name prefix %#q", prefix), "message": "end")
+	actionLogger.LogCtx(ctx, "level", "debug", "message": "end")
 }
 ```
 
@@ -149,21 +153,22 @@ observed object event type. This block should look like this whenever possible.
 var err error
 
 {
-	r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("deleting ELBs with name prefix", prefix), "message": "start")
+	actionLogger := r.loggger.With("action", fmt.Sprintf("deleting ELBs with name prefix", prefix))
+	actionLogger.LogCtx(ctx, "level", "debug", "message": "start")
 
 	for _, elb := range elbs {
-		r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("deleting ELBs with name prefix", prefix), "message": fmt.Sprintf("deleting ELB %#q", elb.Name))
+		actionLogger.LogCtx(ctx, "level", "debug", "message": fmt.Sprintf("deleting ELB %#q", elb.Name))
 
 		err = aws.DeleteELB(ctx, elb)
 		if pkg.IsOperationInProgress(err) {
-			r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("deleting ELBs with name prefix", prefix), "message": fmt.Sprintf("ELB %#q deletion is in progress", elb.Name))
-			r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("deleting ELBs with name prefix", prefix), "message": "keeping finalizers")
+			actionLogger.LogCtx(ctx, "level", "debug", "message": fmt.Sprintf("ELB %#q deletion is in progress", elb.Name))
+			actionLogger.LogCtx(ctx, "level", "debug", "message": "keeping finalizers")
 			finalizerskeptcontext.SetKept(ctx)
 		} else if err != nil {
 			return microerror.Mask(err)
 		}
 	}
 
-	r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("deleting ELBs with name prefix", prefix), "message": "end")
+	actionLogger.LogCtx(ctx, "level", "debug", "message": "end")
 }
 ```

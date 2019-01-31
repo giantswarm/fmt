@@ -6,6 +6,16 @@
 
 - We use `%#q` for string formatting in our log & error messages. This prevents
   from escaping when they are embedded in JSON string value.
+- The `action` key is useful when filtering logs for a given action. Following
+  rules apply:
+    - Value of `action` key never changes in scope of action.
+    - First `message` for the `action` must be `start`.
+    - Last `message` for the `action` can be one of:
+        - `canceling reconciliation`
+        - `canceling resource`
+        - `end`
+        - `keeping finalizers`
+    - All `message`s in between are free form text.
 
 
 
@@ -27,13 +37,13 @@ We use `*context` packages for control flow of the reconciliation loop. Here are
 log messages associated with specific actions.
 
 ```go
-r.logger.LogCtx(ctx, "level", "debug", "message", "keeping finalizers")
+r.logger.LogCtx(ctx, "level", "debug", "action": "...", "message", "keeping finalizers")
 finalizerskeptcontext.SetKept(ctx)
 
-r.logger.LogCtx(ctx, "level", "debug", "message", "canceling reconciliation")
+r.logger.LogCtx(ctx, "level", "debug", "action": "...", "message", "canceling reconciliation")
 reconciliationcanceledcontext.SetCanceled(ctx)
 
-r.logger.LogCtx(ctx, "level", "debug", "message", "canceling resource")
+r.logger.LogCtx(ctx, "level", "debug", "action": "...", "message", "canceling resource")
 resourcecanceledcontext.SetCanceled(ctx)
 ```
 
@@ -76,16 +86,16 @@ The fact gathering statement expresses what happens and in case the action fails
 field is added to get some tracing information from the carried error.
 
 ```go
-s.logger.Log("level", "debug", "message", "collecting metrics")
+s.logger.Log("level", "debug", "action", "collecting metrics", "message", "start")
 
 for _, c := range s.collectors {
 	err := c.Collect(ch)
 	if err != nil {
-		s.logger.LogCtx(ctx, "level", "error", "message", "failed to collect metrics", "stack", fmt.Sprintf("%#v", microerror.Mask(err)))
+		s.logger.LogCtx(ctx, "level", "error", "action", "collecting metrics", "message", fmt.Sprintf("collector %#q failed", c.name), "stack", fmt.Sprintf("%#v", microerror.Mask(err)))
 	}
 }
 
-s.logger.LogCtx(ctx, "level", "debug", "message", "collected metrics")
+s.logger.Log("level", "debug", "action", "collecting metrics", "message", "end")
 ```
 
 
@@ -95,82 +105,65 @@ s.logger.LogCtx(ctx, "level", "debug", "message", "collected metrics")
 Usually the reconciling code discovers some facts about the system in order to
 figure out what actions it needs to take in order to push the current state
 towards the desired state. Those discovering blocks should look like this
-whenever possible (the additional comments should be omitted they serve
-informational purpose only):
+whenever possible. In the example below the system fact is list of ELBs in AWS
+API.
 
 ```go
 var err error
 
-// Note all messages contain "system fact" which is human readable name for the
-// system fact being discovered. Exception is "cancelling resource" message.
-var systemFact string
+var elbs []aws.ELB
 {
-	// Start message. Note "finding out" here.
-	r.logger.LogCtx(ctx, "level", "debug", "message", "finding out system fact")
+	r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("finding ELBs with name prefix %#q", prefix), "message": "start")
 
-	systemFact, err = pkg.FindSystemFact(ctx)
-	if IsNotFound(err) {
-		// Not found log. Note "did not find" here.
-		r.logger.LogCtx(ctx, "level", "debug", "message", "did not find system fact")
-		// Reason log should be separate free form log explaining why
-		// the system fact can't be found.
-		r.logger.LogCtx(ctx, "level", "debug", "message", "waiting for system fact to be created")
-		// Canceling resource log should be separate.
-		r.logger.LogCtx(ctx, "level", "debug", "message", "canceling resource")
-		return nil
-	} else if err != nil {
-		return microerror.Mask(err)
-	}
+	r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("finding ELBs with name prefix %#q", prefix), "message": "listing all ELBs")
 
-	// End message. Note "found" here.
-	r.logger.LogCtx(ctx, "level", "debug", "message", "found system fact")
-}
-```
-
-
-
-### Ensuring State
-
-After all the facts are gathered there is usually a reconciliation action which
-is ensuring the resource is created and up to date or deleted depending on the
-observed object event type. This block should look like this whenever possible
-(the additional comments should be omitted they serve informational purpose
-only):
-
-```go
-var err error
-
-// Note all messages contain "managed resource" which is human readable name
-// for the resource being ensured.
-{
-	// Start message. Note "ensured" here. "deletion of" should be present
-	// in case of delete event.
-	r.logger.LogCtx(ctx, "level", "debug", "message", "ensuring [deletion of] managed resource")
-
-	err = pkg.APICall(ctx, systemFact)
-	if IsDeletionInProgress(err) {
-		// Did not ensure log. Note "did not ensure" here. "deletion of"
-		// should be present in case of delete event.
-		r.logger.LogCtx(ctx, "level", "debug", "message", "did not ensure [deletion of] managed resource")
-		// Reason log should be separate free form log explaining why
-                // the managed resource can't be ensured.
-		r.logger.LogCtx(ctx, "level", "debug", "message", "waiting for the API call to finish")
-		// Canceling resource log should be separate.
-		r.logger.LogCtx(ctx, "level", "debug", "message", "canceling resource")
-		return nil
-	} else if err != nil {
-		return microerror.Mask(err)
-	}
-
-	err = pkg.OtherAPICall(ctx, systemFact)
-	if IsDeletionInProgress(err) {
+	elbs, err = aws.ListELBs(ctx)
+	if aws.IsNotFound(err) {
 		// Fall trough.
 	} else if err != nil {
 		return microerror.Mask(err)
 	}
 
-	// End message. Note "ensured" here. "deletion of" should be present in
-	// case of delete event.
-	r.logger.LogCtx(ctx, "level", "debug", "message", "ensured [deletion of] managed resource is created")
+	r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("finding ELBs with name prefix %#q", prefix), "message": fmt.Sprintf("filtering prefixed ELBs from total %d", len(elbs)))
+
+        elbs, err = filterELBs(elbs, prefix)
+	if err != nil {
+		return microerror.Mask(err)
+	}
+
+	r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("finding ELBs with name prefix %#q", prefix), "message", fmt.Sprintf("found %d ELBs", len(elbs)))
+
+	r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("finding ELBs with name prefix %#q", prefix), "message": "end")
+}
+```
+
+
+
+### Reconciling State
+
+After all the facts are gathered there is usually a reconciliation action which
+is ensuring the resource is created and up to date or deleted depending on the
+observed object event type. This block should look like this whenever possible.
+
+```go
+var err error
+
+{
+	r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("deleting ELBs with name prefix", prefix), "message": "start")
+
+	for _, elb := range elbs {
+		r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("deleting ELBs with name prefix", prefix), "message": fmt.Sprintf("deleting ELB %#q", elb.Name))
+
+		err = aws.DeleteELB(ctx, elb)
+		if pkg.IsOperationInProgress(err) {
+			r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("deleting ELBs with name prefix", prefix), "message": fmt.Sprintf("ELB %#q deletion is in progress", elb.Name))
+			r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("deleting ELBs with name prefix", prefix), "message": "keeping finalizers")
+			finalizerskeptcontext.SetKept(ctx)
+		} else if err != nil {
+			return microerror.Mask(err)
+		}
+	}
+
+	r.logger.LogCtx(ctx, "level", "debug", "action", fmt.Sprintf("deleting ELBs with name prefix", prefix), "message": "end")
 }
 ```

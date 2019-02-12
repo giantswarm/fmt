@@ -2,9 +2,19 @@
 
 (Not only) coding guidelines and best practices hub.
 
+
+
 ## Azure
 
 - [Naming Resources](azure/naming_resources.md)
+
+
+
+## Glossary
+
+- [Control Plane](glossary/control_plane.md)
+- [Installation](glossary/installation.md)
+- [Tenant Cluster](glossary/tenant_cluster.md)
 
 
 
@@ -28,10 +38,13 @@
 - [Formatting Guidelines](helm/formatting_guidelines.md)
 
 
+
 ## Javascript
 
 - [General Style Guide](javascript/general_style_guide.md)
 - [Imports](javascript/imports.md)
+
+
 
 ## Kubernetes
 

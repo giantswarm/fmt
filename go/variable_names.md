@@ -9,10 +9,10 @@ no-brainer how to call things, so we can concentrate on what actually matters.
 
 In `operatorkit` resource implementations, we sometimes work with
 `controllercontext` package. We store data extracted from this context in
-variable named `cctx`.
+variable named `cc`.
 
 ```go
-cctx, err := controllercontext.FromContext(ctx)
+cc, err := controllercontext.FromContext(ctx)
 if err != nil {
 	creturn nil, microerror.Mask(err)
 }

@@ -122,7 +122,7 @@ func Test_ClusterID(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
+		t.Run(strconv.Itoa(i), func(t *testing.T) {
 			clusterID, err := ClusterID(tc.inputObj)
 
 			switch {
@@ -150,6 +150,7 @@ func Test_ClusterID(t *testing.T) {
 - one can run single test cases in table-driven tests
 - single test cases identifiers in test run are always in sync
 - useful diff comparison
+- run `go test ./... -run Test_Foo/5` to only execute a single test
 
 **Cons:**
 

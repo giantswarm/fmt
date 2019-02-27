@@ -18,7 +18,7 @@ App CR client.
 r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("creating App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
 
 err := r.g8sClient.ApplicationV1alpha1().Apps(appCR.Namespace).Create(appCR.Name)
-if apierrors.IsNotFound(err) {
+if apierrors.IsAlreadyExists(err) {
 	r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("already created App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
 } else if err != nil {
 	return microerror.Mask(err)

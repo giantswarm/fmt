@@ -9,6 +9,50 @@
 
 
 
+## Generated Kubernetes Clients CRUD Calls
+
+Below are examples of logs around calling basic CRUD operations on generated
+App CR client.
+
+```go
+r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("creating App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
+
+err := r.g8sClient.ApplicationV1alpha1().Apps(appCR.Namespace).Create(appCR.Name)
+if apierrors.IsAlreadyExists(err) {
+	r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("already created App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
+} else if err != nil {
+	return microerror.Mask(err)
+} else {
+	r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("created App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
+}
+```
+
+```go
+r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("deleting App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
+
+err := r.g8sClient.ApplicationV1alpha1().Apps(appCR.Namespace).Delete(appCR.Name, &metav1.DeleteOptions{})
+if apierrors.IsNotFound(err) {
+	r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("already deleted App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
+} else if err != nil {
+	return microerror.Mask(err)
+} else {
+	r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("deleted App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
+}
+```
+
+```go
+r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("updating App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
+
+_, err = r.g8sClient.ApplicationV1alpha1().Apps(appCR.Namespace).Update(appCR)
+if err != nil {
+	return microerror.Mask(err)
+}
+
+r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("updated App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
+```
+
+
+
 ## Resource Reconciliation
 
 When doing resource reconciliation action we often have to find out the current

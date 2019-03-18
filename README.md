@@ -12,8 +12,12 @@
 
 ## Glossary
 
+- [Control Plane Finalizer](glossary/control_plane_finalizer.md)
+- [Control Plane Initializer](glossary/control_plane_initializer.md)
 - [Control Plane](glossary/control_plane.md)
 - [Installation](glossary/installation.md)
+- [Tenant Cluster Control Plane](glossary/tenant_cluster_control_plane.md)
+- [Tenant Cluster Data Plane](glossary/tenant_cluster_data_plane.md)
 - [Tenant Cluster](glossary/tenant_cluster.md)
 
 

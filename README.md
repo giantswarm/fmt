@@ -56,6 +56,12 @@
 
 
 
+## Prometheus
+
+- [Time Based Rules](prometheus/time_based_rules.md)
+
+
+
 ## Releases
 
 - [How to write a changelog](releases/how_write_changelog_message.md)

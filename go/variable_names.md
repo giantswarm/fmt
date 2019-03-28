@@ -14,7 +14,7 @@ variable named `cc`.
 ```go
 cc, err := controllercontext.FromContext(ctx)
 if err != nil {
-	creturn nil, microerror.Mask(err)
+	return nil, microerror.Mask(err)
 }
 ```
 

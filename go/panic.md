@@ -41,7 +41,8 @@ The handling should look like this:
 func main() {
 	err := mainE()
 	if err != nil {
-		panic(fmt.Sprintf("%#v", err))
+		fmt.Fprintf(os.Stderr, "%#v", err)
+                os.Exit(1)
 	}
 }
 

@@ -30,6 +30,7 @@
 - [Idempotency Conventions](go/idempotency_conventions.md)
 - [Imports](go/imports.md)
 - [Log Messages](go/log_messages.md)
+- [Panic](go/panic.md)
 - [Struct Initialization](go/struct_initialization.md)
 - [TODO Comments](go/todo_comments.md)
 - [Unit Tests](go/unit_tests.md)

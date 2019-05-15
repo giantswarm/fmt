@@ -9,6 +9,7 @@ This page provides a guidelines on how to craft pull requests. The goal is to ha
 - Try to change things in as few packages as possible. If changes are needed in too many packages at once it's an indication that the PR scope is too broad or package design is wrong.
 - Vendoring should go into a separate PR unless impossible (that shouldn't be an issue with go modules).
 - Renaming/moving/general refactoring should go into a separate PR.
+- Review your own PR once it got crafted. You yourself get the chance to spot issues you can address immediately, which also makes the life of your colleagues easier.
 - Always squash and merge.
 
 ## Structure

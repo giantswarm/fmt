@@ -37,6 +37,11 @@
 
 
 
+## Github
+
+- [Pull Requests](github/pull_requests.md)
+
+
 ## Helm Charts
 
 - [Formatting Guidelines](helm/formatting_guidelines.md)

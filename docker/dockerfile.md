@@ -15,7 +15,7 @@ practice.
 - We just add the binary and set the [entrypoint] to the Go binary.
 - Here is an example Dockerfile for [app-operator] in this case. 
 
-```
+```Dockerfile
 FROM alpine:3.9
 
 RUN apk add --no-cache ca-certificates

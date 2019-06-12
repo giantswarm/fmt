@@ -10,6 +10,18 @@
 
 
 
+## Docker
+
+- [Dockerfile](docker/dockerfile.md)
+
+
+
+## Github
+
+- [Pull Requests](github/pull_requests.md)
+
+
+
 ## Glossary
 
 - [Control Plane Finalizer](glossary/control_plane_finalizer.md)
@@ -37,10 +49,6 @@
 - [Variable Names](go/variable_names.md)
 
 
-
-## Github
-
-- [Pull Requests](github/pull_requests.md)
 
 
 ## Helm Charts

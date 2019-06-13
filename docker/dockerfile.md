@@ -12,7 +12,7 @@ practice.
 - Most of our Docker images package Go binaries.
 - We try to install the minimum number of packages. Usually only
 `ca-certificates` is necessary.
-- We just add the binary and set the [entrypoint] to the Go binary.
+- We just add the binary and set the [entrypoint] to the binary.
 - Here is an example Dockerfile for [app-operator] in this case. 
 
 ```Dockerfile

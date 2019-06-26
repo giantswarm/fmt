@@ -9,19 +9,19 @@ highlight the gist of the change at customer level.
 ## Scope
 
 Changelogs live inside the code repositories of our components. They have a common structure defined in [versionbundle](https://godoc.org/github.com/giantswarm/versionbundle#Bundle). There are a component name, a description and a kind 
-property for every changelog. As example, they look:
+property for every changelog. As an example, they look like this:
 
 ```golang
 Changelogs: []versionbundle.Changelog{
 			{
 				Component:   "cloudconfig",
-				Description: "Removed set-ownership-etcd-data-dir.service.",
+				Description: "Remove set-ownership-etcd-data-dir.service.",
 				Kind:        versionbundle.KindChanged,
 			},
             ...
 			{
 				Component:   "containerlinux",
-				Description: "Updated to version 1632.3.0.",
+				Description: "Update to version 1632.3.0.",
 				Kind:        versionbundle.KindFixed,
 			},
 		},
@@ -34,7 +34,7 @@ Changelogs: []versionbundle.Changelog{
 As a result of building features and fixing bugs we change our components. Here there are some patterns about how to describe the changes:
 
 - A changelog message describes a single change (bug fix or feature). Don't try to define more than one fix or feature per changelog message.    
-- Don't use the component name as the phrase subject. It is unnecessary, it heads the line already automatically. It does not add value: `aws-operator: Fixed AWS operator for ELB creation`.
+- Don't use the component name as the phrase subject. It is unnecessary, it heads the line already automatically. It does not add value: `aws-operator: Fix AWS operator for ELB creation`.
 - Avoid writing dates or times in the message. It is already part of the release.
 - For readability, group messages of one component together.
 - Avoid redundant or unenriching details.
@@ -51,7 +51,7 @@ would be great to add the link to upstream changelogs or release page.
 
 Follow this common structure to make the messages and the entire release have a consistent style
 
-`Past tense + subject + reason`
+`Imperative form + subject + reason`
 
 Action list inspired by [keepachangelog.com](http://keepachangelog.com/en/1.0.0/)
 `Added` `Changed` `Removed` `Fixed` 
@@ -88,7 +88,7 @@ aws-operator: Fix aws operator ELB tags
 ```golang
 {
     Component:   "aws-operator",
-    Description: "Fixed limitation getting ELB tags that affected cluster creation.",
+    Description: "Fix limitation getting ELB tags that affected cluster creation.",
     Kind:        versionbundle.KindFixed,
 }
 ```
@@ -124,7 +124,7 @@ docker: Bump version to 1.12
 ```golang
 {
     Component:   "docker",
-    Description: "Updated to 1.12. https://docs.docker.com/enterprise/17.03/release-notes/",
+    Description: "Update to 1.12. https://docs.docker.com/enterprise/17.03/release-notes/",
     Kind:        versionbundle.KindChanged,
 }
 ```
@@ -132,6 +132,6 @@ docker: Bump version to 1.12
 Output in our user interfaces:
 
 ```
-docker: Updated to 1.12. https://docs.docker.com/enterprise/17.03/release-notes/
+docker: Update to 1.12. https://docs.docker.com/enterprise/17.03/release-notes/
 ```
 

@@ -9,7 +9,7 @@ highlight the gist of the change at customer level.
 ## Scope
 
 Changelogs live inside the code repositories of our components. They have a common structure defined in [versionbundle](https://godoc.org/github.com/giantswarm/versionbundle#Bundle). There are a component name, a description and a kind 
-property for every changelog. As example, they look:
+property for every changelog. As an example, they look like this:
 
 ```golang
 Changelogs: []versionbundle.Changelog{

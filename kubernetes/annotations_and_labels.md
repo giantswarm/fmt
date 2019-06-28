@@ -8,9 +8,9 @@ This page defines common annotations and labels we set in Kubernetes objects.
   location. For now this should be in our `giantswarm/giantswarm` repository in
   which we crosslink all pages to create a reasonable documentation of all kinds
   of Kubernetes resources, their functionality and relationships.
-- `machine-deployment.giantswarm.io/subnet` - value should contain a subnet
-  CIDR that has been allocated for the given node pool / MachineDeployment
-  object that has this annotation.
+- `machine-deployment.giantswarm.io/subnet` - value contains a subnet CIDR that
+  has been allocated for the given node pool / MachineDeployment object that
+  has this annotation.
 
 ## Common Labels
 

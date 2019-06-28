@@ -169,6 +169,20 @@ B's error. A should never match against an error of C. As soon as A imports C
 for error handling this code smells and we should think about what we are doing
 and why.
 
+There are some rules for defining errors we match against:
+
+- `executionFailedError` should never be matched against. I.e.
+  `IsExecutionFailed` matcher should never be used. You can think of it as
+  a softer version of `panic`.
+- All other errors must be matched in at least one place. Be it in the same
+  codebase or another (in a library case).
+
+Those rules are established to reduce risk of returning an error which is
+handled in an unexpected way. When an error should not be handled or the way of
+handling it is yet unclear `executionFailedError` should be returned. This
+allows developer to not check whether and how its handled and makes the whole
+system simpler overall.
+
 Example:
 
 ```go

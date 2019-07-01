@@ -26,6 +26,8 @@ We use the following config params:
 - `--trailing-comma es5`
 
 
+## React Style Guide
+
 ## Props and State & ES6 Destructuring
 
 Always destructure props and state to local variables if they are used more than
@@ -41,8 +43,6 @@ const AppDetailsBody = props => {
   );
 };
 ```
-
-## React Style Guide
 
 ### Functional (or stateless) Components vs Class Components
 

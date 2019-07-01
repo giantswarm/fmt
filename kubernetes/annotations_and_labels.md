@@ -10,7 +10,8 @@ This page defines common annotations and labels we set in Kubernetes objects.
   of Kubernetes resources, their functionality and relationships.
 - `machine-deployment.giantswarm.io/subnet` - value contains a subnet CIDR that
   has been allocated for the given node pool / MachineDeployment object that
-  has this annotation.
+  has this annotation. E.g.
+  `machine-deployment.giantswarm.io/subnet=10.102.31.0/24`.
 
 ## Common Labels
 
@@ -61,6 +62,25 @@ This page defines common annotations and labels we set in Kubernetes objects.
 - `giantswarm.io/managed-by`
 - `OPERATOR.giantswarm.io/version`
 - `release.giantswarm.io/version`
+
+
+### Annotations and Labels Set In Cluster API Custom Resource Objects
+
+#### Cluster
+
+##### Annotations
+
+##### Labels
+
+#### MachineDeployment
+
+##### Annotations
+
+- `machine-deployment.giantswarm.io/subnet`
+
+##### Labels
+
+- `giantswarm.io/machine-deployment`
 
 ### Labels Set In Nodes
 

@@ -83,7 +83,7 @@ with its pros and cons. More info in the [React Docs](https://reactjs.org/docs/h
 
 - State
 - Built-in methods
-- Custom
+- Custom methods
 - Render method
 - Proptypes
 
@@ -123,5 +123,5 @@ _Pending_
 We are going to use:
 
 - [Jest](https://jestjs.io/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) for unit and integration tests
-- [Cypress](https://www.cypress.io/) for E2E(End To End / functional) tests
+- [Cypress](https://www.cypress.io/) for E2E (End To End / functional) tests
 - We may use [Browserstack](https://www.browserstack.com/) for crossbrowser testing

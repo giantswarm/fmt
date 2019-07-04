@@ -30,7 +30,7 @@
 - [Control Plane](glossary/control_plane.md)
 - [Installation](glossary/installation.md)
 - [Tenant Cluster Control Plane](glossary/tenant_cluster_control_plane.md)
-- [Tenant Cluster Data Plane](glossary/tenant_cluster_data_plane.md)
+- [Tenant Cluster Node Pool](glossary/tenant_cluster_node_pool.md)
 - [Tenant Cluster](glossary/tenant_cluster.md)
 
 

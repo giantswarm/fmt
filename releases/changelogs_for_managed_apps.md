@@ -26,7 +26,6 @@ when a new release is added.**
 [0.2.0]: https://github.com/giantswarm/kubernetes-node-exporter/releases/tag/v0.2.0
 ```
 
-
 To tag a commit and push it:
 
 ```bash

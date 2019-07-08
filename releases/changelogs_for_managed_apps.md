@@ -29,7 +29,7 @@ when a new release is added.**
 To tag a commit and push it:
 
 ```bash
-git v1.2.3 GIT_SHA
+git tag v1.2.3 GIT_SHA
 
 git push --tags origin
 ```

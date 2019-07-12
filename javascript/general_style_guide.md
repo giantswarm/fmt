@@ -136,7 +136,7 @@ import { logo } from '../images/;
 
 ## CSS
 
-Currently we are in the process ofmoving all the styles in sass files (.scss / .sass) to React
+Currently we are in the process of moving all the styles in sass files (.scss / .sass) to React
 components with Emotion](https://emotion.sh). We have decided to use the css syntax instead of
 the JavaScript object syntax.
 

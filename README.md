@@ -43,7 +43,7 @@
 - [General Style Guide](go/general_style_guide.md)
 - [Idempotency Conventions](go/idempotency_conventions.md)
 - [Imports](go/imports.md)
-- [Interfaces](go/interface_spec.md)
+- [Interface Spec](go/interface_spec.md)
 - [Log Messages](go/log_messages.md)
 - [Panic](go/panic.md)
 - [Struct Initialization](go/struct_initialization.md)

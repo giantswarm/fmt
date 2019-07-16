@@ -1,4 +1,4 @@
-# Interfaces
+# Interface Spec
 
 When providing an interface for a package, it is convention to do this in a `spec.go` file. 
 

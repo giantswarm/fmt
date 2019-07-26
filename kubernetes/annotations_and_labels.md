@@ -66,6 +66,19 @@ This page defines common annotations and labels we set in Kubernetes objects.
 
 ### Annotations and Labels Set In Cluster API Custom Resource Objects
 
+#### App Catalog
+
+##### Labels
+
+- `application.giantswarm.io/catalog-type`
+  Describes the type of catalog that this AppCatalog CR represents.
+  This label helps our UI determine how to show this app catalog.
+
+  - `internal` - Will not show up in our UIs at all.
+  - `managed` - Will gain a 'managed' banner, helping it stand out from other catalogs.
+  - `incubator` - Will show some expectation management message before installing an app from this catalog, that it is still a work in progress, but expected to at least install and somewhat work.
+  - `community` - Will show a more strongly worded expectation management message, indicating that  apps from this catalog will most likely not work without some adjustments.
+
 #### Cluster
 
 ##### Annotations
@@ -100,7 +113,7 @@ This page defines common annotations and labels we set in Kubernetes objects.
 
 #### Control Plane
 
-#### Tenant Cluster 
+#### Tenant Cluster
 
 - `app`
 - `giantswarm.io/service-type`

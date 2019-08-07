@@ -10,6 +10,6 @@ SIGs.
 ```
 // TODO: Remove the foobar once the jank is lollobazzed.
 //
-//	See https://github.com/giantswarm/giantswarm/issues/9001
+//	https://github.com/giantswarm/giantswarm/issues/9001
 //
 ```

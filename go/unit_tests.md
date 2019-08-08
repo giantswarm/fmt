@@ -136,7 +136,7 @@ func Test_ClusterID(t *testing.T) {
 				t.Fatalf("error == %#v, want matching", err)
 			}
 
-			if clusterID != tc.expectedClusterID {
+			if !cmp.Equal(clusterID, tc.expectedClusterID) {
 				t.Fatalf("\n\n%s\n", cmp.Diff(tc.expectedClusterID, clusterID))
 			}
 		})

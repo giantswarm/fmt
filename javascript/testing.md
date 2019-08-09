@@ -10,18 +10,18 @@ Tools we are using:
 
 ```javascript
 test('renders without crashing', () => {
-  const {container} = render(<ClusterApps value="0" />)
-  expect(container.firstChild).toMatchSnapshot()
+  const {container} = render(<ClusterApps someProp="some value" />)
 })
 ```
 
 ### Snapshots
 
-Snapshots are a great way to test components that you __don't want to change__.
+[Snapshots](https://jestjs.io/docs/en/snapshot-testing#snapshot-testing-with-jest) are 
+a great way to test components that you __don't want to be changed__.
 
 ```javascript
 test('matches snapshot', () => {
-  const {container} = render(<ClusterApps value="0" />)
+  const {container} = render(<ClusterApps someProp="some value" />)
   expect(container.firstChild).toMatchSnapshot()
 })
 ```

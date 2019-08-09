@@ -19,7 +19,7 @@ test('matches snapshot', () => {
 })
 ```
 
-### Assert rendered element (an error here) is triggered with an interaction
+### Assert an element (an error here) is triggered with an interaction
 
 ```javascript
 test('entering an invalid value shows an error message', () => {

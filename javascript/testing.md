@@ -6,13 +6,6 @@ Tools we are using:
 - [`jest-dom`](https://github.com/testing-library/jest-dom#table-of-contents): custom matchers that extend Jest,
 - [DOM Testing Library](https://testing-library.com/docs/dom-testing-library/cheatsheet) and [React Testing Library](https://testing-library.com/docs/react-testing-library/cheatsheet): basically querying. Built on top of DOM Testing Library
 
-### Test _it renders without crashing_
-
-```javascript
-test('renders without crashing', () => {
-  const {container} = render(<ClusterApps someProp="some value" />)
-})
-```
 
 ### Snapshots
 

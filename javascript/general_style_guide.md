@@ -44,7 +44,7 @@ We use the following config params:
 
 ## React Style Guide
 
-## Props and State & ES6 Destructuring
+### Props and State & ES6 Destructuring
 
 Always destructure props and state to local variables if they are used more than
 once inside the render method:

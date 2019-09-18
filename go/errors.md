@@ -92,58 +92,6 @@ Then in code returning error:
 return microerror.Maskf(invalidConfigError, "name must not be empty")
 ```
 
-Dealing with errors from outside packages
-
-We usually want to align with our error handling conventions, so we might encounter errors like this one in Prometheus:
-
-```go
-type AlreadyRegisteredError struct {
-	ExistingCollector, NewCollector Collector
-}
-
-func (err AlreadyRegisteredError) Error() string {
-	return "duplicate metrics collector registration attempted"
-}
-```
-
-Which we can align with our pattern easily like this:
-
-```go
-var alreadyRegisteredError = &microerror.Error{
-	Kind: "alreadyRegisteredError",
-}
-
-// IsAlreadyRegisteredError asserts alreadyRegisteredError.
-func IsAlreadyRegisteredError(err error) bool {
-	c := microerror.Cause(err)
-	_, ok := c.(prometheus.AlreadyRegisteredError)
-	if ok {
-		return true
-	}
-	if c == alreadyRegisteredError {
-		return true
-	}
-
-	return false
-}
-```
-
-Some anti-patterns:
-
-```go
-// This is wrong.
-// Error message doesn't match error variable name.
-var invalidConfigError = microerror.New("invalid config file")
-
-// This is wrong.
-// Error message ends with *error*
-var invalidConfigError = microerror.New("invalid config error")
-
-// This is wrong.
-// Error message is capitalized.
-var invalidConfigError = microerror.New("Invalid config")
-```
-
 **Pros:**
 
 - we can test functions returning

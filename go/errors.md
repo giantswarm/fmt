@@ -1,5 +1,9 @@
 # Errors
 
+- [Wrapped Errors](#wrapped-errors)
+- [Custom Errors](#custom-errors)
+- [Matching Errors](#matching-errors)
+- [Handling Third Party Library Errors](#handling-third-party-library-errors)
 
 ## Wrapped Errors
 
@@ -37,7 +41,7 @@ return microerror.Maskf(err, "Additional information")
 **Cons:**
 
 - We have to be very consistent with this. The human effort we have to put into
-  it is notable but neglectible once familar with the concept.
+  it is notable but neglectible once familiar with the concept.
 
 
 ## Custom Errors
@@ -207,3 +211,74 @@ if pkg.IsTimeout(err) {
 **Cons:**
 
 - There is a notable overhead of repeated errors to keep the contract up.
+
+## Handling Third Party Library Errors
+
+When creating libraries using third party libraries under the hood errors
+returned by them must be handled as well. Often times those third party
+libraries do not support any error handling or the provided error handling is
+not sufficient. Our way of dealing with that problem is creating internal error
+matchers which are not exposed to the library users and then using them
+transform third party errors into [custom errors](#custom-errors) which [can be
+matched](#matching-errors). Custom matchers are written in the
+`error_internal.go` file. The rest stays as usual.
+
+Example of real world `error_internal.go` file in `githubclient` package:
+
+```go
+package githubclient
+
+import "github.com/google/go-github/github"
+
+func isGitHub404(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	errResponse, ok := err.(*github.ErrorResponse)
+	if !ok {
+		return false
+	}
+
+	if errResponse.Response == nil {
+		return false
+	}
+
+	return errResponse.Response.StatusCode == 404
+}
+```
+
+Example usage of `isGitHub404` internal error matcher:
+
+```go
+fileContent, directoryContent, _, err := underlyingClient.Repositories.GetContents(ctx, owner, repo, path, opt)
+if isGitHub404(err) {
+	return RepositoryFile{}, microerror.Maskf(notFoundError, "repository file %#q for owner %#q in repository %#q", path, owner, repo)
+} else if err != nil {
+	return RepositoryFile{}, microerror.Mask(err)
+}
+```
+
+In the example above GitHub 404 response error is converted to `notFoundError`
+matched by `IsNotFound`. Note that this way we are able to include some
+operation specific information in the error annotation instead of having what
+is provided by the third party library implementor. This makes the debug
+process easier in case of error occurrence.
+
+This is also possible that third party error is handled without returning an
+error. In this case the error matcher is not exposed and `error.go` file stays
+clean. E.g.:
+
+```go
+err := thirdParty.Create(obj)
+if isAlreadyExists(err) {
+	// The thing is already created.
+} else if err != nil {
+	return microerror.Mask(err)
+}
+```
+
+In the example above `obj` is created with third party library. When the object
+already exists no error is returned even though the third party library returns
+one handled with `isAlreadyExists` internal matcher. The benefit here is that
+there is no `IsAlreadyExists` matcher exposed to the wrapping library user.

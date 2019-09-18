@@ -14,7 +14,7 @@ From https://godoc.org/github.com/ghodss/yaml:
 > JSON methods MarshalJSON and UnmarshalJSON unlike go-yaml.
 
 There is a good explanation for doing so written down here:
-http://ghodss.com/2014/the-right-way-to-handle-yaml-in-golang.
+http://web.archive.org/web/20190603050330/http://ghodss.com/2014/the-right-way-to-handle-yaml-in-golang/.
 
 This implies that we do not tag Go structs with `yaml` tags. Only `json` tags
 are used by the library.

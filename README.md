@@ -57,6 +57,7 @@
 ## Helm Charts
 
 - [Formatting Guidelines](helm/formatting_guidelines.md)
+- [Image Templating](helm/image_templating.md)
 
 
 

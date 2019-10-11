@@ -172,8 +172,8 @@ matched](#matching-errors). Custom matchers are written in the
 `error_internal.go` file and **they are private**. The rest stays as usual.
 
 **NOTE:** When it is necessary to handle internally matched error it can be
-converted into one of package errors in `error.go` file. Example below shows
-how it is done.
+converted into one of package errors in `error.go` file. The example below
+shows how it can be done.
 
 Example of real world `error_internal.go` file in `githubclient` package:
 

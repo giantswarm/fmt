@@ -4,6 +4,7 @@
 - [Custom Errors](#custom-errors)
 - [Matching Errors](#matching-errors)
 - [Handling Third Party Library Errors](#handling-third-party-library-errors)
+- [Zero Values when returning Errors](#zero-values-when-returning-errors)
 
 ## Wrapped Errors
 
@@ -230,3 +231,39 @@ In the example above `obj` is created with third party library. When the object
 already exists no error is returned even though the third party library returns
 one handled with `isAlreadyExists` internal matcher. The benefit here is that
 there is no `IsAlreadyExists` matcher exposed to the wrapping library user.
+
+
+
+# Zero Values when returning Errors
+
+A general best practise is to return the zero value of any return value in case
+a non nil error is returned. APIs should follow this always and no code should
+ever expect any other value in case an error is returned. Not complying with
+this makes code potentially more fragile, confusing and dangerous.
+
+```go
+func Foo() ([]string, error) {
+  err := thirdParty.Create(obj)
+  if err != nil {
+    return nil, microerror.Mask(err)
+  }
+}
+```
+
+```go
+func Foo() (string, error) {
+  err := thirdParty.Create(obj)
+  if err != nil {
+    return "", microerror.Mask(err)
+  }
+}
+```
+
+```go
+func Foo() (RepositoryFile, error) {
+  err := thirdParty.Create(obj)
+  if err != nil {
+    return RepositoryFile{}, microerror.Mask(err)
+  }
+}
+```

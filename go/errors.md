@@ -170,7 +170,11 @@ not sufficient. Our way of dealing with that problem is creating internal error
 matchers which are not exposed to the library users and then using them
 transform third party errors into [custom errors](#custom-errors) which [can be
 matched](#matching-errors). Custom matchers are written in the
-`error_internal.go` file. The rest stays as usual.
+`error_internal.go` file and **they are private**. The rest stays as usual.
+
+**NOTE:** When it is necessary to handle internally matched error it can be
+converted into one of package errors in `error.go` file. The example below
+shows how it can be done.
 
 Example of real world `error_internal.go` file in `githubclient` package:
 

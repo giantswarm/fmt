@@ -46,6 +46,7 @@
 - [Interface Spec](go/interface_spec.md)
 - [Log Messages](go/log_messages.md)
 - [Panic](go/panic.md)
+- [Project Structure](go/project_structure.md)
 - [Struct Initialization](go/struct_initialization.md)
 - [TODO Comments](go/todo_comments.md)
 - [Unit Tests](go/unit_tests.md)

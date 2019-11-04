@@ -24,3 +24,6 @@ import (
 - imports are easier to read
 
 **Cons:**
+
+## Configuring IntelliJ Idea
+![](images/imports.png)

@@ -123,6 +123,8 @@ func Test_ClusterID(t *testing.T) {
 
 	for i, tc := range testCases {
 		t.Run(strconv.Itoa(i), func(t *testing.T) {
+			t.Log(tc.name)
+
 			clusterID, err := ClusterID(tc.inputObj)
 
 			switch {

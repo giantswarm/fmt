@@ -66,62 +66,57 @@ This page defines common annotations and labels we set in Kubernetes objects.
 
 ### Annotations and Labels Set In Cluster API Custom Resource Objects
 
-#### App/AppCatalog
+#### App Catalog
 
-- Annotation
-    - `giantswarm.io/monitoring` - `true|false', indicating monitoring feature on/off on the service
-    - `giantswarm.io/monitoring-path` - value should indicate monitoring path
-    - `giantswarm.io/monitoring-port` - value should indicate monitoring port on the specific path
+##### Labels
 
-- Labels
+- `application.giantswarm.io/catalog-type`
+  Describes the type of catalog that this AppCatalog CR represents.
+  This label helps our UI determine how to show this app catalog.
 
-    - `application.giantswarm.io/catalog-type`
-      Describes the type of catalog that this AppCatalog CR represents.
-      This label helps our UI determine how to show this app catalog.
-
-      - `internal` - Will not show up in our UIs at all.
-      - `managed` - Will gain a 'managed' banner, helping it stand out from other catalogs.
-      - `incubator` - Will show some expectation management message before installing an app from this catalog, that it is still a work in progress, but expected to at least install and somewhat work.
-      - `community` - Will show a more strongly worded expectation management message, indicating that  apps from this catalog will most likely not work without some adjustments.
+  - `internal` - Will not show up in our UIs at all.
+  - `managed` - Will gain a 'managed' banner, helping it stand out from other catalogs.
+  - `incubator` - Will show some expectation management message before installing an app from this catalog, that it is still a work in progress, but expected to at least install and somewhat work.
+  - `community` - Will show a more strongly worded expectation management message, indicating that  apps from this catalog will most likely not work without some adjustments.
 
 #### Cluster
 
-- Annotations
+##### Annotations
 
-- Labels
+##### Labels
 
 #### MachineDeployment
 
-- Annotations
+##### Annotations
 
-    - `machine-deployment.giantswarm.io/subnet`
+- `machine-deployment.giantswarm.io/subnet`
 
-- Labels
+##### Labels
 
-    - `giantswarm.io/machine-deployment`
+- `giantswarm.io/machine-deployment`
 
 ### Labels Set In Nodes
 
-- Control Plane
+#### Control Plane
 
-- Tenant Cluster
+#### Tenant Cluster
 
-    - `release.giantswarm.io/version` - Should be applied to all Kubernetes nodes,
-      regardless of their role.
-    - `OPERATOR.giantswarm.io/version` - Should be applied to all Kubernetes nodes,
-      regardless of their role. This should be set by the operator itself and never
-      change during the node lifetime.
-    - `giantswarm.io/provider` - Should be applied to all Kubernetes nodes,
-      regardless of their role.
+- `release.giantswarm.io/version` - Should be applied to all Kubernetes nodes,
+  regardless of their role.
+- `OPERATOR.giantswarm.io/version` - Should be applied to all Kubernetes nodes,
+  regardless of their role. This should be set by the operator itself and never
+  change during the node lifetime.
+- `giantswarm.io/provider` - Should be applied to all Kubernetes nodes,
+  regardless of their role.
 
 ### Labels Set In Objects Created With Managed Services
 
-- Control Plane
+#### Control Plane
 
-- Tenant Cluster
+#### Tenant Cluster
 
-    - `app`
-    - `giantswarm.io/service-type`
+- `app`
+- `giantswarm.io/service-type`
 
 ### Labels Set In Objects Created With Operators
 

@@ -49,7 +49,10 @@ This page defines common annotations and labels we set in Kubernetes objects.
   statusresource.
 - `giantswarm.io/provider` - value should be the installation's provider, e.g.
   `kvm`, `aws`, or `azure`.
-- `version` - value should contain the version of the application.
+- `version` - value should contain the version of the application.  Should be applied
+  to every Kubernetes resource associated with an application. This together with `app`
+  label should also be used as replicas selector. E.g. `app=kvm-operator,version=1.0.0`. Exceptions can
+  be made to accomodate for adherence to existing selectors upstream.
 
 ### Labels Set In Custom Resources
 

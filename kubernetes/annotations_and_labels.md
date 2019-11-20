@@ -34,6 +34,7 @@ This page defines common annotations and labels we set in Kubernetes objects.
   `giantswarm.io/organization=dev`.
 - `giantswarm.io/randomkey` - value should contain randomkey name as defined in
   github.com/giantswarm/randomkeys repo. This is used in encryption Secrets.
+- `giantswarm.io/reconciled-version` - value should contain version reconciled by the operator (formerly known as versionbundle version).
 - `giantswarm.io/service-type` - value should be either `system` for core system
   services (i.e. K8s components) or `managed` for Giant Swarm managed services
   (i.e. networking, DNS, monitoring, ingress controller, etc.). Latter would be
@@ -48,6 +49,7 @@ This page defines common annotations and labels we set in Kubernetes objects.
   statusresource.
 - `giantswarm.io/provider` - value should be the installation's provider, e.g.
   `kvm`, `aws`, or `azure`.
+- `version` - value should contain the version of the application.
 
 ### Labels Set In Custom Resources
 

@@ -68,6 +68,12 @@ This page defines common annotations and labels we set in Kubernetes objects.
 
 #### App Catalog
 
+#### Annotation
+
+- `giantswarm.io/monitoring` - `true|false', indicating monitoring feature on/off on the service
+- `giantswarm.io/monitoring-path` - value should indicate monitoring path
+- `giantswarm.io/monitoring-port` - value should indicate monitoring port on the specific path
+
 ##### Labels
 
 - `application.giantswarm.io/catalog-type`

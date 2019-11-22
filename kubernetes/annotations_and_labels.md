@@ -16,9 +16,9 @@ This page defines common annotations and labels we set in Kubernetes objects.
 ## Common Labels
 
 - `app` - value should contain the name of the application. Should be applied
-  to every Kubernetes resource associated with an application. This should also
-  be used as replicas selector. E.g. `app=kvm-operator`. Exceptions can be made
-  to accomodate for adherence to existing selectors upstream.
+  to every Kubernetes resource associated with an application. This together with `version`
+  label should also be used as replicas selector. E.g. `app=kvm-operator,version=1.0.0`. Exceptions can
+  be made to accomodate for adherence to existing selectors upstream.
 - `giantswarm.io/certificate` - value should contain certificate name as
   defined in github.com/giantswarm/certs repo. This is used in certificate
   Secrets and CertConfigs.
@@ -34,6 +34,7 @@ This page defines common annotations and labels we set in Kubernetes objects.
   `giantswarm.io/organization=dev`.
 - `giantswarm.io/randomkey` - value should contain randomkey name as defined in
   github.com/giantswarm/randomkeys repo. This is used in encryption Secrets.
+- `giantswarm.io/reconciled-version` - value should contain version reconciled by the operator (formerly known as versionbundle version).
 - `giantswarm.io/service-type` - value should be either `system` for core system
   services (i.e. K8s components) or `managed` for Giant Swarm managed services
   (i.e. networking, DNS, monitoring, ingress controller, etc.). Latter would be
@@ -48,6 +49,10 @@ This page defines common annotations and labels we set in Kubernetes objects.
   statusresource.
 - `giantswarm.io/provider` - value should be the installation's provider, e.g.
   `kvm`, `aws`, or `azure`.
+- `version` - value should contain the version of the application.  Should be applied
+  to every Kubernetes resource associated with an application. This together with `app`
+  label should also be used as replicas selector. E.g. `app=kvm-operator,version=1.0.0`. Exceptions can
+  be made to accomodate for adherence to existing selectors upstream.
 
 ### Labels Set In Custom Resources
 

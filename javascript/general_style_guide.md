@@ -15,6 +15,18 @@ Please use always triple equal comparisions and get rid of a lot of bugs related
 "0" === 0 // false
 ```
 
+### Strings
+
+Use single quotes for strings: `'This is a regular string` 
+
+Use template strings for interpolation or multiline strings:
+
+```javascript
+const name = 'John Doe';
+
+const wave = `Hi ${ name }`;
+```
+
 ## Prettier
 
 Our JavaScript Code Style is determined by `prettier`. Please make sure files have
@@ -40,7 +52,6 @@ We use the following config params:
 - `--jsx-single-quote`
 - `--single-quote`
 - `--trailing-comma es5`
-
 
 ## React Style Guide
 
@@ -106,7 +117,7 @@ with its pros and cons. More info in the [React Docs](https://reactjs.org/docs/h
 
 ### Naming
 
-- Files: snake_case
+- Files: cameCase
 - Props, state and methods: camelCase
 - Components: PascalCase
 
@@ -182,9 +193,11 @@ _Pending_
 
 ## Testing
 
-We are going to use:
+We are using:
 
-- [Jest](https://jestjs.io/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) 
-for unit and integration tests
+- [Jest](https://jestjs.io/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) for unit and integration tests
+
+We are considering using:
+
 - [Cypress](https://www.cypress.io/) for E2E (End To End / functional) tests
 - We may use [Browserstack](https://www.browserstack.com/) for crossbrowser testing

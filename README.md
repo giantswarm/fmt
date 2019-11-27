@@ -23,19 +23,6 @@
 
 
 
-## Glossary
-
-- [Control Plane Finalizer](glossary/control_plane_finalizer.md)
-- [Control Plane Initializer](glossary/control_plane_initializer.md)
-- [Control Plane](glossary/control_plane.md)
-- [Installation](glossary/installation.md)
-- [Special Working Hours](glossary/special_working_hours.md)
-- [Tenant Cluster Control Plane](glossary/tenant_cluster_control_plane.md)
-- [Tenant Cluster Node Pool](glossary/tenant_cluster_node_pool.md)
-- [Tenant Cluster](glossary/tenant_cluster.md)
-
-
-
 ## Go
 
 - [Context](go/context.md)

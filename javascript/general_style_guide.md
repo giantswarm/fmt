@@ -47,12 +47,6 @@ and want to format your files you can write this into your preferences JSON:
 A CI step will enforce that this has happened, failing the CI if it detects that
 `prettier` would make any changes.
 
-We use the following config params:
-
-- `--jsx-single-quote`
-- `--single-quote`
-- `--trailing-comma es5`
-
 ## React Style Guide
 
 ### Props and State & ES6 Destructuring
@@ -119,7 +113,8 @@ with its pros and cons. More info in the [React Docs](https://reactjs.org/docs/h
 
 - Files: cameCase
 - Props, state and methods: camelCase
-- Components: PascalCase
+- Components and components folders: PascalCase
+- Non-component folders: lower_case
 
 ### Parentheses
 
@@ -148,7 +143,7 @@ import { logo } from '../images/;
 ## CSS
 
 Currently we are in the process of moving all the styles in sass files (.scss / .sass) to React
-components with Emotion](https://emotion.sh). We have decided to use the css syntax instead of
+components with [Emotion](https://emotion.sh). We have decided to use the css syntax instead of
 the JavaScript object syntax.
 
 ### Positioning
@@ -185,7 +180,6 @@ This makes it easier to reuse element tags inside a wrapper element or component
 positioning properties. 
 
 However, we can use `margin`, `padding` or even `algin-*` to **make room between two sibling elements**.
-
 
 ## Redux
 

@@ -112,11 +112,10 @@ with its pros and cons. More info in the [React Docs](https://reactjs.org/docs/h
 
 ### Naming
 
-- Regular JS Files (not components): camelCase.js
-- Component Files: PascalCase
+- Regular JS files (not components) and non-component folders: camelCase.js
+- Component files and folders: PascalCase
 - Props, state and methods: camelCase
-- Components and components folders: PascalCase
-- Non-component folders: lower_case
+- We don't use `index.js` for component files.
 
 ### Parentheses
 

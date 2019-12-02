@@ -19,11 +19,12 @@ Please use always triple equal comparisions and get rid of a lot of bugs related
 
 Use single quotes for strings: `'This is a regular string` 
 
-Use template strings for interpolation or multiline strings:
+Use template literals (template strings) for interpolation or multiline strings:
 
 ```javascript
 const name = 'John Doe';
 
+// This is a template literal as we are using backticks here
 const wave = `Hi ${ name }`;
 ```
 
@@ -111,7 +112,8 @@ with its pros and cons. More info in the [React Docs](https://reactjs.org/docs/h
 
 ### Naming
 
-- Files: cameCase
+- Regular JS Files (not components): camelCase.js
+- Component Files: PascalCase
 - Props, state and methods: camelCase
 - Components and components folders: PascalCase
 - Non-component folders: lower_case

@@ -15,6 +15,19 @@ Please use always triple equal comparisions and get rid of a lot of bugs related
 "0" === 0 // false
 ```
 
+### Strings
+
+Use single quotes for strings: `'This is a regular string` 
+
+Use template literals (template strings) for interpolation or multiline strings:
+
+```javascript
+const name = 'John Doe';
+
+// This is a template literal as we are using backticks here
+const wave = `Hi ${ name }`;
+```
+
 ## Prettier
 
 Our JavaScript Code Style is determined by `prettier`. Please make sure files have
@@ -34,13 +47,6 @@ and want to format your files you can write this into your preferences JSON:
 
 A CI step will enforce that this has happened, failing the CI if it detects that
 `prettier` would make any changes.
-
-We use the following config params:
-
-- `--jsx-single-quote`
-- `--single-quote`
-- `--trailing-comma es5`
-
 
 ## React Style Guide
 
@@ -106,9 +112,10 @@ with its pros and cons. More info in the [React Docs](https://reactjs.org/docs/h
 
 ### Naming
 
-- Files: snake_case
+- Regular JS files (not components) and non-component folders: camelCase.js
+- Component files and folders: PascalCase
 - Props, state and methods: camelCase
-- Components: PascalCase
+- We don't use `index.js` for component files.
 
 ### Parentheses
 
@@ -137,7 +144,7 @@ import { logo } from '../images/;
 ## CSS
 
 Currently we are in the process of moving all the styles in sass files (.scss / .sass) to React
-components with Emotion](https://emotion.sh). We have decided to use the css syntax instead of
+components with [Emotion](https://emotion.sh). We have decided to use the css syntax instead of
 the JavaScript object syntax.
 
 ### Positioning
@@ -175,16 +182,17 @@ positioning properties.
 
 However, we can use `margin`, `padding` or even `algin-*` to **make room between two sibling elements**.
 
-
 ## Redux
 
 _Pending_
 
 ## Testing
 
-We are going to use:
+We are using:
 
-- [Jest](https://jestjs.io/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) 
-for unit and integration tests
+- [Jest](https://jestjs.io/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) for unit and integration tests
+
+We are considering using:
+
 - [Cypress](https://www.cypress.io/) for E2E (End To End / functional) tests
 - We may use [Browserstack](https://www.browserstack.com/) for crossbrowser testing

@@ -18,7 +18,7 @@ Tools we are using:
 
 ### Snapshots
 
-Use them just in components that we don’t want to change. Otherwise we will have to update them too frequently.
+Use them just in components that we are not changing too frequently. Otherwise we will have to update them every now and then.
 
 ### Avoid implementation details
 
@@ -31,7 +31,7 @@ We want our tests to be [as resilient as possible](https://twitter.com/dan_abram
 
 Integration tests give more test coverage with fewer tests while unit tests are a nice way of testing complex parts of our codebase.
 
-Let's [keep a balance](https://twitter.com/rauchg/status/807626710350839808?lang=en) between them.
+Let's [keep a balance](https://twitter.com/rauchg/status/807626710350839808?lang=en) between them and keep in mind that more isolation = less bugs caught.
 
 ### What we think makes a good test
 

@@ -25,7 +25,7 @@ Use them just in components that we are not changing too frequently. Otherwise w
 We want our tests to be [as resilient as possible](https://twitter.com/dan_abramov/status/1151842775417151489). Hence, don’t test if a css class is present or a piece of state holds this or that value, test what is actually rendered. For example:
 
 - Test if a button is red instead of it has an `alert` class
-- Test if an element is in present in the DOM instead of testing a state value in a component
+- Test if an element is present in the DOM instead of testing a state value in a component
 
 ### Unit tests vs Integration tests
 

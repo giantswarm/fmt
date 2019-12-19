@@ -25,5 +25,3 @@ import (
 
 **Cons:**
 
-## Configuring IntelliJ Idea
-![](images/imports.png)

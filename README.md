@@ -30,6 +30,7 @@
 - [General Style Guide](go/general_style_guide.md)
 - [Idempotency Conventions](go/idempotency_conventions.md)
 - [Imports](go/imports.md)
+- [IntelliJ/Goland configuration](go/intellij.md)
 - [Interface Spec](go/interface_spec.md)
 - [Log Messages](go/log_messages.md)
 - [Panic](go/panic.md)

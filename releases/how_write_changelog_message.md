@@ -13,22 +13,22 @@ property for every changelog. As an example, they look like this:
 
 ```golang
 Changelogs: []versionbundle.Changelog{
-			{
-				Component:   "cloudconfig",
-				Description: "Remove set-ownership-etcd-data-dir.service.",
-				Kind:        versionbundle.KindChanged,
-			},
+      {
+        Component:   "cloudconfig",
+        Description: "Remove set-ownership-etcd-data-dir.service.",
+        Kind:        versionbundle.KindChanged,
+      },
             ...
-			{
-				Component:   "containerlinux",
-				Description: "Update to version 1632.3.0.",
-				Kind:        versionbundle.KindFixed,
+      {
+        Component:   "containerlinux",
+        Description: "Update to version 1632.3.0.",
+        Kind:        versionbundle.KindFixed,
         URLs: []string{
-					"https://coreos.com/releases/#1632.3.0",
+          "https://coreos.com/releases/#1632.3.0",
           "https://github.com/giantswarm/some-operator/pull/123",
-				},
-			},
-		},
+        },
+      },
+    },
 ```
 
 ## Rules

@@ -14,24 +14,18 @@ We use [microkit] to enrich **all** errors with stack traces.
 import "github.com/giantswarm/microerror"
 ```
 
-For errors returned by function call it is fine to just wrap them and return:
+While creating new error, then error from the same package (i.e. from error.go
+file) should be wrapped with `Maskf` with additional information. The
+additional information should be lowercased:
+
+```go
+return microerror.Maskf(executionFailedError, "failed to request %#q", url)
+````
+
+Errors returned by function calls should be simply wrapped with `Mask`:
 
 ```go
 return microerror.Mask(err)
-```
-
-Or wrap with additional information and return:
-
-```go
-return microerror.Maskf(err, "additional information")
-```
-
-Additional information should be lowercased:
-
-```go
-// This is wrong.
-// Additional information should start with lower letter.
-return microerror.Maskf(err, "Additional information")
 ```
 
 **Pros:**

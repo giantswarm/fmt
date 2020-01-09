@@ -1,79 +1,44 @@
-# Frontend Testing Examples
+# Frontend Testing Manifesto
+
+### Statements
+
+- Testing UI [is hard]
+- And it's not easy to [know what to test](https://twitter.com/dan_abramov/status/1197901310982590464)
+- Mocking too much reduces test quality
+- Test from a user perspective. Think less about the code you are testing and more about the use cases that code supports
+
+### Tools
 
 Tools we are using:
 
 - [Jest](https://jestjs.io/en/): assertions, matchers and mocking
-- [`jest-dom`](https://github.com/testing-library/jest-dom#table-of-contents): custom matchers that extend Jest,
-- [DOM Testing Library](https://testing-library.com/docs/dom-testing-library/cheatsheet) and [React Testing Library](https://testing-library.com/docs/react-testing-library/cheatsheet): basically querying. Built on top of DOM Testing Library
-
+- [Jest DOM](https://github.com/testing-library/jest-dom#table-of-contents): custom matchers that extend Jest
+- [DOM Testing Library](https://testing-library.com/docs/dom-testing-library/cheatsheet): basically for querying the DOM
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/cheatsheet): for testing React components. Built on top of DOM Testing Library
 
 ### Snapshots
 
-[Snapshots](https://jestjs.io/docs/en/snapshot-testing#snapshot-testing-with-jest) are 
-a great way to test components that you __don't want to be changed__.
+Use them just in components that we are not changing too frequently. Otherwise we will have to update them every now and then.
 
-```javascript
-test('matches snapshot', () => {
-  const {container} = render(<ClusterApps someProp="some value" />)
-  expect(container.firstChild).toMatchSnapshot()
-})
-```
+### Avoid implementation details
 
-### Assert an element (an error here) is triggered with an interaction
+We want our tests to be [as resilient as possible](https://twitter.com/dan_abramov/status/1151842775417151489). Hence, don’t test if a css class is present or a piece of state holds this or that value, test what is actually rendered. For example:
 
-```javascript
-test('entering an invalid value shows an error message', () => {
-  const {getByLabelText, getByTestId} = render(<ViewAndEdit />)
-  const input = getByLabelText(/name/i)
-  fireEvent.change(input, {target: {value: 'a'}})
-  expect(getByTestId('error-message')).toHaveTextContent(
-    /please use a name with at least 3 characters/i,
-  )
-})
-```
+- Test if a button is red instead of it has an `alert` class
+- Test if an element is present in the DOM instead of testing a state value in a component
 
-### Mock an API call after clicking a button
+### Unit tests vs Integration tests
 
-This is an imaginary component that should load to an element with `test-id="cluster-name"`
-what's returned from the API call triggered when clicking the button
+Integration tests give more test coverage with fewer tests while unit tests are a nice way of testing complex parts of our codebase.
 
-```javascript
-// ...
-import {loadClusterName as mockLoadClusterName} from '../api'
-// ...
+Let's [keep a balance](https://twitter.com/rauchg/status/807626710350839808?lang=en) between them and keep in mind that more isolation = less bugs caught.
 
-jest.mock('../api', () => {
-  return {
-    loadClusterName: jest.fn(subject =>
-      Promise.resolve({data: {name: `Awesome cluster`}}),
-    ),
-  }
-})
+### What we think makes a good test
 
-test('loads cluster name on click', async () => {
-  const {getByText, getByTestId} = render(<ClusterNameLoader />)
-  const loadButton = getByText(/load/i)
-  fireEvent.click(loadButton)
-  expect(mockLoadClusterName).toHaveBeenCalledTimes(1)
-  await wait(() => expect(getByTestId('cluster-name')).toHaveTextContent('Awesome Cluster'))
-})
-```
+It: 
 
-### Test a redux connected React Component
-
-```javascript
-import {createStore} from 'redux'
-import {Provider} from 'react-redux'
-import {render, fireEvent} from 'react-testing-library'
-import {clusterReducer, Cluster} from 'index'
-
-test('can render with redux with custom initial state', () => {
-  const store = createStore(reducer, {/* initial state here */})
-  const {getByTestId, getByText} = render(
-    <Provider store={store}>
-      <Cluster />
-    </Provider>,
-  )
-  // expect something here
-})
-```
+- Runs fast
+- Doesn't break often
+- Easy to read/understand
+- Catches bugs
+- Gives good coverage to effort ratio

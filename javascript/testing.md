@@ -27,6 +27,9 @@ We want our tests to be [as resilient as possible](https://twitter.com/dan_abram
 - Test if a button is red instead of it has an `alert` class
 - Test if an element is present in the DOM instead of testing a state value in a component
 
+### Finding elements in the DOM
+- You should look for elements in [the same way the user would look for an element](https://testing-library.com/docs/guide-which-query)
+
 ### Unit tests vs Integration tests
 
 Integration tests give more test coverage with fewer tests while unit tests are a nice way of testing complex parts of our codebase.
@@ -35,7 +38,7 @@ Let's [keep a balance](https://twitter.com/rauchg/status/807626710350839808?lang
 
 ### What we think makes a good test
 
-It: 
+It:
 
 - Runs fast
 - Doesn't break often

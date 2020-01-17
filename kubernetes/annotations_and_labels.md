@@ -8,6 +8,9 @@ This page defines common annotations and labels we set in Kubernetes objects.
   location. For now this should be in our `giantswarm/giantswarm` repository in
   which we crosslink all pages to create a reasonable documentation of all kinds
   of Kubernetes resources, their functionality and relationships.
+- `giantswarm.io/restart` - this annotation is meant to be used for DaemonSet,
+  Deployment and StatefulSet restarts. The value can be arbitrary string that
+  works for given reconciliation purposes.
 - `machine-deployment.giantswarm.io/subnet` - value contains a subnet CIDR that
   has been allocated for the given node pool / MachineDeployment object that
   has this annotation. E.g.

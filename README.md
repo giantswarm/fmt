@@ -8,7 +8,9 @@
 
 - [Naming Resources](azure/naming_resources.md)
 
+## CircleCI
 
+- [All CircleCI best practices](circleci/)
 
 ## Docker
 

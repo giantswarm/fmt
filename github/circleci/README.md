@@ -2,7 +2,7 @@
 
 ## Making steps self-explanatory
 
-CircleCI offers a way to make a step in a CI config or org self-explanatory. We SHOULD always use this to make the config more self-explanatory.
+Always set the `name` of your steps to something that explains what it does.
 
 ### Don't
 

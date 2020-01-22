@@ -234,9 +234,7 @@ __Components__ use these data to render the views.
 
 ### Loading flags
 
-`loadingFlags` is an object at the root of our store where we have all our loading flags for each action. `loadingReducer` reducer will take care of all ourt flags without us having to even think about the. It will update flags in store in the following manner:
-
-Any action dispatched that has a type with the `_REQUEST` suffix will update (or create if it doesn't exist) a flag in the store for its respective action. For example, if we dispatch an action with the type of `CLUSTERS_LOAD_REQUEST`, it will result in the following changes in the store:
+`loadingFlags` is an object at the root of our store where we have all our loading flags for each action. `loadingReducer` reducer will take care of all ourt flags without us having to even think about them. It will update flags in store in the following manner: any action dispatched that has a type with the `_REQUEST` suffix will update (or create if it doesn't exist) a flag in the store for its respective action. For example, if we dispatch an action with the type of `CLUSTERS_LOAD_REQUEST`, it will result in the following changes in the store:
 
 ```javascript
 ...

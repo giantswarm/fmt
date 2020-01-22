@@ -216,19 +216,21 @@ However, we can use `margin`, `padding` or even `algin-*` to **make room between
 ╚════════════╝           ╚════════════╝           ╚════════════╝
 ```
 
-__Batched actions__: what we call a _batched actions function_ is a function where we perform a series of actions that will result in a bunch of data that a specific view needs in its returned JSX. We use async logic in those functions so we can wait for some API calls to be fulfilled (and its returned data saved in stored) before proceeding with other calls that might need this data.
+__Batched actions__: what we call a _batched actions function_ is a function where we call a series of _thunks_ that will result in a bunch of data that a specific view needs. We use async logic in those functions so we can wait for some API calls to be fulfilled (and its returned data saved in stored) before proceeding with other calls that might need this data. 
 
-Thunks live in `actions/xxxxActions.js` files. These are the functions responsible of
+These functions describe what exactly is going on in each view regarding the data layer.
+
+__Thunks__ live in `actions/xxxxActions.js` files. These functions are responsible of
 
 - Making API calls
 - Transform the data received if it is needed so it fits in Redux store
 - Dispatch actions
 
-Reducers modify state in the store.
+__Reducers__ modify state in the __store__.
 
-Selectors (when used) select or get data from the store.
+__Selectors__ (when used) select or get data from the store.
 
-Components use these data to render the views.
+__Components__ use these data to render the views.
 
 ### Loading flags
 

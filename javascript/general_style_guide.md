@@ -184,7 +184,75 @@ However, we can use `margin`, `padding` or even `algin-*` to **make room between
 
 ## Redux
 
-_Pending_
+### Libraries we use
+
+- We use [Thunk](https://github.com/reduxjs/redux-thunk) to write async logic that interacts with the store
+- We use [Immer](https://github.com/immerjs/immer) for creating the new state in Redux in an immutable way
+- We derive state in selectors using [Reselect](https://github.com/reduxjs/reselect)
+
+### Our conventions
+
+- Reducers are pure functions, we want reducers to be as clean as possible to easily see at a glance what pieces of state we are creating/deleting/updating
+- We inline objects inside `dispatch()` instead writing action creators
+- We have a `loadingReducer` that takes care of all our loading flags
+
+### Data flow
+
+```
+
+                         ╔════════════╗
+                         ║   A P I    ║
+                         ╚════════════╝
+                               ↑
+                               ↓
+╔════════════╗           ╔════════════╗           ╔════════════╗
+║  Batched   ║ → → → → → ║   Thunks   ║ → → → → → ║  Reducers  ║
+║  Actions   ║           ╚════════════╝           ╚════════════╝
+╚════════════╝                                          ↓
+     ↑                                                  ↓
+     ↑                                                  ↓
+╔════════════╗           ╔════════════╗           ╔════════════╗
+║ Components ║ ← ← ← ← ← ║  Selectors ║ ← ← ← ← ← ║   Store    ║
+╚════════════╝           ╚════════════╝           ╚════════════╝
+```
+
+__Batched actions__: what we call a _batched actions function_ is a function where we perform a series of actions that will result in a bunch of data that a specific view needs in its returned JSX. We use async logic in those functions so we can wait for some API calls to be fulfilled (and its returned data saved in stored) before proceeding with other calls that might need this data.
+
+Thunks live in `actions/xxxxActions.js` files. These are the functions responsible of
+
+- Making API calls
+- Transform the data received if it is needed so it fits in Redux store
+- Dispatch actions
+
+Reducers modify state in the store.
+
+Selectors (when used) select or get data from the store.
+
+Components use these data to render the views.
+
+### Loading flags
+
+`loadingFlags` is an object at the root of our store where we have all our loading flags for each action. `loadingReducer` reducer will take care of all ourt flags without us having to even think about the. It will update flags in store in the following manner:
+
+Any action dispatched that has a type with the `_REQUEST` suffix will update (or create if it doesn't exist) a flag in the store for its respective action. For example, if we dispatch an action with the type of `CLUSTERS_LOAD_REQUEST`, it will result in the following changes in the store:
+
+```javascript
+...
+loadingFlags: {
+  ...
+  CLUSTERS_LOAD: true
+}
+```
+
+On the contrary if we dispatch any action with any of these suffixes: `_SUCCESS`, `_ERROR`, `_FINISHED`, `_NOT_FOUND`, the respective flag will be set to false. Hence, if we dispatch an action with the type of `CLUSTERS_LOAD_SUCCESS`, it will result in the following changes in the store:
+
+```javascript
+...
+loadingFlags: {
+  ...
+  CLUSTERS_LOAD: false
+}
+```
 
 ## Testing
 

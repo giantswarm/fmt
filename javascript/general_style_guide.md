@@ -234,7 +234,7 @@ __Components__ use this data to render the views.
 
 ### Loading flags
 
-`loadingFlags` is an object at the root of our store where we save our loading flags for each action. `loadingReducer` reducer will take care of all our flags without us having to even think about them. It will update flags in store in the following manner: __any action dispatched__ that has a type with the `_REQUEST` suffix will update (or create if it doesn't exist) a flag in the store for its respective action. For example, if we dispatch an action with the type of `CLUSTERS_LOAD_REQUEST`, it will result in the following changes in the store:
+`loadingFlags` is an object at the root of our store where we save our loading flags for each action. `loadingReducer` reducer will take care of all our flags without us having to even think about them. It will update flags in store in the following manner: __any action dispatched__ that has a type with the `_REQUEST` suffix will update (or create if it doesn't exist) a flag in the store for its respective action setting its value to `true`. For example, if we dispatch an action with the type of `CLUSTERS_LOAD_REQUEST`, it will result in the following changes in the store:
 
 ```javascript
 ...
@@ -244,7 +244,9 @@ loadingFlags: {
 }
 ```
 
-On the contrary, if we dispatch any action with any of these suffixes: `_SUCCESS`, `_ERROR`, `_FINISHED`, `_NOT_FOUND`, the respective flag will be set to false. Hence, if we dispatch an action with the type of `CLUSTERS_LOAD_SUCCESS`, it will result in the following changes in the store:
+This means that clusters are still being loaded, and so data is not yet available.
+
+On the contrary, if we dispatch any action with any of these suffixes: `_SUCCESS`, `_ERROR`, `_FINISHED`, `_NOT_FOUND`, the respective flag will be set to `false`. Hence, if we dispatch an action with the type of `CLUSTERS_LOAD_SUCCESS`, it will result in the following changes in the store:
 
 ```javascript
 ...
@@ -253,6 +255,16 @@ loadingFlags: {
   CLUSTERS_LOAD: false
 }
 ```
+
+Which means that clusters are loaded and data is available in store.
+
+#### When to use/dispatch each suffix
+
+`_REQUEST` -> just before we perform the API call
+`_SUCCESS` -> when the API call results in a resolved promise
+`_ERROR` -> when the API call results in a rejected promise
+`_NOT_FOUND` -> when the API call results in a rejected promise with the 404 status error
+`_FINISHED` -> in any other situation when we want to set the flag to false, ie when we are dispatching an action that is not related to an specific API call but with various of them. We can use `_REQUEST` and `_FINISHED` to just mark the begining and the end of the process that will result in all of the data we need saved in the store.
 
 #### Using loading flags
 
@@ -270,7 +282,7 @@ Thanks to these flags we have fine-grained control of what is going on in the st
 - Prevent undesired behaviors such as flashing in components
 - Tell Happa exactly what views it can render in which moments
 
-We can now have a parent view for example that waits for a specific flag to be set to `false` (most of the times an API call) and a child view that waits for another flag, so the we can improve the time to first render. For example:
+We can now have a parent view for example that waits for a specific flag to be set to `false` (most of the times an API call) and a child view that waits for another flag, so the we can improve the time to first render. For example, `Layout` will render when `CLUSTERS_LIST` flag is set to `false`:
 
 ```javascript
 class Layout extends React.Component {
@@ -288,14 +300,14 @@ class Layout extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    // This is th flag we are using
+    // This is the flag we are using
     loadingClustersList: state.loadingFlags.CLUSTERS_LIST,
   };
 }
 
 ```
 
-This is a granchild component of `Layout`:
+While `ClusterDashboardResources` - a grandchild component of `Layout` - will have to wait for `CLUSTERS_LOAD_DETAILS`, `NODEPOOLS_LOAD` and `CLUSTER_LOAD_STATUS` flags before rendering its contents:
 
 ```javascript
 // ClusterDashboardResources.js
@@ -330,15 +342,15 @@ We are using a last argument in batched functions which is an object with the fo
 
 ##### `filterBySelectedOrganization`
 
-We use this to filter the clusters before we fetch details for them. If set to true Happa will fetch details and node pools for clusters owned by the selected organization.
+We use this to filter the clusters before we fetch details for them. If set to true Happa will fetch details and node pools for clusters owned by the selected organization _only_.
 
 ##### `withLoadingFlags`
 
-In cases such as batched functions called for __refreshing data which is already in store__ - ie, `batchedRefreshClusters()` or `batchedRefreshClusterDetailView()` - we don't want to wait for any flag to be set to `false`, so we are passing this parameter set to `false` to tell the _thunk_ to skip the dispatching of the loading flag, and so no spinner or placeholder will be rendered.
+In cases such as batched functions called for __refreshing data which is already in store__ and in the view - ie, `batchedRefreshClusters()` or `batchedRefreshClusterDetailView()` - we don't want to wait for any flag to be set to `false`, so we are passing this parameter set to `false` to tell the _thunk_ to skip the dispatching of the loading flag, and so no spinner or placeholder will be rendered.
 
 ##### `initializeNodePools`
 
-This option will reset `cluster.nodePools` to an empty array in the store. This is the array that contain node pools ids for a given cluster. We just do this the first time we fetch details for a cluster.
+This option will reset `cluster.nodePools` to an empty array in the store. This is the array that contain node pools IDs for a given cluster. We just do this the first time we fetch details for a cluster.
 
 
 ## Testing

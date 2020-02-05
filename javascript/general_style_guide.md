@@ -354,7 +354,8 @@ This option will reset `cluster.nodePools` to an empty array in the store. This 
 
 ### Selectors
 
-We access the store from components using `mapStateToProps`, a `useSelector` hook, or selectors.
+We can access the store from our components by using `mapStateToProps` or a `useSelector` hook.
+In `mapStateToProps` we prefer that you use a selector function, especially when computing derived data.
 
 Selectors live in the `.src/selectors/` directory. They can be:
 

@@ -352,6 +352,34 @@ In cases such as batched functions called for __refreshing data which is already
 
 This option will reset `cluster.nodePools` to an empty array in the store. This is the array that contain node pools IDs for a given cluster. We just do this the first time we fetch details for a cluster.
 
+### Selectors
+
+We access store from components using `mapStateToProps` (or `useSelector` hook alternatively), or selectors.
+
+Selectors live in the `.src/selectors/` directory. They can be:
+
+1. Ordinary selectors. We are using them to retrieve data from store. We don't need any library for this:
+
+```javascript
+const selectClusterById = (state, props) => {
+  return state.entities.clusters.items[props.cluster.id];
+};
+```
+
+ 2. [Memoized selectors](https://github.com/reduxjs/reselect#creating-a-memoized-selector). We will use Reselect memoized selectors when we need to __derive data from store__. We can use [`createSelector()`](https://github.com/reduxjs/reselect#createselectorinputselectors--inputselectors-resultfunc) which memoize returned values from input selectors (selectors passed as arguments) or [`createDeepEqualSelector()`](https://github.com/giantswarm/happa/blob/master/src/selectors/selectorUtils.js) if we need to perform deep equality checks.
+
+```javascript
+export const selectResourcesV4 = () =>
+  /**
+   *  @SelectClusterById  {function} a regular selector
+   *  @cluster {any} whatever SelectClusterById returns.
+   */
+  createDeepEqualSelector(selectClusterById, cluster => {
+    // compute data
+
+    return data;
+  });
+```
 
 ## Testing
 

@@ -380,14 +380,3 @@ export const selectResourcesV4 = () =>
     return data;
   });
 ```
-
-## Testing
-
-We are using:
-
-- [Jest](https://jestjs.io/) and [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) for unit and integration tests
-
-We are considering using:
-
-- [Cypress](https://www.cypress.io/) for E2E (End To End / functional) tests
-- We may use [Browserstack](https://www.browserstack.com/) for crossbrowser testing

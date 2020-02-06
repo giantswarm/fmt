@@ -2,28 +2,22 @@
 
 (Not only) coding guidelines and best practices hub.
 
-
-
 ## Azure
 
 - [Naming Resources](azure/naming_resources.md)
 
 ## CircleCI
 
-- [All CircleCI best practices](circleci/)
+- [All CircleCI best practices](circleci/all-circleci-best-practices.md)
 
 ## Docker
 
 - [Dockerfile](docker/dockerfile.md)
 
-
-
 ## Github
 
 - [Pull Requests](github/pull_requests.md)
 - [Readmes](github/readmes.md)
-
-
 
 ## Go
 
@@ -43,14 +37,10 @@
 - [Variable Names](go/variable_names.md)
 - [YAML Marshalling](go/yaml_marshalling.md)
 
-
-
 ## Helm Charts
 
 - [Formatting Guidelines](helm/formatting_guidelines.md)
 - [Image Templating](helm/image_templating.md)
-
-
 
 ## Javascript
 
@@ -58,19 +48,13 @@
 - [Imports](javascript/imports.md)
 - [Tests](javascript/testing.md)
 
-
-
 ## Kubernetes
 
 - [Annotations and Labels](kubernetes/annotations_and_labels.md)
 
-
-
 ## Prometheus
 
 - [Time Based Rules](prometheus/time_based_rules.md)
-
-
 
 ## Releases
 

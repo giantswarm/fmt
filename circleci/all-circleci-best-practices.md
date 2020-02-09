@@ -2,7 +2,7 @@
 
 ## Making steps self-explanatory
 
-Always set the `name` of your steps to something that explains what it does.
+Always set the `name` of your steps to something that explains what it does. Note: This does not work for orbs as CircleCI does not allow a `name` key for elements in the `steps` array.
 
 ### Don't
 

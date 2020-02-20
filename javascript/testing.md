@@ -45,3 +45,47 @@ It:
 - Easy to read/understand
 - Catches bugs
 - Gives good coverage to effort ratio
+
+
+### Persisted nocks considered a antipattern
+
+We should avoid using persisted nocks so that we get a good idea of the request
+behaviour of our components. You might run into trouble when trying to do this
+especially when combining it with `nock.disableNetConnect();` and `nock.cleanAll();`
+in your `afterEach` block.
+
+If you see errors after your test has finished running like:
+
+```
+Error: Nock: No match for request
+```
+
+or
+
+```
+NetConnectNotAllowedError
+```
+
+What is really happening is that the test has already finished but an asynchronous
+part of the component is still running.
+
+Possibly some request chain hasn't finished yet and it is trying to complete the chain.
+
+However, since the test is considered done, the code has already moved on and
+cleaned up all the nock interceptors, resulting in errors, sometimes non-deterministically
+since it depends on when afterEach is called and when the asynchronous part of
+the component in test gets time to run.
+
+In these cases you should wait for all pending mocks to finish as part of your
+test:
+
+```
+await wait(() => {
+  expect(nock.isDone()).toBe(true);
+});
+```
+
+That way your test will only be considered finished when all requests you thought
+it would do are finished. It will also reveal any unecessary nocks, since after
+5 seconds of nock not being done, this block will fail, and the whole test will
+fail as well.

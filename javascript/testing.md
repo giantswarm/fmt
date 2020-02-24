@@ -51,7 +51,7 @@ It:
 
 We should avoid using persisted nocks so that we get a good idea of the request
 behaviour of our components. You might run into trouble when trying to do this
-especially when combining it with nock.cleanAll(); in your afterEach block and nock.disableNetConnect(); before running the test suite.
+especially when combining it with `nock.cleanAll();` in your `afterEach` block and `nock.disableNetConnect();` before running the test suite.
 
 If you see errors after your test has finished running like:
 

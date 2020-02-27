@@ -2,7 +2,7 @@
 
 ### Statements
 
-- Testing UI [is hard]
+- Testing UI is hard
 - And it's not easy to [know what to test](https://twitter.com/dan_abramov/status/1197901310982590464)
 - Mocking too much reduces test quality
 - Test from a user perspective. Think less about the code you are testing and more about the use cases that code supports

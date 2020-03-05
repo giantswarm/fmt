@@ -50,16 +50,43 @@ This page defines common annotations and labels we set in Kubernetes objects.
   Its value may be equal to that of `app.kubernetes.io/version` but it has a
   different purpose and since there could be multiple operators reconciling one
   object there could be multiple per-operator labels on one object.
-- `app.giantswarm.io/branch` - (informational) branch from which this
-  instance of the app/operator was built from.
+- `helm.sh/chart` - value should contain a chart name and version, see
+  [Helm chart labels best practices][helm-labels]
+- `app.kubernetes.io/name` - the name of the application; should be applied to
+  every Kubernetes resource associated with that application, i.e. all objects
+  in a chart that installs it.
+- `app.kubernetes.io/instance` - value should be set to `{{ .Release.Name }}`
+  and is meant for differentiating between instances of the same application.
+  This together with `app.kubernetes.io/name` should be used as replicas
+  selector, e.g.
+  `app.kubernetes.io/name=kvm-operator,app.kubernetes.io/instance=kvm-operator-1.0.0`.
+- `app.kubernetes.io/version` and other common labels (see
+  [here][helm-labels] and [here][k8s-common-labels]) - are informational,
+  applied to all objects in a chart that installs an app or operator and so
+  they indicate the source and instance of that app/operator; value of
+  `.../version` should be the app/operator version as defined in `project.go`
+  and matching `appVersion` in `Chart.yaml`, e.g.
+  `app.kubernetes.io/version=1.0.0`.
+- `app.giantswarm.io/branch` - (informational) branch from which the instance
+  of the app/operator that this object is part of was built from.
 - `app.giantswarm.io/commit` - (informational) ID (git SHA) of the commit from
-  which this instance of the app/operator was built from.
+  which the instance of the app/operator that this object is part of was built
+  from.
 - `giantswarm.io/provider` - value should be the installation's provider, e.g.
   `kvm`, `aws`, or `azure`.
 - `version` - value should contain the version of the application.  Should be applied
   to every Kubernetes resource associated with an application. This together with `app`
   label should also be used as replicas selector. E.g. `app=kvm-operator,version=1.0.0`. Exceptions can
   be made to accomodate for adherence to existing selectors upstream.
+
+Also see [Helm chart labels best practices][helm-labels] and
+[common labels recommended in Kubernetes docs][k8s-common-labels] for a set of
+common labels that can be set on all objects to enable visualisation and
+querying by shared tooling.
+
+
+[helm-labels]: https://helm.sh/docs/topics/chart_best_practices/labels/
+[k8s-common-labels]: https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/
 
 ### Labels Set In Custom Resources
 

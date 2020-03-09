@@ -23,14 +23,19 @@ You can run this configuration locally by using `golangci-lint run -E gosec -E g
 
 ### False Positives
 
-The linter's job is to enforce conformity, but if you find that one of the rules conflicts with Giant Swarm style or functional needs, it is possible to exclude the offending rule.
+The linter's job is to enforce conformity, but if you find that one of the rules conflicts with Giant Swarm style or functional needs,
+it is possible to exclude the offending rule.
 
-1. For a specific rule which should be suppressed globally, it can be excluded with `-e < specific regex to match the error>`
-2. For a folder or file path which should never be linted (globally), it can be excluded with `--skip-dirs <regex to match directories>`
+1. For a specific rule which should be suppressed globally,
+it can be excluded with `-e < specific regex to match the error>`
+2. For a folder or file path which should never be linted (globally),
+it can be excluded with `--skip-dirs <regex to match directories>`
 or `--skip-files <regex to match files>`
-3. For a rule which should be suppressed only for a specific code line or block, it can be silenced in the code with `//no-lint:<linter name>`.
+3. For a rule which should be suppressed only for a specific code line or block,
+it can be silenced in the code with `//no-lint:<linter name>`.
 This should be used sparingly to avoid forming a bad habit of simply silencing bad code.
 
-Options 1 and 2 can only be applied by updating the command in `architect-orb`.
+**Note:** Options 1 and 2 can only be applied by updating the command in `architect-orb`.
 
-Details for using all of these methods can be found in the [False Positives](https://github.com/golangci/golangci-lint#false-positives) section of the docs.
+Details for using all of these methods can be found in the
+[False Positives](https://github.com/golangci/golangci-lint#false-positives) section of the docs.

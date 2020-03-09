@@ -10,7 +10,10 @@ understand.
 
 ## Code Quality
 
-To prevent shipping problematic or unsafe code, [`architect-orb`](https://github.com/giantswarm/architect-orb)'s [`go-test`](https://github.com/giantswarm/architect-orb/blob/master/src/commands/go-test.yaml) and [`go-test-legacy`](https://github.com/giantswarm/architect-orb/blob/master/src/commands/go-test-legacy.yaml) commands include running several linting tools via [`golangci-lint`](https://github.com/golangci/golangci-lint).
+To prevent shipping problematic or unsafe code, [`architect-orb`](https://github.com/giantswarm/architect-orb)'s
+[`go-test`](https://github.com/giantswarm/architect-orb/blob/master/src/commands/go-test.yaml) and
+[`go-test-legacy`](https://github.com/giantswarm/architect-orb/blob/master/src/commands/go-test-legacy.yaml)
+commands include running several linting tools via [`golangci-lint`](https://github.com/golangci/golangci-lint).
 
 You can install and run this tool locally to lint your code before committing. Follow the instructions in the `golangci-lint` docs.
 
@@ -27,5 +30,7 @@ The linter's job is to enforce conformity, but if you find that one of the rules
 or `--skip-files <regex to match files>`
 3. For a rule which should be suppressed only for a specific code line or block, it can be silenced with `//no-lint:<linter name>`.
 This should be used sparingly to avoid forming a bad habit of simply silencing bad code.
+
+Options 1 and 2 can only be applied by updating the command in `architect-orb`.
 
 Details for using all of these methods can be found in the [False Positives](https://github.com/golangci/golangci-lint#false-positives) section of the docs.

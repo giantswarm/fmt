@@ -15,10 +15,6 @@ This page defines common annotations and labels we set in Kubernetes objects.
 
 ## Common Labels
 
-- `app` - value should contain the name of the application. Should be applied
-  to every Kubernetes resource associated with an application. This together with `version`
-  label should also be used as replicas selector. E.g. `app=kvm-operator,version=1.0.0`. Exceptions can
-  be made to accomodate for adherence to existing selectors upstream.
 - `giantswarm.io/certificate` - value should contain certificate name as
   defined in github.com/giantswarm/certs repo. This is used in certificate
   Secrets and CertConfigs.
@@ -74,10 +70,6 @@ This page defines common annotations and labels we set in Kubernetes objects.
   from.
 - `giantswarm.io/provider` - value should be the installation's provider, e.g.
   `kvm`, `aws`, or `azure`.
-- `version` - value should contain the version of the application.  Should be applied
-  to every Kubernetes resource associated with an application. This together with `app`
-  label should also be used as replicas selector. E.g. `app=kvm-operator,version=1.0.0`. Exceptions can
-  be made to accomodate for adherence to existing selectors upstream.
 
 Also see [Helm chart labels best practices][helm-labels] and
 [common labels recommended in Kubernetes docs][k8s-common-labels] for a set of

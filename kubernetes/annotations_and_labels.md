@@ -179,6 +179,20 @@ querying by shared tooling.
 
 #### Tenant Cluster
 
+### App Labels
+
+Labels related to a higher-level virtual concept of an _app_, i.e. a bunch of
+components usually installed by one or more Helm charts.
+
+- `helm.sh/chart`
+- `app.kubernetes.io/name`
+- `app.kubernetes.io/instance`
+- `app.kubernetes.io/version`
+- `app.kubernetes.io/managed-by`
+- `app.giantswarm.io/branch`
+- `app.giantswarm.io/commit`
+- `OPERATOR.giantswarm.io/version`
+
 ## Finalizers
 
 - Operatorkit sets a finalizer for objects that are watched by the framework

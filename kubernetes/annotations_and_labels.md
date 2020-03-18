@@ -53,8 +53,8 @@ This page defines common annotations and labels we set in Kubernetes objects.
   object there could be multiple per-operator labels on one object.
 - `app.giantswarm.io/branch` - (informational) branch from which this
   instance of the app/operator was built from.
-- `app.giantswarm.io/commit` - (informational) ID of the commit from which
-  this instance of the app/operator was built from.
+- `app.giantswarm.io/commit` - (informational) ID (git SHA) of the commit from
+  which this instance of the app/operator was built from.
 - `giantswarm.io/provider` - value should be the installation's provider, e.g.
   `kvm`, `aws`, or `azure`.
 - `version` - value should contain the version of the application.  Should be applied

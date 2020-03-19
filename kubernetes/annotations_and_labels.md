@@ -176,7 +176,7 @@ querying by shared tooling.
 
 #### Tenant Cluster
 
-### App Labels
+### Labels Set On Objects Installed By Charts
 
 Labels related to a higher-level virtual concept of an _app_, i.e. a bunch of
 components usually installed by one or more Helm charts.

@@ -56,18 +56,15 @@ This page defines common annotations and labels we set in Kubernetes objects.
   This together with `app.kubernetes.io/name` should be used as replicas
   selector, e.g.
   `app.kubernetes.io/name=kvm-operator,app.kubernetes.io/instance=kvm-operator-1.0.0`.
-- `app.kubernetes.io/version` and other common labels (see
-  [here][helm-labels] and [here][k8s-common-labels]) - are informational,
-  applied to all objects in a chart that installs an app or operator and so
-  they indicate the source and instance of that app/operator; value of
-  `.../version` should be the app/operator version as defined in `project.go`
-  and matching `appVersion` in `Chart.yaml`, e.g.
-  `app.kubernetes.io/version=1.0.0`.
-- `app.giantswarm.io/branch` - (informational) branch from which the instance
-  of the app/operator that this object is part of was built from.
-- `app.giantswarm.io/commit` - (informational) ID (git SHA) of the commit from
-  which the instance of the app/operator that this object is part of was built
-  from.
+- informational labels, applied to all objects in a chart that installs an app
+  or operator and so they indicate its source and instance:
+  - `app.kubernetes.io/version` - value should be the app/operator version as
+    defined in `project.go` and matching `appVersion` in `Chart.yaml`, e.g.
+    `app.kubernetes.io/version=1.0.0`.
+  - `app.giantswarm.io/branch` - branch from which the instance of the
+    app/operator that this object is part of was built from.
+  - `app.giantswarm.io/commit` - ID (git SHA) of the commit from which the
+    instance of the app/operator that this object is part of was built from.
 - `giantswarm.io/provider` - value should be the installation's provider, e.g.
   `kvm`, `aws`, or `azure`.
 

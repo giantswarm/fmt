@@ -50,7 +50,7 @@ This page defines common annotations and labels we set in Kubernetes objects.
   [Helm chart labels best practices][helm-labels]
 - `app.kubernetes.io/name` - the name of the application; should be applied to
   every Kubernetes resource associated with that application, i.e. all objects
-  in a chart that installs it.
+  in a chart that installs it. E.g. `app.kubernetes.io/name=kvm-operator`.
 - `app.kubernetes.io/instance` - value should be set to `{{ .Release.Name }}`
   and is meant for differentiating between instances of the same application.
   This together with `app.kubernetes.io/name` should be used as replicas

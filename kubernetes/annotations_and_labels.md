@@ -40,12 +40,20 @@ This page defines common annotations and labels we set in Kubernetes objects.
   managed by `chart-operator`.
 - `release.giantswarm.io/version` - value should be Giant Swarm release
   version, e.g. `release.giantswarm.io/version=2.3.0`.
-- `OPERATOR.giantswarm.io/version` - value should be an operator version, e.g.
-  `kvm-operator.giantswarm.io/version=1.0.0`. This is not the same as release
-  version. This value can be the same in multiple releases. This label is used
-  by the operator to recognize which object it should reconcile. When set on
-  nodes it is used to set that information in the status with the
-  statusresource.
+- `OPERATOR.giantswarm.io/version` - value should be the version of the
+  operator as defined in `project.go` and matching `appVersion` in
+  `Chart.yaml`, e.g. `kvm-operator.giantswarm.io/version=1.0.0`. It is used by
+  the given operator to recognize which object it should reconcile (i.e. to
+  only reconcile objects matching its own version). When set on Node objects it
+  is used to set that information in the status with the statusresource. This
+  is different from release version and can be the same in multiple releases.
+  Its value may be equal to that of `app.kubernetes.io/version` but it has a
+  different purpose and since there could be multiple operators reconciling one
+  object there could be multiple per-operator labels on one object.
+- `app.giantswarm.io/branch` - (informational) branch from which this
+  instance of the app/operator was built from.
+- `app.giantswarm.io/commit` - (informational) ID (git SHA) of the commit from
+  which this instance of the app/operator was built from.
 - `giantswarm.io/provider` - value should be the installation's provider, e.g.
   `kvm`, `aws`, or `azure`.
 - `version` - value should contain the version of the application.  Should be applied

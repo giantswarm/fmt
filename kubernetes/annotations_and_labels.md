@@ -37,15 +37,16 @@ This page defines common annotations and labels we set in Kubernetes objects.
 - `release.giantswarm.io/version` - value should be Giant Swarm release
   version, e.g. `release.giantswarm.io/version=2.3.0`.
 - `OPERATOR.giantswarm.io/version` - value should be the version of the
-  operator as defined in `project.go` and matching `appVersion` in
-  `Chart.yaml`, e.g. `kvm-operator.giantswarm.io/version=1.0.0`. It is used by
-  the given operator to recognize which object it should reconcile (i.e. to
-  only reconcile objects matching its own version). When set on Node objects it
-  is used to set that information in the status with the statusresource. This
-  is different from release version and can be the same in multiple releases.
-  Its value may be equal to that of `app.kubernetes.io/version` but it has a
-  different purpose and since there could be multiple operators reconciling one
-  object there could be multiple per-operator labels on one object.
+  operator reconciling the object, as defined in `project.go` and matching
+  `appVersion` in `Chart.yaml`, e.g.
+  `kvm-operator.giantswarm.io/version=1.0.0`. It is used by the given operator
+  to recognize which object it should reconcile (i.e. to only reconcile objects
+  matching its own version). When set on Node objects it is used to set that
+  information in the status with the statusresource. This is different from
+  release version and can be the same in multiple releases. Its value may be
+  equal to that of `app.kubernetes.io/version` but it has a different purpose
+  and since there could be multiple operators reconciling one object there
+  could be multiple per-operator labels on one object.
 - `helm.sh/chart` - value should contain a chart name and version, see
   [Helm chart labels best practices][helm-labels]
 - `app.kubernetes.io/name` - the name of the application; should be applied to
@@ -188,7 +189,6 @@ components usually installed by one or more Helm charts.
 - `app.kubernetes.io/managed-by`
 - `app.giantswarm.io/branch`
 - `app.giantswarm.io/commit`
-- `OPERATOR.giantswarm.io/version`
 
 ## Finalizers
 

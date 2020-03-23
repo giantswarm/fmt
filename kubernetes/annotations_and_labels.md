@@ -182,13 +182,13 @@ querying by shared tooling.
 Labels related to a higher-level virtual concept of an _app_, i.e. a bunch of
 components usually installed by one or more Helm charts.
 
-- `helm.sh/chart`
 - `app.kubernetes.io/name`
 - `app.kubernetes.io/instance`
-- `app.kubernetes.io/version`
-- `app.kubernetes.io/managed-by`
 - `app.giantswarm.io/branch`
 - `app.giantswarm.io/commit`
+- `app.kubernetes.io/managed-by`
+- `app.kubernetes.io/version`
+- `helm.sh/chart`
 
 To set those labels without having to repeat their definition in multiple
 places we use a template helper based on that in [chart template][helm-def-tpl]
@@ -220,12 +220,12 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "aws-operator.labels" -}}
-helm.sh/chart: {{ include "aws-operator.chart" . | quote }}
 {{ include "aws-operator.selectorLabels" . }}
 app.giantswarm.io/branch: {{ .Values.project.branch | quote }}
 app.giantswarm.io/commit: {{ .Values.project.commit | quote }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+helm.sh/chart: {{ include "aws-operator.chart" . | quote }}
 {{- end -}}
 
 {{/*
@@ -291,14 +291,13 @@ metadata:
   name: aws-operator-8-2-1-dcff541
   namespace: giantswarm
   labels:
-    helm.sh/chart: "aws-operator-8.2.1-dcff5413bbd51d2a57ce69fead20c2eb9cb35d47"
-    app: "aws-operator"
     app.kubernetes.io/name: "aws-operator"
     app.kubernetes.io/instance: "aws-operator-8.2.1-dcff541"
     app.giantswarm.io/branch: "voo-ensure-labels"
-    app.giantswarm.io/commit: "dcff5413bbd51d2a57ce69fead20c2eb9cb35d47"
-    app.kubernetes.io/version: "8.2.2-dev"
+    app.giantswarm.io/commit: "5b8a2f2e457e7a0f95084b32a43ce88959fd2552"
     app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "8.2.2-dev"
+    helm.sh/chart: "aws-operator-8.2.1-5b8a2f2e457e7a0f95084b32a43ce88959fd2552"
 spec:
   replicas: 1
   revisionHistoryLimit: 3

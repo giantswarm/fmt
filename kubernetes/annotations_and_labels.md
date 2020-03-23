@@ -15,11 +15,8 @@ This page defines common annotations and labels we set in Kubernetes objects.
 
 ## Common Labels
 
-- `app` - value should contain the name of the application. Should be applied
-  to every Kubernetes resource associated with an application. E.g.
-  `app=kvm-operator`. This is softly deprecated and should be replaced with
-  `app.kubernetes.io/name`, it's only kept to avoid breaking existing
-  workflows.
+- `app` - should be set to the same value as `app.kubernetes.io/name`. It's
+  deprecated and only kept to avoid breaking existing workflows.
 - `giantswarm.io/certificate` - value should contain certificate name as
   defined in github.com/giantswarm/certs repo. This is used in certificate
   Secrets and CertConfigs.

@@ -249,11 +249,12 @@ with labels:
 - `aws-operator.chart` - normalised name + version of the chart, i.e. trimmed
   to 63 characters and with `+` signs replaced with `-`
 - `aws-operator.labels` - defines all the labels described above, including the
-  selector labels; usage: `{{- include "aws-operator.labels" . | nindent 4 }}`
-  (adjust indent as required)
+  selector labels;
+  usage: `{{- include "aws-operator.labels" . | nindent INDENT }}`
+  (set `INDENT` to required number of spaces)
 - `aws-operator.selectorLabels` - defines labels to be used in selectors;
-  usage: `{{- include "aws-operator.selectorLabels" . | nindent 6 }}`
-  (adjust indent as required)
+  usage: `{{- include "aws-operator.selectorLabels" . | nindent INDENT }}`
+  (set `INDENT` to required number of spaces)
 
 <details>
 <summary>EXAMPLE</summary>

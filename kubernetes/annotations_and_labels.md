@@ -15,6 +15,11 @@ This page defines common annotations and labels we set in Kubernetes objects.
 
 ## Common Labels
 
+- `app` - value should contain the name of the application. Should be applied
+  to every Kubernetes resource associated with an application. E.g.
+  `app=kvm-operator`. This is softly deprecated and should be replaced with
+  `app.kubernetes.io/name`, it's only kept to avoid breaking existing
+  workflows.
 - `giantswarm.io/certificate` - value should contain certificate name as
   defined in github.com/giantswarm/certs repo. This is used in certificate
   Secrets and CertConfigs.
@@ -182,6 +187,7 @@ querying by shared tooling.
 Labels related to a higher-level virtual concept of an _app_, i.e. a bunch of
 components usually installed by one or more Helm charts.
 
+- `app`
 - `app.kubernetes.io/name`
 - `app.kubernetes.io/instance`
 - `app.giantswarm.io/branch`
@@ -220,6 +226,7 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "aws-operator.labels" -}}
+app: {{ include "aws-operator.name" . | quote }}
 {{ include "aws-operator.selectorLabels" . }}
 app.giantswarm.io/branch: {{ .Values.project.branch | quote }}
 app.giantswarm.io/commit: {{ .Values.project.commit | quote }}
@@ -291,6 +298,7 @@ metadata:
   name: aws-operator-8-2-1-dcff541
   namespace: giantswarm
   labels:
+    app: "aws-operator"
     app.kubernetes.io/name: "aws-operator"
     app.kubernetes.io/instance: "aws-operator-8.2.1-dcff541"
     app.giantswarm.io/branch: "voo-ensure-labels"

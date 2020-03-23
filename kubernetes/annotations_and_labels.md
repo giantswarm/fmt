@@ -190,6 +190,141 @@ components usually installed by one or more Helm charts.
 - `app.giantswarm.io/branch`
 - `app.giantswarm.io/commit`
 
+To set those labels without having to repeat their definition in multiple
+places we use a template helper based on that in [chart template][helm-def-tpl]
+from upstream Helm. This template helper is in a form of a file `_helpers.tpl`
+that should be placed inside the chart's `templates/` subdirectory and it
+defines a couple of variables that can then be re-used throughout other
+templates in the chart.
+
+Contents of `_helpers.tpl` (replace `aws-operator` with the name of your
+app/operator):
+
+``` HTML+Django
+{{/* vim: set filetype=mustache: */}}
+{{/*
+Expand the name of the chart.
+*/}}
+{{- define "aws-operator.name" -}}
+{{- .Chart.Name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "aws-operator.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Common labels
+*/}}
+{{- define "aws-operator.labels" -}}
+helm.sh/chart: {{ include "aws-operator.chart" . | quote }}
+{{ include "aws-operator.selectorLabels" . }}
+app.giantswarm.io/branch: {{ .Values.project.branch | quote }}
+app.giantswarm.io/commit: {{ .Values.project.commit | quote }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+{{- end -}}
+
+{{/*
+Selector labels
+*/}}
+{{- define "aws-operator.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "aws-operator.name" . | quote }}
+app.kubernetes.io/instance: {{ .Release.Name | quote }}
+{{- end -}}
+```
+
+This defines a couple of strings based on chart name/version normalised to
+comply with k8s resource name [constraints][k8s-identifiers], and two snippets
+with labels:
+
+- `aws-operator.name` - name of the chart, trimmed to 63 characters
+- `aws-operator.chart` - normalised name + version of the chart, i.e. trimmed
+  to 63 characters and with `+` signs replaced with `-`
+- `aws-operator.labels` - defines all the labels described above, including the
+  selector labels; usage: `{{- include "aws-operator.labels" . | nindent 4 }}`
+  (adjust indent as required)
+- `aws-operator.selectorLabels` - defines labels to be used in selectors;
+  usage: `{{- include "aws-operator.selectorLabels" . | nindent 6 }}`
+  (adjust indent as required)
+
+<details>
+<summary>EXAMPLE</summary>
+<p>
+For example, given snippet from `templates/deployment.yaml` in _aws-operator_:
+
+``` yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ tpl .Values.resource.default.name  . }}
+  namespace: {{ tpl .Values.resource.default.namespace  . }}
+  labels:
+    {{- include "aws-operator.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      {{- include "aws-operator.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        releasetime: {{ $.Release.Time }}
+      labels:
+        {{- include "aws-operator.selectorLabels" . | nindent 8 }}
+    spec:
+...
+```
+
+produces the following when rendered:
+
+``` yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aws-operator-8-2-1-dcff541
+  namespace: giantswarm
+  labels:
+    helm.sh/chart: "aws-operator-8.2.1-dcff5413bbd51d2a57ce69fead20c2eb9cb35d47"
+    app: "aws-operator"
+    app.kubernetes.io/name: "aws-operator"
+    app.kubernetes.io/instance: "aws-operator-8.2.1-dcff541"
+    app.giantswarm.io/branch: "voo-ensure-labels"
+    app.giantswarm.io/commit: "dcff5413bbd51d2a57ce69fead20c2eb9cb35d47"
+    app.kubernetes.io/version: "8.2.2-dev"
+    app.kubernetes.io/managed-by: "Helm"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "aws-operator"
+      app.kubernetes.io/instance: "aws-operator-8.2.1-dcff541"
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        releasetime: 
+      labels:
+        app.kubernetes.io/name: "aws-operator"
+        app.kubernetes.io/instance: "aws-operator-8.2.1-dcff541"
+    spec:
+...
+```
+</p>
+</details>
+
+
+[helm-def-tpl]: https://github.com/helm/helm/blob/ec1d1a3d3eb672232f896f9d3b3d0797e4f519e3/pkg/chartutil/create.go#L338
+[k8s-identifiers]: https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture/identifiers.md
+
 ## Finalizers
 
 - Operatorkit sets a finalizer for objects that are watched by the framework

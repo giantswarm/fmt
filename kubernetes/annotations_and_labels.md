@@ -254,7 +254,7 @@ with labels:
 <details>
 <summary>EXAMPLE</summary>
 <p>
-For example, given snippet from `templates/deployment.yaml` in _aws-operator_:
+For example, this snippet from <code>templates/deployment.yaml</code> in <em>aws-operator</em>:
 
 ``` yaml
 apiVersion: apps/v1

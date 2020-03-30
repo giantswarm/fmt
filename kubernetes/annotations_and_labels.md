@@ -203,7 +203,7 @@ templates in the chart.
 Contents of `_helpers.tpl` (replace `aws-operator` with the name of your
 app/operator):
 
-``` HTML+Django
+```
 {{/* vim: set filetype=mustache: */}}
 {{/*
 Expand the name of the chart.

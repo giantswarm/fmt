@@ -39,16 +39,16 @@ This page defines common annotations and labels we set in Kubernetes objects.
 - `release.giantswarm.io/version` - value should be Giant Swarm release
   version, e.g. `release.giantswarm.io/version=2.3.0`.
 - `OPERATOR.giantswarm.io/version` - value should be the version of the
-  operator reconciling the object, as defined in `project.go` and matching
+  given operator reconciling the object, as defined in its `project.go` and
   `appVersion` in `Chart.yaml`, e.g.
   `kvm-operator.giantswarm.io/version=1.0.0`. It is used by the given operator
   to recognize which object it should reconcile (i.e. to only reconcile objects
-  matching its own version). When set on Node objects it is used to set that
-  information in the status with the statusresource. This is different from
-  release version and can be the same in multiple releases. Its value may be
-  equal to that of `app.kubernetes.io/version` but it has a different purpose
-  and since there could be multiple operators reconciling one object there
-  could be multiple per-operator labels on one object.
+  matching its own version, which is exposed as `app.kubernetes.io/version` on
+  the operator's own component resources like `Deployment`). When set on Node
+  objects it is used to set that information in the status with the
+  statusresource. This is different from release version and can be the same in
+  multiple releases. Since there could be multiple operators reconciling one
+  object there could be multiple per-operator labels on one object.
 - `helm.sh/chart` - value should contain a chart name and version, see
   [Helm chart labels best practices][helm-labels]
 - `app.kubernetes.io/name` - the name of the application; should be applied to
@@ -63,7 +63,12 @@ This page defines common annotations and labels we set in Kubernetes objects.
   or operator and so they indicate its source and instance:
   - `app.kubernetes.io/version` - value should be the app/operator version as
     defined in `project.go` and matching `appVersion` in `Chart.yaml`, e.g.
-    `app.kubernetes.io/version=1.0.0`.
+    `app.kubernetes.io/version=1.0.0`. In case of our operators there should be
+    only a single instance with a given version running on a cluster as this
+    also indicates this operator reconciles objects labeled with
+    `OPERATOR.giantswarm.io/version` with the same value, and there should be
+    only one **version** of an operator reconciling a single object. This is
+    enforced by GateKeeper on our clusters.
   - `app.giantswarm.io/branch` - branch from which the instance of the
     app/operator that this object is part of was built from.
   - `app.giantswarm.io/commit` - ID (git SHA) of the commit from which the

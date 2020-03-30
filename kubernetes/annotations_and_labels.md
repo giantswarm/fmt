@@ -223,8 +223,8 @@ Create chart name and version as used by the chart label.
 Common labels
 */}}
 {{- define "aws-operator.labels" -}}
-app: {{ include "aws-operator.name" . | quote }}
 {{ include "aws-operator.selectorLabels" . }}
+app: {{ include "aws-operator.name" . | quote }}
 app.giantswarm.io/branch: {{ .Values.project.branch | quote }}
 app.giantswarm.io/commit: {{ .Values.project.commit | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service | quote }}

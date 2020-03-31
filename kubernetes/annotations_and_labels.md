@@ -15,10 +15,8 @@ This page defines common annotations and labels we set in Kubernetes objects.
 
 ## Common Labels
 
-- `app` - value should contain the name of the application. Should be applied
-  to every Kubernetes resource associated with an application. This together with `version`
-  label should also be used as replicas selector. E.g. `app=kvm-operator,version=1.0.0`. Exceptions can
-  be made to accomodate for adherence to existing selectors upstream.
+- `app` - should be set to the same value as `app.kubernetes.io/name`. It's
+  deprecated and only kept to avoid breaking existing workflows.
 - `giantswarm.io/certificate` - value should contain certificate name as
   defined in github.com/giantswarm/certs repo. This is used in certificate
   Secrets and CertConfigs.
@@ -41,25 +39,51 @@ This page defines common annotations and labels we set in Kubernetes objects.
 - `release.giantswarm.io/version` - value should be Giant Swarm release
   version, e.g. `release.giantswarm.io/version=2.3.0`.
 - `OPERATOR.giantswarm.io/version` - value should be the version of the
-  operator as defined in `project.go` and matching `appVersion` in
-  `Chart.yaml`, e.g. `kvm-operator.giantswarm.io/version=1.0.0`. It is used by
-  the given operator to recognize which object it should reconcile (i.e. to
-  only reconcile objects matching its own version). When set on Node objects it
-  is used to set that information in the status with the statusresource. This
-  is different from release version and can be the same in multiple releases.
-  Its value may be equal to that of `app.kubernetes.io/version` but it has a
-  different purpose and since there could be multiple operators reconciling one
+  given operator reconciling the object, as defined in its `project.go` and
+  `appVersion` in `Chart.yaml`, e.g.
+  `kvm-operator.giantswarm.io/version=1.0.0`. It is used by the given operator
+  to recognize which object it should reconcile (i.e. to only reconcile objects
+  matching its own version, which is exposed as `app.kubernetes.io/version` on
+  the operator's own component resources like `Deployment`). When set on Node
+  objects it is used to set that information in the status with the
+  statusresource. This is different from release version and can be the same in
+  multiple releases. Since there could be multiple operators reconciling one
   object there could be multiple per-operator labels on one object.
-- `app.giantswarm.io/branch` - (informational) branch from which this
-  instance of the app/operator was built from.
-- `app.giantswarm.io/commit` - (informational) ID (git SHA) of the commit from
-  which this instance of the app/operator was built from.
+- `helm.sh/chart` - value should contain a chart name and version, see
+  [Helm chart labels best practices][helm-labels]
+- `app.kubernetes.io/name` - the name of the application; should be applied to
+  every Kubernetes resource associated with that application, i.e. all objects
+  in a chart that installs it. E.g. `app.kubernetes.io/name=kvm-operator`.
+- `app.kubernetes.io/instance` - value should be set to `{{ .Release.Name }}`
+  and is meant for differentiating between instances of the same application.
+  This together with `app.kubernetes.io/name` should be used as replicas
+  selector, e.g.
+  `app.kubernetes.io/name=kvm-operator,app.kubernetes.io/instance=kvm-operator-1.0.0`.
+- informational labels, applied to all objects in a chart that installs an app
+  or operator and so they indicate its source and instance:
+  - `app.kubernetes.io/version` - value should be the app/operator version as
+    defined in `project.go` and matching `appVersion` in `Chart.yaml`, e.g.
+    `app.kubernetes.io/version=1.0.0`. In case of our operators there should be
+    only a single instance with a given version running on a cluster as this
+    also indicates this operator reconciles objects labeled with
+    `OPERATOR.giantswarm.io/version` with the same value, and there should be
+    only one **version** of an operator reconciling a single object. This is
+    enforced by GateKeeper on our clusters.
+  - `app.giantswarm.io/branch` - branch from which the instance of the
+    app/operator that this object is part of was built from.
+  - `app.giantswarm.io/commit` - ID (git SHA) of the commit from which the
+    instance of the app/operator that this object is part of was built from.
 - `giantswarm.io/provider` - value should be the installation's provider, e.g.
   `kvm`, `aws`, or `azure`.
-- `version` - value should contain the version of the application.  Should be applied
-  to every Kubernetes resource associated with an application. This together with `app`
-  label should also be used as replicas selector. E.g. `app=kvm-operator,version=1.0.0`. Exceptions can
-  be made to accomodate for adherence to existing selectors upstream.
+
+Also see [Helm chart labels best practices][helm-labels] and
+[common labels recommended in Kubernetes docs][k8s-common-labels] for a set of
+common labels that can be set on all objects to enable visualisation and
+querying by shared tooling.
+
+
+[helm-labels]: https://helm.sh/docs/topics/chart_best_practices/labels/
+[k8s-common-labels]: https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/
 
 ### Labels Set In Custom Resources
 
@@ -159,6 +183,157 @@ This page defines common annotations and labels we set in Kubernetes objects.
 - `giantswarm.io/randomkey` - Only when `giantswarm.io/certificate` is not set.
 
 #### Tenant Cluster
+
+### Labels Set On Objects Installed By Charts
+
+Labels related to a higher-level virtual concept of an _app_, i.e. a bunch of
+components usually installed by one or more Helm charts.
+
+- `app`
+- `app.kubernetes.io/name`
+- `app.kubernetes.io/instance`
+- `app.giantswarm.io/branch`
+- `app.giantswarm.io/commit`
+- `app.kubernetes.io/managed-by`
+- `app.kubernetes.io/version`
+- `helm.sh/chart`
+
+To set those labels without having to repeat their definition in multiple
+places we use a template helper based on that in [chart template][helm-def-tpl]
+from upstream Helm. This template helper is in a form of a file `_helpers.tpl`
+that should be placed inside the chart's `templates/` subdirectory and it
+defines a couple of variables that can then be re-used throughout other
+templates in the chart.
+
+Contents of `_helpers.tpl` (replace `aws-operator` with the name of your
+app/operator):
+
+```
+{{/* vim: set filetype=mustache: */}}
+{{/*
+Expand the name of the chart.
+*/}}
+{{- define "aws-operator.name" -}}
+{{- .Chart.Name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "aws-operator.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Common labels
+*/}}
+{{- define "aws-operator.labels" -}}
+{{ include "aws-operator.selectorLabels" . }}
+app: {{ include "aws-operator.name" . | quote }}
+app.giantswarm.io/branch: {{ .Values.project.branch | quote }}
+app.giantswarm.io/commit: {{ .Values.project.commit | quote }}
+app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+helm.sh/chart: {{ include "aws-operator.chart" . | quote }}
+{{- end -}}
+
+{{/*
+Selector labels
+*/}}
+{{- define "aws-operator.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "aws-operator.name" . | quote }}
+app.kubernetes.io/instance: {{ .Release.Name | quote }}
+{{- end -}}
+```
+
+This defines a couple of strings based on chart name/version normalised to
+comply with k8s resource name [constraints][k8s-identifiers], and two snippets
+with labels:
+
+- `aws-operator.name` - name of the chart, trimmed to 63 characters
+- `aws-operator.chart` - normalised name + version of the chart, i.e. trimmed
+  to 63 characters and with `+` signs replaced with `-`
+- `aws-operator.labels` - defines all the labels described above, including the
+  selector labels;
+  usage: `{{- include "aws-operator.labels" . | nindent INDENT }}`
+  (set `INDENT` to required number of spaces)
+- `aws-operator.selectorLabels` - defines labels to be used in selectors;
+  usage: `{{- include "aws-operator.selectorLabels" . | nindent INDENT }}`
+  (set `INDENT` to required number of spaces)
+
+<details>
+<summary>EXAMPLE</summary>
+<p>
+For example, this snippet from <code>templates/deployment.yaml</code> in <em>aws-operator</em>:
+
+``` yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ tpl .Values.resource.default.name  . }}
+  namespace: {{ tpl .Values.resource.default.namespace  . }}
+  labels:
+    {{- include "aws-operator.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      {{- include "aws-operator.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        releasetime: {{ $.Release.Time }}
+      labels:
+        {{- include "aws-operator.selectorLabels" . | nindent 8 }}
+    spec:
+...
+```
+
+produces the following when rendered:
+
+``` yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aws-operator-8-2-1-dcff541
+  namespace: giantswarm
+  labels:
+    app: "aws-operator"
+    app.kubernetes.io/name: "aws-operator"
+    app.kubernetes.io/instance: "aws-operator-8.2.1-dcff541"
+    app.giantswarm.io/branch: "voo-ensure-labels"
+    app.giantswarm.io/commit: "5b8a2f2e457e7a0f95084b32a43ce88959fd2552"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/version: "8.2.2-dev"
+    helm.sh/chart: "aws-operator-8.2.1-5b8a2f2e457e7a0f95084b32a43ce88959fd2552"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "aws-operator"
+      app.kubernetes.io/instance: "aws-operator-8.2.1-dcff541"
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        releasetime: 
+      labels:
+        app.kubernetes.io/name: "aws-operator"
+        app.kubernetes.io/instance: "aws-operator-8.2.1-dcff541"
+    spec:
+...
+```
+</p>
+</details>
+
+
+[helm-def-tpl]: https://github.com/helm/helm/blob/ec1d1a3d3eb672232f896f9d3b3d0797e4f519e3/pkg/chartutil/create.go#L338
+[k8s-identifiers]: https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture/identifiers.md
 
 ## Finalizers
 

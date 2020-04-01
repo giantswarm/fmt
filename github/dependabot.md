@@ -27,7 +27,10 @@ For instance, [here are some vulnerabilities found in the k8s.io libraries we us
 There are two ways to configure Dependabot:
 
 1. Through [the web UI](https://app.dependabot.com/accounts/giantswarm/)
-2. Using [configuration files](https://dependabot.com/docs/config-file/)
+2. Using [configuration files](https://dependabot.com/docs/config-file/) (preferred)
+
+Configuration files are preferred because they can be more easily managed per-project and per-branch directly in the repository,
+and expose more configuration options than the web UI.
 
 You can validate a Dependabot config file [using this validator](https://dependabot.com/docs/config-file/validator/)
 

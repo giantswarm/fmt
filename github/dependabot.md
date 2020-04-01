@@ -26,14 +26,15 @@ For instance, [here are some vulnerabilities found in the k8s.io libraries we us
 
 There are two ways to configure Dependabot:
 
-1. Through the web UI located [here](https://app.dependabot.com/accounts/giantswarm/)
-2. Using configuration files described [here](https://dependabot.com/docs/config-file/)
+1. Through [the web UI](https://app.dependabot.com/accounts/giantswarm/)
+2. Using [configuration files](https://dependabot.com/docs/config-file/)
 
 You can validate a Dependabot config file [using this validator](https://dependabot.com/docs/config-file/validator/)
 
 A sample configuration file is included below, which excludes all `k8s.io` dependencies above `0.17.0`:
 
 ```yml
+# .dependabot/config.yml
 version: 1
 update_configs:
   - package_manager: "go:modules"
@@ -43,7 +44,6 @@ update_configs:
       - match:
           dependency_name: "k8s.io/*"
           version_requirement: ">=0.17.0"
-
 ```
 
 When possible, exclude only known-breaking version changes (e.g. exclude only major versions).

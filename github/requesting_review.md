@@ -6,7 +6,7 @@ This document tries to explain who should be requested for review when crafting 
 
 By default a review **should** be requested from:
 
-- A team. Usually your team or [team owning the component][ownership].
+- A team. Usually your team or the [team owning the component][ownership].
 - Individual stakeholders or person who can bring valuable input.
 
 By default a review **should not** be requested from:

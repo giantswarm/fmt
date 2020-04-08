@@ -13,6 +13,8 @@ From now on all clusters roles we need to create should have this convention
 - Cluster ID.
 - Purpose in lower case.
 
+__Warning__: Please read [the AWS IAM limitations](https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_iam-limits.html) before adding new role to the stack (Role names cannot have more than 64 characters).
+
 Example:
 
 - OLD worker role: `5md7e-master-EC2-K8S-Role`

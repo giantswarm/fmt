@@ -15,8 +15,8 @@ From now on all clusters roles we need to create should have this convention
 
 Example:
 
-OLD worker role: `5md7e-master-EC2-K8S-Role`
-NEW worker role: `gs-5md7e-master-ec2-k8s` (prefix `gs`, cluster ID `5md7e`, 
+- OLD worker role: `5md7e-master-EC2-K8S-Role`
+- NEW worker role: `gs-5md7e-master-ec2-k8s` (prefix `gs`, cluster ID `5md7e`, 
 purpose `master-ec2-k8s`) 
 
 That way in the policy given to the customer to prepare the account we can set 

@@ -7,8 +7,8 @@ AWS operator needs a set of roles in customer accounts to be able to act against
 From now on all clusters roles we need to create should have this convention
 
 - Common prefix `gs-`
-- Follow with `cluster id`
-- Ending with `purpose`
+- Follow with `-cluster_id-`
+- Ending with `-purpose`
 
 Example:
 

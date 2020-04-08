@@ -1,6 +1,6 @@
 # Requesting review
 
-This document tires to explain who should be requested for review when crafting a PR.
+This document tries to explain who should be requested for review when crafting a PR.
 
 ## Default
 

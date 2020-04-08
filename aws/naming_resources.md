@@ -2,9 +2,9 @@
 
 ## IAM Resources
 
-AWS operator needs a set of roles in customer accounts to be able to operator against the AWS API. Most of the customers need bounded policy to be security complaint. Here we define a convention to help them to achieve that and a same time have a coherent way to name the roles.
+AWS operator needs a set of roles in customer accounts to be able to act against the AWS API. Most of the customers need a bounded policy to be security complaint. Here we define a convention to help them to achieve this and at the same time have a coherent way to name the roles.
 
-From now own all clusters roles we need to create should have this convention
+From now on all clusters roles we need to create should have this convention
 
 - Common prefix `gs-`
 - Follow with `cluster id`

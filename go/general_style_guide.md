@@ -39,3 +39,8 @@ This should be used sparingly to avoid forming a bad habit of simply silencing b
 
 Details for using all of these methods can be found in the
 [False Positives](https://github.com/golangci/golangci-lint#false-positives) section of the docs.
+
+## Tooling
+
+You can lint your code straight from the editor
+- [Intellij](./intellij.md)

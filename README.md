@@ -46,8 +46,8 @@
 ## Javascript
 
 - [General Style Guide](javascript/general_style_guide.md)
-- [Imports](javascript/imports.md)
 - [Tests](javascript/testing.md)
+- [Happy path to the left](javascript/leftmost-happy-path.md)
 
 ## Kubernetes
 

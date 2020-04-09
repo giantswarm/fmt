@@ -1,4 +1,4 @@
-# Conditionals and the Happy Path of a function
+# Conditionals and the Happy Path of a function - Keep to the left
 
 In general, the true business logic that a function is concerned with should be on the leftmost indent of that function.
 

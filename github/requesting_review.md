@@ -25,7 +25,8 @@ For information spreading:
   documentation for creating releases.
 - Request review from relevant Chapters for `fmt`. E.g. Chapter FE for
   JavaScript related guidelines.
-- PRs in projects `happa` and `giantswarm-js-client` should always be reviewed by chapter FE.
+- PRs in projects `happa` and `giantswarm-js-client` should always be reviewed
+  by Chapter FE.
 
 For generic changes such as structure, cross-area changes, changes that are
 meant to be applied across whole codebase (as opposed to a single repository)

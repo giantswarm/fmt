@@ -57,4 +57,4 @@ Suggested way of using the feature.
 3. Find repositories you are interested in and start watching them.
    ![](requesting_review/watching.png)
 
-[ownership]: https://github.com/giantswarm/giantswarm/blob/master/teams/team-ownership.md
+[ownership]: https://github.com/giantswarm/giantswarm/blob/master/content/docs/product/team-ownership.md

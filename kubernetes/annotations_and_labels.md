@@ -245,7 +245,7 @@ app.kubernetes.io/instance: {{ .Release.Name | quote }}
 {{- end -}}
 ```
 
-Content of `_resource.tpl`
+Contents of `_resource.tpl`:
 
 ```
 {{/* vim: set filetype=mustache: */}}

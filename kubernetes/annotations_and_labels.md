@@ -200,49 +200,77 @@ components usually installed by one or more Helm charts.
 
 To set those labels without having to repeat their definition in multiple
 places we use a template helper based on that in [chart template][helm-def-tpl]
-from upstream Helm. This template helper is in a form of a file `_helpers.tpl`
-that should be placed inside the chart's `templates/` subdirectory and it
-defines a couple of variables that can then be re-used throughout other
+from upstream Helm. Template helpers are any file that begin with an underscore
+and should be placed inside the chart's `templates/` subdirectory and they
+define a couple of variables that can then be re-used throughout other
 templates in the chart.
 
-Contents of `_helpers.tpl` (replace `aws-operator` with the name of your
-app/operator):
+Contents of `_helpers.tpl`:
 
 ```
 {{/* vim: set filetype=mustache: */}}
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "aws-operator.name" -}}
+{{- define "name" -}}
 {{- .Chart.Name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "aws-operator.chart" -}}
+{{- define "chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Common labels
 */}}
-{{- define "aws-operator.labels" -}}
-{{ include "aws-operator.selectorLabels" . }}
-app: {{ include "aws-operator.name" . | quote }}
+{{- define "labels.common" -}}
+app: {{ include "name" . | quote }}
+{{ include "labels.selector" . }}
 app.giantswarm.io/branch: {{ .Values.project.branch | quote }}
 app.giantswarm.io/commit: {{ .Values.project.commit | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-helm.sh/chart: {{ include "aws-operator.chart" . | quote }}
+helm.sh/chart: {{ include "chart" . | quote }}
 {{- end -}}
 
 {{/*
 Selector labels
 */}}
-{{- define "aws-operator.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "aws-operator.name" . | quote }}
+{{- define "labels.selector" -}}
+app.kubernetes.io/name: {{ include "name" . | quote }}
 app.kubernetes.io/instance: {{ .Release.Name | quote }}
+{{- end -}}
+```
+
+Contents of `_resource.tpl`:
+
+```
+{{/* vim: set filetype=mustache: */}}
+{{/*
+Create a name stem for resource names
+
+When pods for deployments are created they have an additional 16 character
+suffix appended, e.g. "-957c9d6ff-pkzgw". Given that Kubernetes allows 63
+characters for resource names, the stem is truncated to 47 characters to leave
+room for such suffix.
+*/}}
+{{- define "resource.default.name" -}}
+{{- .Release.Name | replace "." "-" | trunc 47 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "resource.psp.name" -}}
+{{- include "resource.default.name" . -}}-psp
+{{- end -}}
+
+{{- define "resource.pullSecret.name" -}}
+{{- include "resource.default.name" . -}}-pull-secret
+{{- end -}}
+
+{{- define "resource.default.namespace" -}}
+giantswarm
 {{- end -}}
 ```
 

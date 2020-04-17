@@ -36,13 +36,49 @@ github.com/giantswarm/k8sclient/
         └── types.go
 ```
 
-Below there are a few packages discussed.
+Below the go.mod file and a few packages discussed.
+
+## go.mod file
+
+Since we use Go modules releasing a major version of the library means we also
+need to change the import path of the module. The last segment of the module
+import must be `/vX` for `vX.Y.Z` releases where `X >= 2`. E.g. for release
+`v3.4.5` it must be `v3`. This is because of backward compatibility reasons.
+Technically module defined with `/vX` segment is treated as a separate module
+from the v0 and v1 versions.
+
+Let's try to illustrate that with `github.com/giantswarm/k8sclient` library
+example.
+
+For releases `v0.x.x` and `v1.x.x` in the `go.mod` file there should be a line
+like:
+
+```
+module github.com/giantswarm/k8sclient
+```
+
+For releases `v2.x.x`:
+
+```
+module github.com/giantswarm/k8sclient/v2
+```
+
+For releases `v3.x.x`:
+
+```
+module github.com/giantswarm/k8sclient/v3
+```
+
+And so on.
+
+Note that even though the `module` directive changes on major version bumps the
+directory layout inside the repository does not.
 
 ## Root package
 
-Note that since we use Go modules we don't have any Go files in the root of the
+Since we use Go modules we don't have any Go files in the root of the library
 repository. This is because as we bump the major version of the module we need
-to use `/vN/` imports. We put everything under subpackages of `/pkg` to avoid
+to use `/vN` imports. We put everything under subpackages of `/pkg` to avoid
 some ugly import aliases like:
 
 ```

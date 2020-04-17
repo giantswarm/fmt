@@ -43,9 +43,11 @@ Below the go.mod file and a few packages discussed.
 Since we use Go modules releasing a major version of the library means we also
 need to change the import path of the module. The last segment of the module
 import must be `/vX` for `vX.Y.Z` releases where `X >= 2`. E.g. for release
-`v3.4.5` it must be `v3`. This is because of backward compatibility reasons.
-Technically module defined with `/vX` segment is treated as a separate module
-from the v0 and v1 versions.
+`v3.4.5` it must be `v3`. This is important for the libraries as they are
+imported in external repositories (as opposed to operators for example) and
+they wouldn't be Go module compatible otherwise. It's worth mentioning that
+module defined with `/vX` segment is treated as a separate module from the v0
+and v1 versions and they can be imported at the same time.
 
 Let's try to illustrate that with `github.com/giantswarm/k8sclient` library
 example.

@@ -36,7 +36,7 @@ github.com/giantswarm/k8sclient/
         └── types.go
 ```
 
-Below the go.mod file and a few packages discussed.
+The go.mod file and packages are discussed below.
 
 ## go.mod file
 
@@ -84,26 +84,26 @@ to use `/vN` imports. We put everything under subpackages of `/pkg` to avoid
 some ugly import aliases like:
 
 ```
-k8sclientv3 "github.com/giantswarm/k8sclient/v3"
+import k8sclientv3 "github.com/giantswarm/k8sclient/v3"
 ```
 
 Instead the import will look like:
 
 ```
-"github.com/giantswarm/k8sclient/v3/pkg/k8sclient"
+import "github.com/giantswarm/k8sclient/v3/pkg/k8sclient"
 ```
 
 This comes at expense of longer imports of other packages. E.g. instead of
 having import like:
 
 ```
-"github.com/giantswarm/k8sclient/v3/k8scrdclient"
+import "github.com/giantswarm/k8sclient/v3/k8scrdclient"
 ```
 
 We have import like:
 
 ```
-"github.com/giantswarm/k8sclient/v3/pkg/k8scrdclient"
+import "github.com/giantswarm/k8sclient/v3/pkg/k8scrdclient"
 ```
 
 Which seems to be a fair price to pay.

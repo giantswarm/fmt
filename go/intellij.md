@@ -48,7 +48,7 @@ Instead of manually writing this
 
 ```go
 if err != nil {
-  return microerror.Mask(err)
+	return microerror.Mask(err)
 }
 ```
 

@@ -35,3 +35,18 @@ Now, make sure that lint inspections are enabled
 ![](images/golangci-lint-inspection.png)
 
 It should show inspection warnings when linting fails.
+
+## Autocomplete with our microerror library
+
+You can make IntelliJ to autocomplete with [our microerror library](https://github.com/giantswarm/microerror/) when returning an error.
+Instead of manually writing this
+
+```go
+if err != nil {
+  return microerror.Mask(err)
+}
+```
+
+You can use a _LiveTemplate_ so that the IDE automatically writes that when you type `err`.
+
+![](images/microerror_livetemplate.png)

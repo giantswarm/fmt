@@ -2,6 +2,11 @@
 
 We follow [a specific code format and style](https://github.com/giantswarm/fmt/blob/master/go/general_style_guide.md) for all our projects. You can configure Intellij to help you follow this style.
 
+- [Imports](#imports)
+- [Formatting](#formatting)
+- [golangci-lint](#golangci-lint)
+- [Autocomplete with our microerror library](#autocomplete-with-our-microerror-library)
+
 ## Imports
 
 Use goimports and format the imports on your code automatically using the "optimize imports" action.

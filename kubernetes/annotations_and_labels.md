@@ -369,10 +369,6 @@ spec:
 </p>
 </details>
 
-## Team Label
-
-The 
-
 
 [helm-def-tpl]: https://github.com/helm/helm/blob/ec1d1a3d3eb672232f896f9d3b3d0797e4f519e3/pkg/chartutil/create.go#L338
 [k8s-identifiers]: https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture/identifiers.md

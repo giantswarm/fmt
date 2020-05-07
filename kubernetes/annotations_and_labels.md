@@ -194,6 +194,7 @@ components usually installed by one or more Helm charts.
 - `app.kubernetes.io/instance`
 - `app.giantswarm.io/branch`
 - `app.giantswarm.io/commit`
+- `app.giantswarm.io/team`
 - `app.kubernetes.io/managed-by`
 - `app.kubernetes.io/version`
 - `helm.sh/chart`
@@ -204,6 +205,14 @@ from upstream Helm. Template helpers are any file that begin with an underscore
 and should be placed inside the chart's `templates/` subdirectory and they
 define a couple of variables that can then be re-used throughout other
 templates in the chart.
+
+The team label is set using the `maintainers` field in Chart.yaml. The prefix
+`team-` identifies it and is used to set `.Values.maintainers.team`.
+
+```
+maintainers:
+- name: team-firecracker
+```
 
 Contents of `_helpers.tpl`:
 
@@ -231,6 +240,7 @@ app: {{ include "name" . | quote }}
 {{ include "labels.selector" . }}
 app.giantswarm.io/branch: {{ .Values.project.branch | quote }}
 app.giantswarm.io/commit: {{ .Values.project.commit | quote }}
+app.giantswarm.io/team: {{ .Values.maintainers.team | quote }
 app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 helm.sh/chart: {{ include "chart" . | quote }}
@@ -358,6 +368,10 @@ spec:
 ```
 </p>
 </details>
+
+## Team Label
+
+The 
 
 
 [helm-def-tpl]: https://github.com/helm/helm/blob/ec1d1a3d3eb672232f896f9d3b3d0797e4f519e3/pkg/chartutil/create.go#L338

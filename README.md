@@ -16,6 +16,7 @@
 
 ## Github
 
+- [Branches](github/branches.md)
 - [Dependabot (automatic dependency updates)](github/dependabot.md)
 - [Pull Requests](github/pull_requests.md)
 - [Readmes](github/readmes.md)

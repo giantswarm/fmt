@@ -16,7 +16,6 @@
 
 ## Github
 
-- [Branches](github/branches.md)
 - [Dependabot (automatic dependency updates)](github/dependabot.md)
 - [Pull Requests](github/pull_requests.md)
 - [Readmes](github/readmes.md)
@@ -61,5 +60,6 @@
 
 ## Releases
 
+- [Branches](github/branches.md)
 - [Changelogs For Managed Apps](releases/changelogs_for_managed_apps.md)
 - [How to write a changelog](releases/how_write_changelog_message.md)

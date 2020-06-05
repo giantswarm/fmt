@@ -53,7 +53,7 @@ We should try to not mechanically write in changelog everything that is changed
 in the repository because not all changes are breaking and not all of them are
 the reason to upgrade for the end user.
 
-Here are some examples of not useful changelog entires creating unnecessary
+Here are some examples of not useful changelog entries creating unnecessary
 noise and polluting the changelog:
 
 - Update documentation.
@@ -68,6 +68,5 @@ and non-breaking.
 
 Those are not a breaking changes. Code refactoring and way of building the code
 is not a reason for the end user to update.
-a reason for the end user to update.
 
 [keepachangelog]: https://keepachangelog.com/en/1.0.0/

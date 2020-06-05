@@ -60,5 +60,5 @@
 
 ## Releases
 
-- [Changelogs For Managed Apps](releases/changelogs_for_managed_apps.md)
+- [Changelog](releases/changelog.md)
 - [How to write a changelog](releases/how_write_changelog_message.md)

@@ -177,10 +177,41 @@ h3 {
 }
 ```
 
-This makes it easier to reuse element tags inside a wrapper element or component without inheriting 
-positioning properties. 
+This makes it easier to reuse element tags inside a wrapper element or component without inheriting
+positioning properties.
 
 However, we can use `margin`, `padding` or even `algin-*` to **make room between two sibling elements**.
+
+### Styled components
+
+We're using [@emotion/styled](https://emotion.sh/docs/@emotion/styled) for styling. It allows us to write css styles and use them as JSX elements.
+
+We should aim to keep our styled components simple and avoid nested selectors. This makes it easier to override styles of nested elements.
+
+**Instead of this:**
+
+```
+const MyDiv = styled.div`
+  color: blue;
+
+  span {
+    margin-bottom: 10px;
+  }
+`;
+```
+
+**Do this:**
+
+```
+const MyDiv = styled.div`
+  color: blue;
+`;
+
+const MySpan = styled.span`
+  margin-bottom: 10px;
+`;
+```
+
 
 ## Redux
 

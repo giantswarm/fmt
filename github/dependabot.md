@@ -24,30 +24,53 @@ For instance, [here are some vulnerabilities found in the k8s.io libraries we us
 
 ## Configuration
 
-There are two ways to configure Dependabot:
+Dependabot updates can be enabled for a repository in the "Settings & analysis" tab of the GitHub settings UI.
+To enable updates, simply click the "Enable" button as shown in the image below.
+![](dependabot/dependabot-enable.png)
 
-1. Through [the web UI](https://app.dependabot.com/accounts/giantswarm/)
-2. Using [configuration files](https://dependabot.com/docs/config-file/) (preferred)
+To further configure how Dependabot performs updates in your repository, use a configuration file.
 
-Configuration files are preferred because they can be more easily managed per-project and per-branch directly in the repository,
-and expose more configuration options than the web UI.
-
-You can validate a Dependabot config file [using this validator](https://dependabot.com/docs/config-file/validator/)
-
-A sample configuration file is included below, which excludes all `k8s.io` dependencies above `0.17.0`:
+A sample configuration file is included below, which excludes all `k8s.io` dependencies above `0.17.0` and includes `team-ludacris` as a reviewer on each PR:
 
 ```yml
-# .dependabot/config.yml
-version: 1
-update_configs:
-  - package_manager: "go:modules"
-    directory: "/"
-    update_schedule: "daily"
-    ignored_updates:
-      - match:
-          dependency_name: "k8s.io/*"
-          version_requirement: ">=0.17.0"
+# .github/dependabot.yml
+version: 2
+updates:
+- package-ecosystem: gomod
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  target-branch: master
+  reviewers:
+    - "giantswarm/team-ludacris"
+  ignore:
+  - dependency-name: k8s.io/**
+    versions:
+    - ">=0.17.0"
 ```
 
-When possible, exclude only known-breaking version changes (e.g. exclude only major versions).
+Additional configuration file options are outlined in the [Dependabot docs](https://docs.github.com/en/github/administering-a-repository/keeping-your-dependencies-updated-automatically).
+
+When possible, exclude only known-breaking version changes (e.g. `k8s.io` dependencies are often tied to the kubernetes version running in our clusters).
 This way, we continue to get updates which are compatible, but with less noise.
+
+## Dependabot Preview
+
+Note: some projects are still using an older version of Dependabot from before its acquisition by GitHub.
+PRs from this version will be from the `dependabot-preview` bot account.
+
+These projects should be upgraded to the new GitHub-native Dependabot, but if you need to work with the old version, here are some resources:
+
+- [Dependabot dashboard](https://app.dependabot.com/accounts/giantswarm/) (deprecated)
+- [config reference](https://dependabot.com/docs/config-file/) (syntax is deprecated)
+
+### Upgrading
+
+To upgrade to the GitHub "native" Dependabot:
+
+- Click the enable button in your repo settings (see photo above)
+- Dependabot will eventually open a PR translating your config file to the new syntax. If you're in a hurry, go to the old Dependabot dashboard and click "Update config file" on your repo.
+- Merge the PR
+- You can now manage your Dependabot settings as described above

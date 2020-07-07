@@ -31,8 +31,6 @@ To enable updates, simply click the "Enable" button as shown in the image below.
 To further configure how Dependabot performs updates in your repository, use a configuration file.
 
 For `Go` projects, you should generate one using `devctl gen dependabot` (see [`devctl`](https://github.com/giantswarm/devctl) for usage).
-If needed, you can then modify this file to control the update frequency or adjust dependency preferences.
-However, keep in mind that re-generating with `devctl` will overwrite any such customizations.
 
 The generated `Go` file can be adapted for other languages or package managers by changing the `package-ecosystem` and `ignore` dependency values.
 

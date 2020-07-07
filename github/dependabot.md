@@ -29,6 +29,8 @@ To enable updates, simply click the "Enable" button as shown in the image below.
 ![](dependabot/dependabot-enable.png)
 
 To further configure how Dependabot performs updates in your repository, use a configuration file.
+You can generate a stub configuration file using `devctl gen dependabot` (see [`devctl`](https://github.com/giantswarm/devctl) for usage).
+This creates a minimal configuration for `Go` projects, but can be applied to other languages or package managers by changing the `package-ecosystem` and `ignore` dependency values.
 
 A sample configuration file is included below, which excludes all `k8s.io` dependencies above `0.17.0` and includes `team-ludacris` as a reviewer on each PR:
 

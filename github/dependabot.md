@@ -26,11 +26,15 @@ For instance, [here are some vulnerabilities found in the k8s.io libraries we us
 
 Dependabot updates can be enabled for a repository in the "Settings & analysis" tab of the GitHub settings UI.
 To enable updates, simply click the "Enable" button as shown in the image below.
-![](dependabot/dependabot-enable.png)
+![Dependabot enable options in GitHub settings UI](dependabot/dependabot-enable.png)
 
 To further configure how Dependabot performs updates in your repository, use a configuration file.
-You can generate a stub configuration file using `devctl gen dependabot` (see [`devctl`](https://github.com/giantswarm/devctl) for usage).
-This creates a minimal configuration for `Go` projects, but can be applied to other languages or package managers by changing the `package-ecosystem` and `ignore` dependency values.
+
+For `Go` projects, you should generate one using `devctl gen dependabot` (see [`devctl`](https://github.com/giantswarm/devctl) for usage).
+If needed, you can then modify this file to control the update frequency or adjust dependency preferences.
+However, keep in mind that re-generating with `devctl` will overwrite any such customizations.
+
+The generated `Go` file can be adapted for other languages or package managers by changing the `package-ecosystem` and `ignore` dependency values.
 
 A sample configuration file is included below, which excludes all `k8s.io` dependencies above `0.17.0` and includes `team-ludacris` as a reviewer on each PR:
 

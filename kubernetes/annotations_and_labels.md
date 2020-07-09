@@ -274,20 +274,35 @@ giantswarm
 {{- end -}}
 ```
 
-This defines a couple of strings based on chart name/version normalised to
-comply with k8s resource name [constraints][k8s-identifiers], and two snippets
-with labels:
+You'll also need to add the following snippet to the chart's `values.yaml`
+(the placeholders are automatically replaced by `architect` during build):
 
-- `aws-operator.name` - name of the chart, trimmed to 63 characters
-- `aws-operator.chart` - normalised name + version of the chart, i.e. trimmed
-  to 63 characters and with `+` signs replaced with `-`
-- `aws-operator.labels` - defines all the labels described above, including the
+``` yaml
+project:
+  branch: "[[ .Branch ]]"
+  commit: "[[ .SHA ]]"
+```
+
+This defines a couple of template variables based on chart name/version
+normalised to comply with k8s resource name [constraints][k8s-identifiers], and
+two snippets with labels:
+
+- `name` - name of the chart, trimmed to 63 characters
+- `chart` - normalised name + version of the chart, i.e. trimmed to 63
+  characters and with `+` signs replaced with `-`
+- `labels.common` - defines all the labels described above, including the
   selector labels;
-  usage: `{{- include "aws-operator.labels" . | nindent INDENT }}`
+  usage: `{{- include "labels.common" . | nindent INDENT }}`
   (set `INDENT` to required number of spaces)
-- `aws-operator.selectorLabels` - defines labels to be used in selectors;
-  usage: `{{- include "aws-operator.selectorLabels" . | nindent INDENT }}`
+- `labels.selector` - defines labels to be used in selectors;
+  usage: `{{- include "labels.selector" . | nindent INDENT }}`
   (set `INDENT` to required number of spaces)
+- `resource.default.name` - default name for k8s resources created by the chart
+  usage: `{{ include "resource.default.name"  . }}`
+- `resource.default.namespace` - namespace for all resources in the chart
+- `resource.psp.name` - default name for _PodSecurityPolicy_ resources in the
+  chart
+- `resource.pullSecret.name` - default name for pull secrets
 
 <details>
 <summary>EXAMPLE</summary>
@@ -298,16 +313,16 @@ For example, this snippet from <code>templates/deployment.yaml</code> in <em>aws
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ tpl .Values.resource.default.name  . }}
-  namespace: {{ tpl .Values.resource.default.namespace  . }}
+  name: {{ include "resource.default.name"  . }}
+  namespace: {{ include "resource.default.namespace"  . }}
   labels:
-    {{- include "aws-operator.labels" . | nindent 4 }}
+    {{- include "labels.common" . | nindent 4 }}
 spec:
   replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      {{- include "aws-operator.selectorLabels" . | nindent 6 }}
+      {{- include "labels.selector" . | nindent 6 }}
   strategy:
     type: RollingUpdate
   template:
@@ -315,7 +330,7 @@ spec:
       annotations:
         releasetime: {{ $.Release.Time }}
       labels:
-        {{- include "aws-operator.selectorLabels" . | nindent 8 }}
+        {{- include "labels.selector" . | nindent 8 }}
     spec:
 ...
 ```

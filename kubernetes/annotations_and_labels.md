@@ -29,7 +29,7 @@ This page defines common annotations and labels we set in Kubernetes objects.
   `giantswarm.io/machine-deployment=al9qy`.
 - `giantswarm.io/machine-pool` - value should contain tenant cluster node pool
   ID (i.e. the machine pool ID) which this object is part of. E.g.
-  `giantswarm.io/machine-pool=de19f-1`. It is defined in
+  `giantswarm.io/machine-pool=de19f`. It is defined in
   [`github.com/giantswarm/apiextensions/pkg/label` package](https://github.com/giantswarm/apiextensions/blob/master/pkg/label/id.go).
 - `giantswarm.io/managed-by` - value should contain repository name of the
   operator managing the object. E.g. `giantswarm.io/managed-by=kvm-operator`.

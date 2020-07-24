@@ -39,10 +39,6 @@ This page defines common annotations and labels we set in Kubernetes objects.
   services (i.e. K8s components) or `managed` for Giant Swarm managed services
   (i.e. networking, DNS, monitoring, ingress controller, etc.). Latter would be
   managed by `chart-operator`.
-- `machine-pool.giantswarm.io/subnet`: value should contain the name of the
-  subnet where the tenant cluster node pool is deployed. This name should be
-  equivalent to the tenant cluster node pool ID. E.g.
-  `machine-pool.giantswarm.io/subnet=de19f-1`.
 - `release.giantswarm.io/version` - value should be Giant Swarm release
   version, e.g. `release.giantswarm.io/version=2.3.0`.
 - `OPERATOR.giantswarm.io/version` - value should be the version of the

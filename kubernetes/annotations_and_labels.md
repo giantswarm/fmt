@@ -12,6 +12,8 @@ This page defines common annotations and labels we set in Kubernetes objects.
   has been allocated for the given node pool / MachineDeployment object that
   has this annotation. E.g.
   `machine-deployment.giantswarm.io/subnet=10.102.31.0/24`.
+- `machine-pool.giantswarm.io/name` - value contains a human-friendly node pool
+  name set by the customer. It is defined in [`github.com/giantswarm/apiextensions/pkg/annotation` package](https://github.com/giantswarm/apiextensions/blob/master/pkg/annotation/nodepool.go).
 
 ## Common Labels
 
@@ -27,7 +29,8 @@ This page defines common annotations and labels we set in Kubernetes objects.
   `giantswarm.io/machine-deployment=al9qy`.
 - `giantswarm.io/machine-pool` - value should contain tenant cluster node pool
   ID (i.e. the machine pool ID) which this object is part of. E.g.
-  `giantswarm.io/machine-pool=de19f-1`.
+  `giantswarm.io/machine-pool=de19f-1`. It is defined in
+  [`github.com/giantswarm/apiextensions/pkg/label` package](https://github.com/giantswarm/apiextensions/blob/master/pkg/label/id.go).
 - `giantswarm.io/managed-by` - value should contain repository name of the
   operator managing the object. E.g. `giantswarm.io/managed-by=kvm-operator`.
 - `giantswarm.io/organization` - value should contain tenant cluster's

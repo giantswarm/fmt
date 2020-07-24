@@ -35,6 +35,10 @@ Try to explain what you're trying to solve. This should save reviewers a lot of 
 
 When your change fixes an already existing issue it is helpful to link it in your PR. However you still want add some context around it in your PR.
 
+6. Documenation
+
+Think about documenation and comments within your proposed changes so that it becomes self explanatory, put your own review comments first in order to provide more context.
+
 ## Structure
 
 - For the title and the description we follow guidelines described in official Go wiki:

@@ -212,12 +212,14 @@ and should be placed inside the chart's `templates/` subdirectory and they
 define a couple of variables that can then be re-used throughout other
 templates in the chart.
 
-The team label is set using the `maintainers` field in Chart.yaml. The prefix
-`team-` identifies it and is used to set `.Values.maintainers.team`.
+The team label is set using the `maintainers` array field in Chart.yaml.
+The `name` field identifies the team and the `url` field is used to set the
+value of the `app.giantswarm.io/team` label.
 
 ```
 maintainers:
 - name: team-firecracker
+  url: firecracker
 ```
 
 Contents of `_helpers.tpl`:
@@ -246,7 +248,7 @@ app: {{ include "name" . | quote }}
 {{ include "labels.selector" . }}
 app.giantswarm.io/branch: {{ .Values.project.branch | replace "#" "-" | replace "/" "-" | trunc 63 | quote }}
 app.giantswarm.io/commit: {{ .Values.project.commit | quote }}
-app.giantswarm.io/team: {{ .Values.maintainers.team | quote }
+app.giantswarm.io/team: {{ (index .Chart.Maintainers 0).URL | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service | quote }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 helm.sh/chart: {{ include "chart" . | quote }}
@@ -365,6 +367,7 @@ metadata:
     app.kubernetes.io/instance: "aws-operator-8.2.1-dcff541"
     app.giantswarm.io/branch: "voo-ensure-labels"
     app.giantswarm.io/commit: "5b8a2f2e457e7a0f95084b32a43ce88959fd2552"
+    app.giantswarm.io/team: "firecracker"
     app.kubernetes.io/managed-by: "Helm"
     app.kubernetes.io/version: "8.2.2-dev"
     helm.sh/chart: "aws-operator-8.2.1-5b8a2f2e457e7a0f95084b32a43ce88959fd2552"

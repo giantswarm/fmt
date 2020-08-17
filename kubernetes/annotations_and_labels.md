@@ -21,9 +21,10 @@ This page defines common annotations and labels we set in Kubernetes objects.
 
 - `app` - should be set to the same value as `app.kubernetes.io/name`. It's
   deprecated and only kept to avoid breaking existing workflows.
-- `cluster.x-k8s.io/cluster-name` - currently set to same value same as
-  `giantswarm.io/cluster`, which should contain tenant cluster ID which this
-  object is part of. E.g. `giantswarm.io/cluster=eggs2`.
+- `cluster.x-k8s.io/cluster-name` - currently set to same value as
+  `giantswarm.io/cluster`, which is same as `Meta.Name` field of the CR and it
+  should contain tenant cluster ID which this object is part of. E.g.
+  `giantswarm.io/cluster=eggs2`.
 - `giantswarm.io/certificate` - value should contain certificate name as
   defined in github.com/giantswarm/certs repo. This is used in certificate
   Secrets and CertConfigs.

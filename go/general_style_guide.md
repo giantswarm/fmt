@@ -78,9 +78,25 @@ A finding from `nancy` might look like:
 
 ```
 
-The best course of action is to update the dependency.
-If the dependency is nested, try using a `replace` directive in `go.mod` to use a safe version.
-If it is not possible to update the dependency for technical or compatibility reasons, you can suppress the finding by adding it to a file named `.nancy-ignore` in the root of your repository.
+For each identified vulnerability:
+
+1. First, try to update the vulnerable dependency. If the dependency is not a _direct_ dependency, try using `go mod graph` to identify which package imports it, and update that instead.
+2. If the vulnerable dependency can't be resolved by updating a direct dependency, add a `replace` directive to your `go.mod` file.
+For example, in the finding above, `gorilla/websocket v1.4.0` is vulnerable, but `v1.4.2` has been fixed.
+This vulnerability can be mitigated by adding the following to the project's `go.mod` ():
+
+ ```go
+ replace github.com/gorilla/websocket => github.com/gorilla/websocket v1.4.2
+ ```
+
+3. If the fixed dependency version introduces a breaking change or is otherwise impossible to update, you can suppress the finding temporarily to allow time for the dependency to be updated upstream.
+
+When ignoring a dependency, always include a reasonable expiration date (as a suggestion, within 30 days).
+Never create an ignore rule with no expiration -- every vulnerable dependency should either be updated or removed.
+The suppression is only to unblock development until a patch is released.
+If an update is still not available after the 30 day suppression period, this suggests that one of the components used is not regularly maintained. The dependency should be replaced with an alternative or `require`d by the project directly to ensure it continues to stay up to date.
+
+To suppress a finding, add the name of the vulnerability to a file named `.nancy-ignore` in the root of your repository.
 
 For example, this file would suppress the warning above until October 1st 2020:
 

@@ -99,7 +99,7 @@ You can suppress specific CVE numbers in the same way:
 CVE-2020-15114 until=2020-10-01
 ```
 
-You can run `nancy` locally by building downloading the binary and running `go list -json -m all | nancy -quiet` from the root of your project.
+You can run `nancy` locally by building or downloading the binary and running `go list -json -m all | nancy -quiet` from the root of your project.
 
 ## Tooling
 

@@ -86,7 +86,7 @@ For example, in the finding above, `gorilla/websocket v1.4.0` is vulnerable, but
 This vulnerability can be mitigated by adding the following to the project's `go.mod` ():
 
  ```go
- replace github.com/gorilla/websocket => github.com/gorilla/websocket v1.4.2
+ replace github.com/gorilla/websocket v1.4.0 => github.com/gorilla/websocket v1.4.2
  ```
 
 3. If the fixed dependency version introduces a breaking change or is otherwise impossible to update, you can suppress the finding temporarily to allow time for the dependency to be updated upstream.

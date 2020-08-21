@@ -137,6 +137,8 @@ querying by shared tooling.
 
 ##### Annotations
 
+- `cluster.giantswarm.io/description` - A user-friendly cluster description.
+
 ##### Labels
 
 - `cluster.x-k8s.io/cluster-name`
@@ -168,6 +170,14 @@ querying by shared tooling.
 ##### Labels
 
 - `giantswarm.io/machine-deployment`
+
+#### MachinePool
+
+##### Annotations
+
+- `machine-pool.giantswarm.io/name` - A user-friendly machine pool description.
+
+##### Labels
 
 ### Labels Set In Nodes
 

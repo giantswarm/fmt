@@ -41,6 +41,7 @@
 
 ## Helm Charts
 
+- [Checksum Annotations](helm/checksum_annotations.md)
 - [Formatting Guidelines](helm/formatting_guidelines.md)
 - [Image Templating](helm/image_templating.md)
 

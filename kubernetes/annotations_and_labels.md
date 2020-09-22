@@ -370,7 +370,7 @@ spec:
   template:
     metadata:
       annotations:
-        releasetime: {{ $.Release.Time }}
+        app.giantswarm.io/config-checksum: {{ include (print .Template.BasePath "/configmap.yaml") . | sha256sum }}
       labels:
         {{- include "labels.selector" . | nindent 8 }}
     spec:
@@ -406,7 +406,7 @@ spec:
   template:
     metadata:
       annotations:
-        releasetime: 
+        app.giantswarm.io/config-checksum: 86328d7f4f645d74d43e17bb0ff877b0e09a2d4bd9f0fb6eb665a550b1b50320
       labels:
         app.kubernetes.io/name: "aws-operator"
         app.kubernetes.io/instance: "aws-operator-8.2.1-dcff541"

@@ -12,7 +12,7 @@ annotations are not needed.
 
 ## Annotations
 
-- The secret annotation is only needed if chart has a templated secret.
+- The secret annotation is only needed if the chart has a templated secret.
 
 ```yaml
 apiVersion: apps/v1

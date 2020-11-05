@@ -127,13 +127,14 @@ You can run `nancy` locally by building or downloading the binary and running `g
 
 Please don't push secrets to GitHub unless they are encrypted.
 
-Just in case you do, there is a [`gitleaks`](https://github.com/zricethezav/gitleaks/) workflow included in `devctl gen workflows` which will scan your commits and fail your build if a suspected secret is found.
+We recommend [configuring a client-side git hook](https://github.com/zricethezav/gitleaks/wiki/Scanning#uncommitted-changes-scan) so that your secrets are never pushed in the first place.
+
+Just in case someone accidentally pushes a secret, there is a [`gitleaks`](https://github.com/zricethezav/gitleaks/) workflow included in `devctl gen workflows` which will scan your commits and fail your build if a suspected secret is found.
 
 By default, it will scan your PR branch back to the latest ancestor with the target branch.
 If there is no ancestor, or if you are committing directly to `master`, the whole branch history will be scanned, which can take some time on large projects.
 
 Once a secret is pushed to a public repository, however, it must be rotated.
-For this reason, we recommend [configuring a client-side git hook](https://github.com/zricethezav/gitleaks/wiki/Scanning#uncommitted-changes-scan) so that your secrets are never pushed in the first place.
 
 ### Overriding False Positives
 
@@ -173,4 +174,24 @@ There are [a few ways to exclude something](https://github.com/zricethezav/gitle
         '''^\.?gitleaks.toml$''',
         '''(.*?)(jpg|gif|doc|pdf|bin)$''',
         '''(go.mod|go.sum)$''']
+```
+
+### Disabling for a Repository
+
+If it is simply too noisy to use the scanner on a particular repository, it is possible to exclude the workflow.
+
+If you are generating workflows with `devctl`, you can use the `--check-secrets` flag to control the workflow:
+
+```shell
+devctl gen workflows --flavour <flavour> --check-secrets=false
+```
+
+If your repository is managed by [`giantswarm/github`](https://github.com/giantswarm/github/), you can set this via the `gen` options in `meta.yaml`:
+
+```yaml
+- name: my-operator
+  gen:
+    flavour: app
+    checkSecrets: false
+  team: my-team
 ```

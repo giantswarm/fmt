@@ -40,6 +40,12 @@ This should be used sparingly to avoid forming a bad habit of simply silencing b
 Details for using all of these methods can be found in the
 [False Positives](https://github.com/golangci/golangci-lint#false-positives) section of the docs.
 
+### Tooling
+
+You can lint your code straight from the editor
+
+- [IntelliJ](./intellij.md)
+
 ## Vulnerability and Dependency Management
 
 For keeping dependencies up to date, we use [Dependabot](../github/dependabot), which is documented separately.
@@ -117,7 +123,69 @@ CVE-2020-15114 until=2020-10-01
 
 You can run `nancy` locally by building or downloading the binary and running `go list -json -m all | nancy -quiet` from the root of your project.
 
-## Tooling
+## Secrets
 
-You can lint your code straight from the editor
-- [Intellij](./intellij.md)
+Please don't push secrets to GitHub unless they are encrypted.
+
+We recommend [configuring a client-side git hook](https://github.com/zricethezav/gitleaks/wiki/Scanning#uncommitted-changes-scan) so that your secrets are never pushed in the first place.
+
+Just in case someone accidentally pushes a secret, there is a [`gitleaks`](https://github.com/zricethezav/gitleaks/) workflow included in `devctl gen workflows` which will scan your commits and fail your build if a suspected secret is found.
+
+By default, it will scan your PR branch back to the latest ancestor with the target branch.
+If there is no ancestor, or if you are committing directly to `master`, the whole branch history will be scanned, which can take some time on large projects.
+
+Once a secret is pushed to a public repository, however, it must be rotated.
+
+### Overriding False Positives
+
+Secret scanning is currently more art than science.
+`gitleaks` does its best, but it is possible you will encounter false positives (especially when dealing with high-entropy strings).
+
+If that happens, you can customize the scanning behavior by including a `.gitleaks.toml` file in your repository.
+This file allows you to specify particular regular expressions or paths to ignore when scanning.
+To retain as much coverage as possible, we suggest matching your excluded value as exactly as possible (e.g. if you have a non-secret token to check in, simply exclude a regex containing the token value).
+
+Unfortunately, it isn't currently possible to provide a "patch" to the default configuration (this capability has been requested in [this issue](https://github.com/zricethezav/gitleaks/issues/429)).
+If you include a `.gitleaks.toml` file, you must use the [default configuration](https://github.com/zricethezav/gitleaks/blob/master/config/default.go) as a base, and apply your exclusion(s) on top of that.
+There are [a few ways to exclude something](https://github.com/zricethezav/gitleaks/wiki/Configuration), but here are some quick examples:
+
+```toml
+# in .gitleaks.toml
+
+# ...
+# lots of default rules here
+# ...
+
+[allowlist]
+    # Default gitleaks exclusions
+    description = "Allowlisted files"
+    files = ['''^\.?gitleaks.toml$''',
+    '''(.*?)(jpg|gif|doc|pdf|bin)$''',
+    '''(go.mod|go.sum)$''']
+
+    # Exclude anything in vendor/
+    paths = [ '''vendor\/.*''']
+
+    # Exclude a certain value
+    regexes = ['''MyPublicOkToCheckInTokenValue''']
+
+    # Exclude a file by adding it to the existing default 'files' list, e.g.:
+    files = ['''^this-file-is-all-high-entropy-strings.json$''',
+        '''^\.?gitleaks.toml$''',
+        '''(.*?)(jpg|gif|doc|pdf|bin)$''',
+        '''(go.mod|go.sum)$''']
+```
+
+### Disabling for a Repository
+
+If it is simply too noisy to use the scanner on a particular repository, it is possible to exclude the workflow.
+
+If your repository is managed by [`giantswarm/github`](https://github.com/giantswarm/github/), you can set this via the `gen` options in `meta.yaml`:
+
+```yaml
+- name: my-operator
+  gen:
+    flavour: app
+    checkSecrets: false
+  team: my-team
+```

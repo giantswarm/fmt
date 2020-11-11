@@ -180,12 +180,6 @@ There are [a few ways to exclude something](https://github.com/zricethezav/gitle
 
 If it is simply too noisy to use the scanner on a particular repository, it is possible to exclude the workflow.
 
-If you are generating workflows with `devctl`, you can use the `--check-secrets` flag to control the workflow:
-
-```shell
-devctl gen workflows --flavour <flavour> --check-secrets=false
-```
-
 If your repository is managed by [`giantswarm/github`](https://github.com/giantswarm/github/), you can set this via the `gen` options in `meta.yaml`:
 
 ```yaml

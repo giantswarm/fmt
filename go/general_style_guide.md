@@ -44,7 +44,7 @@ Details for using all of these methods can be found in the
 
 You can lint your code straight from the editor
 
-- [Intellij](./intellij.md)
+- [IntelliJ](./intellij.md)
 
 ## Vulnerability and Dependency Management
 
@@ -152,9 +152,9 @@ There are [a few ways to exclude something](https://github.com/zricethezav/gitle
 ```toml
 # in .gitleaks.toml
 
-...
+# ...
 # lots of default rules here
-...
+# ...
 
 [allowlist]
     # Default gitleaks exclusions
@@ -170,7 +170,7 @@ There are [a few ways to exclude something](https://github.com/zricethezav/gitle
     regexes = ['''MyPublicOkToCheckInTokenValue''']
 
     # Exclude a file by adding it to the existing default 'files' list, e.g.:
-    files = ['''^this-file-is-all-high-entropy-strings.json$'''
+    files = ['''^this-file-is-all-high-entropy-strings.json$''',
         '''^\.?gitleaks.toml$''',
         '''(.*?)(jpg|gif|doc|pdf|bin)$''',
         '''(go.mod|go.sum)$''']

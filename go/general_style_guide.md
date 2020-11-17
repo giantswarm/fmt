@@ -132,7 +132,31 @@ We recommend [configuring a client-side git hook](https://github.com/zricethezav
 # Create a directory to hold your global git hooks, if you don't have one
 $ mkdir /path/to/your/git-hooks
 
-# Create a file named pre-commit in that directory, with the content from the gitleaks link above
+# Change to the directory
+$ cd /path/to/your/git-hooks
+
+# Create a file named pre-commit
+$ touch pre-commit
+
+# Add the git hook content from the gitleaks wiki
+$ cat <<EOS >> pre-commit
+#!/bin/sh
+# Adds gitleaks as a pre-commit hook.
+
+gitleaksEnabled=\$(git config --bool hooks.gitleaks)
+cmd="gitleaks --verbose --redact --pretty"
+if [ "\$gitleaksEnabled" = "true" ]; then
+    \$cmd
+    if [ \$? -eq 1 ]; then
+cat <<\EOF
+Error: gitleaks has detected sensitive information in your changes.
+If you know what you are doing you can disable this check using:
+    git config hooks.gitleaks false
+EOF
+exit 1
+    fi
+fi
+EOS
 
 # Add the path as your global git hook location
 $ git config --global core.hooksPath /path/to/your/git-hooks

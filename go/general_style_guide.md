@@ -127,7 +127,43 @@ You can run `nancy` locally by building or downloading the binary and running `g
 
 Please don't push secrets to GitHub unless they are encrypted.
 
-We recommend [configuring a client-side git hook](https://github.com/zricethezav/gitleaks/wiki/Scanning#uncommitted-changes-scan) so that your secrets are never pushed in the first place.
+We recommend [configuring a client-side git hook](https://github.com/zricethezav/gitleaks/wiki/Scanning#uncommitted-changes-scan) so that your secrets are never pushed in the first place. To do this:
+```bash
+# Create a directory to hold your global git hooks, if you don't have one
+$ mkdir /path/to/your/git-hooks
+
+# Change to the directory
+$ cd /path/to/your/git-hooks
+
+# Create a file named pre-commit
+$ touch pre-commit
+
+# Add the git hook content from the gitleaks wiki
+$ cat <<EOS >> pre-commit
+#!/bin/sh
+# Adds gitleaks as a pre-commit hook.
+
+gitleaksEnabled=\$(git config --bool hooks.gitleaks)
+cmd="gitleaks --verbose --redact --pretty"
+if [ "\$gitleaksEnabled" = "true" ]; then
+    \$cmd
+    if [ \$? -eq 1 ]; then
+cat <<\EOF
+Error: gitleaks has detected sensitive information in your changes.
+If you know what you are doing you can disable this check using:
+    git config hooks.gitleaks false
+EOF
+exit 1
+    fi
+fi
+EOS
+
+# Add the path as your global git hook location
+$ git config --global core.hooksPath /path/to/your/git-hooks
+
+# Enable gitleaks globally
+$ git config --global hooks.gitleaks true
+```
 
 Just in case someone accidentally pushes a secret, there is a [`gitleaks`](https://github.com/zricethezav/gitleaks/) workflow included in `devctl gen workflows` which will scan your commits and fail your build if a suspected secret is found.
 

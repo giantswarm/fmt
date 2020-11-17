@@ -127,7 +127,19 @@ You can run `nancy` locally by building or downloading the binary and running `g
 
 Please don't push secrets to GitHub unless they are encrypted.
 
-We recommend [configuring a client-side git hook](https://github.com/zricethezav/gitleaks/wiki/Scanning#uncommitted-changes-scan) so that your secrets are never pushed in the first place.
+We recommend [configuring a client-side git hook](https://github.com/zricethezav/gitleaks/wiki/Scanning#uncommitted-changes-scan) so that your secrets are never pushed in the first place. To do this:
+```
+# Create a directory to hold your global git hooks, if you don't have one
+$ mkdir /path/to/your/git-hooks
+
+# Create a file named pre-commit in that directory, with the content from the gitleaks link above
+
+# Add the path as your global git hook location
+$ git config --global core.hooksPath /path/to/your/git-hooks
+
+# Enable gitleaks globally
+$ git config --global hooks.gitleaks true
+```
 
 Just in case someone accidentally pushes a secret, there is a [`gitleaks`](https://github.com/zricethezav/gitleaks/) workflow included in `devctl gen workflows` which will scan your commits and fail your build if a suspected secret is found.
 

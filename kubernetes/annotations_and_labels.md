@@ -5,7 +5,8 @@ This page defines common annotations and labels we set in Kubernetes objects.
 ## Common Annotations
 
 - `cluster.giantswarm.io/description` - value contains a human-friendly cluster
-  name set by the customer. It is defined in [`github.com/giantswarm/apiextensions/pkg/annotation` package](https://github.com/giantswarm/apiextensions/blob/master/pkg/annotation/cluster.go).
+  name set by the customer. It is defined in
+  [`github.com/giantswarm/apiextensions/pkg/annotation` package][ann-cluster].
 - `giantswarm.io/docs` - value should be an URL to a common documentation
   location. For now this should be in our `giantswarm/giantswarm` repository in
   which we crosslink all pages to create a reasonable documentation of all kinds
@@ -15,7 +16,8 @@ This page defines common annotations and labels we set in Kubernetes objects.
   has this annotation. E.g.
   `machine-deployment.giantswarm.io/subnet=10.102.31.0/24`.
 - `machine-pool.giantswarm.io/name` - value contains a human-friendly node pool
-  name set by the customer. It is defined in [`github.com/giantswarm/apiextensions/pkg/annotation` package](https://github.com/giantswarm/apiextensions/blob/master/pkg/annotation/nodepool.go).
+  name set by the customer. It is defined in
+  [`github.com/giantswarm/apiextensions/pkg/annotation` package][ann-nodepool].
 
 ## Common Labels
 
@@ -60,7 +62,9 @@ This page defines common annotations and labels we set in Kubernetes objects.
   objects it is used to set that information in the status with the
   statusresource. This is different from release version and can be the same in
   multiple releases. Since there could be multiple operators reconciling one
-  object there could be multiple per-operator labels on one object.
+  object there could be multiple per-operator labels on one object. Special
+  version `0.0.0` denotes that this object should be reconciled by the unique
+  version of operator, i.e. operator installed from app collection.
 - `helm.sh/chart` - value should contain a chart name and version, see
   [Helm chart labels best practices][helm-labels]
 - `app.kubernetes.io/name` - the name of the application; should be applied to
@@ -93,10 +97,6 @@ Also see [Helm chart labels best practices][helm-labels] and
 common labels that can be set on all objects to enable visualisation and
 querying by shared tooling.
 
-
-[helm-labels]: https://helm.sh/docs/topics/chart_best_practices/labels/
-[k8s-common-labels]: https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/
-
 ### Labels Set In Custom Resources
 
 #### Control Plane
@@ -114,9 +114,20 @@ querying by shared tooling.
 
 ### Annotations and Labels Set In Cluster API Custom Resource Objects
 
+#### App
+
+##### Annotations
+
+- `config.giantswarm.io/version` - configuration version [config-controller]
+  should use to configure annotated App CR. It is defined in
+  [`github.com/giantswarm/apiextensions/pkg/annotation` package][ann-version].
+  It is set up by the CI when generating app collection App CR. The value is
+  taken from the `config.giantswarm.io/version` annotation defined in
+  `Chart.yaml` of the pushed chart. It is used only for Control Plane apps.
+
 #### App Catalog
 
-#### Annotation
+##### Annotations
 
 - `giantswarm.io/monitoring` - `true|false', indicating monitoring feature on/off on the service.
 - `giantswarm.io/monitoring-path` - value should indicate monitoring URL path.
@@ -416,10 +427,6 @@ spec:
 </p>
 </details>
 
-
-[helm-def-tpl]: https://github.com/helm/helm/blob/ec1d1a3d3eb672232f896f9d3b3d0797e4f519e3/pkg/chartutil/create.go#L338
-[k8s-identifiers]: https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture/identifiers.md
-
 ## Finalizers
 
 - Operatorkit sets a finalizer for objects that are watched by the framework
@@ -438,3 +445,13 @@ spec:
   `giantswarm.io/`. E.g `giantswarm.io/cluster-id`.
 - Operator specific annotations and labels should be prefixed with
   `OPERATOR.giantswarm.io/`. E.g. `kvm-operator.giantswarm.io/service`.
+
+
+[ann-cluster]: https://github.com/giantswarm/apiextensions/blob/master/pkg/annotation/cluster.go
+[ann-cluster]: https://github.com/giantswarm/apiextensions/blob/master/pkg/annotation/version.go
+[ann-nodepool]: https://github.com/giantswarm/apiextensions/blob/master/pkg/annotation/nodepool.go
+[conifg-controller]: https://github.com/giantswarm/config-controller/
+[helm-def-tpl]: https://github.com/helm/helm/blob/ec1d1a3d3eb672232f896f9d3b3d0797e4f519e3/pkg/chartutil/create.go#L338
+[helm-labels]: https://helm.sh/docs/topics/chart_best_practices/labels/
+[k8s-common-labels]: https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/
+[k8s-identifiers]: https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture/identifiers.md

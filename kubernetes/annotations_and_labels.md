@@ -448,8 +448,8 @@ spec:
 
 
 [ann-cluster]: https://github.com/giantswarm/apiextensions/blob/master/pkg/annotation/cluster.go
-[ann-cluster]: https://github.com/giantswarm/apiextensions/blob/master/pkg/annotation/version.go
 [ann-nodepool]: https://github.com/giantswarm/apiextensions/blob/master/pkg/annotation/nodepool.go
+[ann-version]: https://github.com/giantswarm/apiextensions/blob/master/pkg/annotation/version.go
 [conifg-controller]: https://github.com/giantswarm/config-controller/
 [helm-def-tpl]: https://github.com/helm/helm/blob/ec1d1a3d3eb672232f896f9d3b3d0797e4f519e3/pkg/chartutil/create.go#L338
 [helm-labels]: https://helm.sh/docs/topics/chart_best_practices/labels/

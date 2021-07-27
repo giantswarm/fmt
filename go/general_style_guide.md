@@ -177,12 +177,12 @@ Once a secret is pushed to a public repository, however, it must be rotated.
 Secret scanning is currently more art than science.
 `gitleaks` does its best, but it is possible you will encounter false positives (especially when dealing with high-entropy strings).
 
-If that happens, you can customize the scanning behavior by including a `.gitleaks.toml` file in your repository.
+If that happens, you can customize the scanning behavior by including a `.github/.gitleaks.toml` file in your repository.
 This file allows you to specify particular regular expressions or paths to ignore when scanning.
 To retain as much coverage as possible, we suggest matching your excluded value as exactly as possible (e.g. if you have a non-secret token to check in, simply exclude a regex containing the token value).
 
-Unfortunately, it isn't currently possible to provide a "patch" to the default configuration (this capability has been requested in [this issue](https://github.com/zricethezav/gitleaks/issues/429)).
-If you include a `.gitleaks.toml` file, you must use the [default configuration](https://github.com/zricethezav/gitleaks/blob/master/config/default.go) as a base, and apply your exclusion(s) on top of that.
+You can add new rules or override the default configuration through the `.github/.gitleaks.toml` file.
+
 There are [a few ways to exclude something](https://github.com/zricethezav/gitleaks/wiki/Configuration), but here are some quick examples:
 
 ```toml

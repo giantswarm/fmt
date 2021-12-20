@@ -76,5 +76,5 @@ namespace. Additionally, some helm charts install resources only in well-known n
 as `kube-system`.
 
 To ensure consistency and avoid the above problems, it is preferable to specify
-`namespace: {{ .Release.Namespace }}` for `.metadata.namespace` and other namespace fields of a
-helm chart except when resources need to go into a specific hardcoded namespace.
+`{{ .Release.Namespace }}` as the value for `.metadata.namespace` and other namespace fields of
+resources in a helm chart except when resources need to go into a specific hardcoded namespace.

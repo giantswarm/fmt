@@ -65,3 +65,16 @@ rules:
   verbs:
   - get
 ```
+
+## Namespace
+
+Namespaces are optional for resources in helm charts in general. This allows
+`helm template | kubectl apply -f -n <namespace> -` to install all resources into
+the specified namespace as expected. This approach has problems when installing cluster-scoped
+resources such as `ClusterRole`s as these need to refer to a `ServiceAccount` in a specific
+namespace. Additionally, some helm charts install resources only in well-known namespaces such
+as `kube-system`.
+
+To ensure consistency and avoid the above problems, it is preferable to specify
+`{{ .Release.Namespace }}` as the value for `.metadata.namespace` and other namespace fields of
+resources in a helm chart except when resources need to go into a specific hardcoded namespace.

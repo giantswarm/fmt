@@ -123,6 +123,15 @@ CVE-2020-15114 until=2020-10-01
 
 You can run `nancy` locally by building or downloading the binary and running `go list -json -m all | nancy -quiet` from the root of your project.
 
+### Specifying CWE in a nancy-ignore file does not work
+
+Instead of `CWE-xx`, use its OSS Index ID. You can find it in the nancy output.
+
+```
+7a182d40-9217-4391-85e9-6c44219efa7a until=2022-01-01 # CWE-79
+3f9f4830-26e4-4acd-915b-448d38934e43 until=2022-01-01 # CWE-601
+```
+
 ## Secrets
 
 Please don't push secrets to GitHub unless they are encrypted.

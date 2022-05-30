@@ -86,7 +86,7 @@ A finding from `nancy` might look like:
 
 For each identified vulnerability:
 
-1. First, try to update the vulnerable dependency. If the dependency is not a _direct_ dependency, try using `go mod graph` to identify which package imports it, and update that instead.
+1. First, try to update the vulnerable dependency. If the dependency is not a _direct_ dependency, try using `go mod graph` to identify which package imports it, and update that instead. [helcaraxan/gomod](https://github.com/Helcaraxan/gomod) is also incredibly useful for debugging dependency issues. It can identify paths to a specific dependency with `gomod graph -d <your dependency>` and even represent the dependency tree graphically.
 2. If the vulnerable dependency can't be resolved by updating a direct dependency, add a `replace` directive to your `go.mod` file.
 For example, in the finding above, `gorilla/websocket v1.4.0` is vulnerable, but `v1.4.2` has been fixed.
 This vulnerability can be mitigated by adding the following to the project's `go.mod` ():

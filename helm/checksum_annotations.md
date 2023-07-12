@@ -2,13 +2,10 @@
 
 ## Overview
 
-- We add checksum annotations to our deployments and daemonsets to trigger
-fresh pods when their configmaps or secrets have changed.
+- We add checksum annotations to our deployments and daemonsets to trigger fresh pods when their configmaps or secrets have changed.
 - This reduces how often we need to roll pods which can be disruptive.
-- Changes to other resources like PSP and RBAC are applied without needing to
-roll pods.
-- If the app has auto reload functionality like Nginx Ingress Controller these
-annotations are not needed.
+- Changes to other resources like PSP and RBAC are applied without needing to roll pods.
+- If the app has auto reload functionality like Ingress NGINX Controller these annotations are not needed.
 
 ## Annotations
 

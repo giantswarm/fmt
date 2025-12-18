@@ -1,10 +1,12 @@
 # Imports
 
-The import block should be split into 3 separate blocks in this order.
+Imports must be sorted in the order decided by the `golang.org/x/tools/cmd/goimports` tool.
 
-- Native packages.
-- Packages not in the current project.
-- Packages in the current project.
+The import block should be split into 3 separate blocks in this order:
+
+1. Native packages.
+2. Packages not in the current project.
+3. Packages in the current project.
 
 ```go
 

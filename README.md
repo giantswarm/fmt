@@ -2,6 +2,12 @@
 
 (Not only) coding guidelines and best practices hub.
 
+## API
+
+- [Specifications](api/README.md)
+- [REST APIs](api/rest.md)
+- [Names](api/names.md)
+
 ## Azure
 
 - [Naming Resources](azure/naming_resources.md)
@@ -63,3 +69,7 @@
 
 - [Changelog](releases/changelog.md)
 - [How to write a changelog](releases/how_write_changelog_message.md)
+
+## Security
+
+- [OAuth and OIDC](security/oauth.md)

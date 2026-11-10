@@ -46,6 +46,32 @@ You can lint your code straight from the editor
 
 - [IntelliJ](./intellij.md)
 
+## Idiomatic Go
+
+We write Go the way the Go project describes it in [Effective Go][effective-go]
+and the [Go Code Review Comments][code-review-comments]. Where a guide in this
+repository says something more specific, the guide in this repository applies.
+
+[code-review-comments]: https://go.dev/wiki/CodeReviewComments
+[effective-go]: https://go.dev/doc/effective_go
+
+## Reuse before new code
+
+Before we write a new function, type or helper, we check whether something
+already does the job. We look in this order and use the first that fits:
+
+1. The standard library.
+2. A dependency the module already has in `go.mod`.
+3. A helper in the repository.
+4. New code.
+
+A new dependency comes after all four. It has to do something that would be
+hard to write and maintain ourselves. This rule is about new code and new
+dependencies: a repository keeps the libraries it already uses.
+
+Three similar lines are fine. We extract a helper when the same logic is in
+several places, not before.
+
 ## Vulnerability and Dependency Management
 
 For keeping dependencies up to date, we use [Dependabot](../github/dependabot), which is documented separately.

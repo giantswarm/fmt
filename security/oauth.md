@@ -2,7 +2,7 @@
 
 We implement authorization and sign-in with OAuth and OpenID Connect as
 specified. Small departures in this area turn into security bugs, so the
-rule to [ask before deviating](../api/README.md#deviating) matters most here.
+rule to [ask before deviating](../design/specifications.md#deviating) matters most here.
 We also do not design our own token formats or flows where a specified one
 exists.
 
@@ -19,16 +19,17 @@ We follow [OAuth 2.1][oauth-2-1] and the
 - Authorization code flow with PKCE. Only the `S256` method is accepted.
 - No implicit flow and no password flow.
 - Redirect URIs are compared as exact strings.
-- A protected API publishes
-  [OAuth 2.0 Protected Resource Metadata][rfc-9728] at
+
+MCP servers and clients also do the following, because the MCP authorization
+specification requires it. Other APIs do it when their clients and
+authorization server support it:
+
+- The API publishes [OAuth 2.0 Protected Resource Metadata][rfc-9728] at
   `/.well-known/oauth-protected-resource`, so that clients find its
   authorization server.
 - Clients send the `resource` parameter of [RFC 8707][rfc-8707] in the
   authorization request and in the token request, so that the token is issued
   for one API.
-
-The MCP authorization specification requires the last two points of every MCP
-server and client.
 
 ## Tokens are for one audience
 

@@ -2,11 +2,11 @@
 
 (Not only) coding guidelines and best practices hub.
 
-## API
+## Design
 
-- [Specifications](api/README.md)
-- [REST APIs](api/rest.md)
-- [Names](api/names.md)
+- [Specifications](design/specifications.md)
+- [Names](design/names.md)
+- [HTTP APIs](design/http_apis.md)
 
 ## Azure
 

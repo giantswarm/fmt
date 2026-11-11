@@ -65,7 +65,7 @@ already does the job. We look in this order and use the first that fits:
 3. A helper in the repository.
 4. New code.
 
-A new dependency comes after all four. It has to do something that would be
+A new dependency is the last option. It has to do something that would be
 hard to write and maintain ourselves. This rule is about new code and new
 dependencies: a repository keeps the libraries it already uses.
 

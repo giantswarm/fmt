@@ -8,6 +8,14 @@ It is important to follow this guide. It makes review process easier and
 faster. It also makes our codebase consistent, easier to navigate, and
 understand.
 
+## Tracking system labels
+
+For automation purposes, the top of every file should contain a string of the format `repository::visibility::owner::last-modified-date`.
+For example, a public repository named superduper that belongs to team teen titans might have a label that looks like this:
+```
+github.com/suporg/superduper::public::teen-titans::2025-07-24
+```
+
 ## Code Quality
 
 To prevent shipping problematic or unsafe code, [`architect-orb`](https://github.com/giantswarm/architect-orb)'s

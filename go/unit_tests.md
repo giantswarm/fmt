@@ -18,7 +18,7 @@ been prevented by having a test for the relevant code in question.
 Unit tests tend to operate on complex structures. Simply printing two versions
 makes it really hard to identify a particular diff causing issues. We want to
 encourage the use of a diff library like `cmp`. See also
-https://godoc.org/github.com/google/go-cmp/cmp. Example output looks like the
+https://pkg.go.dev/github.com/google/go-cmp/cmp. Example output looks like the
 following. Also see the example test where there is made use of `cmp` when
 asserting test results.
 
@@ -40,121 +40,72 @@ FAIL	github.com/giantswarm/api/service/cluster/creator	0.033s
 
 ### Table Driven Tests
 
-Use table-driven tests instead of separate test methods when possible. Each test
-case in table-driven test should be executed as a sub-test with
-[t.Run](https://golang.org/pkg/testing/#T.Run) as following output of `go test`
-is then easier and one can execute a single specific test case from within table
-if needed.
+Use table-driven tests when several cases exercise the same code. Each case
+runs as a sub-test with [`t.Run`][t-run], named by the case's `name`, so a
+single case can be run with `go test -run 'TestClusterID/nil_object'`.
 
-In table-driven tests the fields of test case struct must be unexported as it's
-common practice and makes semantically more sense. When iterating test cases,
-it's common pattern to use `tc` as variable name for current element.
-
-Description field must start with `case n` where `n` is the index of the test
-starting from 0.
-
-Error matchers `func(error) bool` should be used to assert errors. This makes it
-easier to match errors returned from other packages.
-
-Suggested ordering for test case struct fields is following:
-
-  1. `name`
-  2. Setup config
-  3. Input Parameters
-  4. Expected output
-  5. Validators
-  6. Error matchers
-
-All test validations must be included in `t.Run(...) { }` block as technically
-each test case in table is a single test.
+- Test case fields are unexported, and the loop variable is `tc`.
+- Errors are asserted with `errors.Is` or `errors.As` (or testify's
+  `require.ErrorIs` and `require.ErrorAs`), never by comparing messages.
+- Assertions use [`go-cmp`][go-cmp] or [testify's `require`][testify],
+  whichever the repository already uses.
+- Use `t.Context()` where the code under test takes a context.
 
 Example function to be tested:
+
 ```go
+var ErrWrongType = errors.New("wrong type")
 
-func ClusterID(obj interface{}) (string, error) {
-	customResource, ok := obj.(SpecificType)
+func ClusterID(obj any) (string, error) {
+	cluster, ok := obj.(*Cluster)
 	if !ok {
-		return "", microerror.Maskf(wrongTypeError, "obj must be SpecificType")
+		return "", fmt.Errorf("want *Cluster, got %T: %w", obj, ErrWrongType)
 	}
-
-	return customResource.Spec.ID, nil
+	return cluster.Spec.ID, nil
 }
 ```
 
 Example test:
-```go
 
-func Test_ClusterID(t *testing.T) {
+```go
+func TestClusterID(t *testing.T) {
 	testCases := []struct {
-		name              string
-		inputObj          interface{}
-		expectedClusterID string
-		errorMatcher      func(err error) bool
+		name    string
+		obj     any
+		want    string
+		wantErr error
 	}{
 		{
-			name: "case 0: clusterID returned from valid object",
-			inputObj: SpecificType{
-				Spec: Spec{
-					ID: "foobar",
-				},
-			},
-			expectedClusterID: "foobar",
-			errorMatcher:      nil,
+			name: "valid object",
+			obj:  &Cluster{Spec: ClusterSpec{ID: "foobar"}},
+			want: "foobar",
 		},
 		{
-			name:              "case 1: wrongTypeError returned when nil passed as obj",
-			inputObj:          nil,
-			expectedClusterID: "",
-			errorMatcher:      IsWrongTypeError,
+			name:    "nil object",
+			obj:     nil,
+			wantErr: ErrWrongType,
 		},
 		{
-			name: "case 2: wrongTypeError returned when wrong type passed as obj",
-			inputObj: struct {
-				foo string
-				bar int
-			}{
-				foo: "wrong type",
-				bar: -1,
-			},
-			expectedClusterID: "",
-			errorMatcher:      IsWrongTypeError,
+			name:    "wrong type",
+			obj:     struct{}{},
+			wantErr: ErrWrongType,
 		},
 	}
 
-	for i, tc := range testCases {
-		t.Run(strconv.Itoa(i), func(t *testing.T) {
-			t.Log(tc.name)
-
-			clusterID, err := ClusterID(tc.inputObj)
-
-			switch {
-			case err == nil && tc.errorMatcher == nil:
-				// correct; carry on
-			case err != nil && tc.errorMatcher == nil:
-				t.Fatalf("error == %#v, want nil", err)
-			case err == nil && tc.errorMatcher != nil:
-				t.Fatalf("error == nil, want non-nil")
-			case !tc.errorMatcher(err):
-				t.Fatalf("error == %#v, want matching", err)
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			got, err := ClusterID(tc.obj)
+			if !errors.Is(err, tc.wantErr) {
+				t.Fatalf("err = %v, want %v", err, tc.wantErr)
 			}
-
-			if !cmp.Equal(clusterID, tc.expectedClusterID) {
-				t.Fatalf("\n\n%s\n", cmp.Diff(tc.expectedClusterID, clusterID))
+			if diff := cmp.Diff(tc.want, got); diff != "" {
+				t.Fatalf("ClusterID() mismatch (-want +got):\n%s", diff)
 			}
 		})
 	}
 }
 ```
 
-**Pros:**
-
-- consistent style in tests
-- one can run single test cases in table-driven tests
-- single test cases identifiers in test run are always in sync
-- useful diff comparison
-- run `go test ./... -run Test_Foo/5` to only execute a single test
-
-**Cons:**
-
-- description gets normalized when transformed to test name -> search in code
-  doesn't match the one in `go test` output.
+[go-cmp]: https://pkg.go.dev/github.com/google/go-cmp/cmp
+[t-run]: https://pkg.go.dev/testing#T.Run
+[testify]: https://pkg.go.dev/github.com/stretchr/testify/require

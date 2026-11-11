@@ -14,7 +14,7 @@ import (
 	"context"
 
 	jsonpatch "github.com/evanphx/json-patch"
-	"github.com/giantswarm/microerror"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/giantswarm/cluster-service/service/cluster/storage"
 )

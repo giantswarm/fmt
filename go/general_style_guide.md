@@ -10,35 +10,19 @@ understand.
 
 ## Code Quality
 
-To prevent shipping problematic or unsafe code, [`architect-orb`](https://github.com/giantswarm/architect-orb)'s
-[`go-test`](https://github.com/giantswarm/architect-orb/blob/master/src/commands/go-test.yaml) and
-[`go-test-legacy`](https://github.com/giantswarm/architect-orb/blob/master/src/commands/go-test-legacy.yaml)
-commands include running several linting tools via [`golangci-lint`](https://github.com/golangci/golangci-lint).
-
-You can install and run this tool locally to lint your code before committing. Follow the instructions in the `golangci-lint` docs.
-
-The test (at the time of this writing) runs all default linters, plus `gosec`, `goconst`, and `unparam`.
-
-You can run this configuration locally by using `golangci-lint run -E gosec -E goconst -E unparam`
+We lint with [`golangci-lint`](https://golangci-lint.run/). `devctl gen makefile`
+generates the repository's `.golangci.yaml`, and `make lint` runs it together
+with the import check. CI runs `gosec` through
+[`architect-orb`](https://github.com/giantswarm/architect-orb)'s `go-test`,
+reading the same configuration.
 
 ### False Positives
 
-The linter's job is to enforce conformity, but if you find that one of the rules conflicts with Giant Swarm style or functional needs,
-it is possible to exclude the offending rule.
-
-1. For a specific rule which should be suppressed globally,
-it can be excluded with `-e < specific regex to match the error>`
-2. For a folder or file path which should never be linted (globally),
-it can be excluded with `--skip-dirs <regex to match directories>`
-or `--skip-files <regex to match files>`
-3. For a rule which should be suppressed only for a specific code line or block,
-it can be silenced in the code with `//no-lint:<linter name>`.
-This should be used sparingly to avoid forming a bad habit of simply silencing bad code.
-
-**Note:** Options 1 and 2 can only be applied by updating the command in `architect-orb`.
-
-Details for using all of these methods can be found in the
-[False Positives](https://github.com/golangci/golangci-lint#false-positives) section of the docs.
+When a finding is wrong for one place, silence it there with a
+`//nolint:<linter> // <reason>` comment. When a rule does not fit the
+repository, exclude it in `.golangci.yaml` under `linters.exclusions`, with a
+comment that says why. See
+[False Positives](https://golangci-lint.run/usage/false-positives/).
 
 ### Tooling
 
@@ -74,9 +58,9 @@ several places, not before.
 
 ## Vulnerability and Dependency Management
 
-For keeping dependencies up to date, we use [Dependabot](../github/dependabot), which is documented separately.
+For keeping dependencies up to date, we use [Renovate](../github/renovate.md).
 
-While Dependabot helps to keep dependencies fresh, it is still possible for them to be vulnerable.
+While Renovate helps to keep dependencies fresh, it is still possible for them to be vulnerable.
 For that reason, we also use [`nancy`](https://github.com/sonatype-nexus-community/nancy) to scan a project's dependencies for known vulnerabilities at build time.
 
 A finding from `nancy` might look like:

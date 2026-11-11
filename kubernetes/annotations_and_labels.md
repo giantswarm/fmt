@@ -429,13 +429,12 @@ spec:
 
 ## Finalizers
 
-- Operatorkit sets a finalizer for objects that are watched by the framework
-  named `operatorkit.giantswarm.io/NAME`.
-- `NAME` is configured by the operator and should be the operator name. E.g.
-  `kvm-operator`.
-- If one operator implements multiple frameworks, then `NAME` should include
-  the framework name. E.g `aws-operator-cluster` and
-  `aws-operator-drainer`.
+- A finalizer is a domain-qualified name owned by the controller that removes
+  it, for example `app-operator.giantswarm.io/app`. See the
+  [Kubernetes documentation on finalizers][finalizers].
+- Existing operatorkit operators use `operatorkit.giantswarm.io/NAME`, where
+  `NAME` is the operator name. Keep it on objects they already manage, so they
+  can still be deleted.
 
 ## Naming
 
@@ -455,3 +454,5 @@ spec:
 [helm-labels]: https://helm.sh/docs/topics/chart_best_practices/labels/
 [k8s-common-labels]: https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/
 [k8s-identifiers]: https://github.com/kubernetes/community/blob/master/contributors/design-proposals/architecture/identifiers.md
+
+[finalizers]: https://kubernetes.io/docs/concepts/overview/working-with-objects/finalizers/

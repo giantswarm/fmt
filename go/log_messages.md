@@ -1,220 +1,84 @@
 # Log Messages
 
+We log with structured loggers: [`log/slog`][slog] in services and CLIs, and
+the [`logr`][logr] logger that controller-runtime puts in the context in
+controllers (`log.FromContext(ctx)`). `github.com/giantswarm/micrologger` is
+deprecated; new code does not use it.
 
+- [Messages and attributes](#messages-and-attributes)
+- [Levels](#levels)
+- [Errors](#errors)
+- [Reconciliation](#reconciliation)
 
-## General Guidelines
+## Messages and attributes
 
-- We use `%#q` for string formatting in our log & error messages. This prevents
-  from escaping when they are embedded in JSON string value.
-
-
-
-## Generated Kubernetes Clients CRUD Calls
-
-Below are examples of logs around calling basic CRUD operations on generated
-App CR client.
+The message says what happened, in lowercase, without formatting values into
+it. Values go into attributes, so they can be searched and filtered:
 
 ```go
-r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("creating App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
-
-err := r.g8sClient.ApplicationV1alpha1().Apps(appCR.Namespace).Create(appCR.Name)
-if apierrors.IsAlreadyExists(err) {
-	r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("already created App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
-} else if err != nil {
-	return microerror.Mask(err)
-} else {
-	r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("created App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
-}
+logger.Info("created app", "name", app.Name, "namespace", app.Namespace)
 ```
 
-```go
-r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("deleting App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
+**Don't do this**:
 
-err := r.g8sClient.ApplicationV1alpha1().Apps(appCR.Namespace).Delete(appCR.Name, &metav1.DeleteOptions{})
-if apierrors.IsNotFound(err) {
-	r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("already deleted App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
-} else if err != nil {
-	return microerror.Mask(err)
-} else {
-	r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("deleted App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
-}
+```go
+logger.Info(fmt.Sprintf("created App CR %q in namespace %q", app.Name, app.Namespace))
 ```
 
-```go
-r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("updating App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
+- Attribute keys are lowerCamelCase and mean the same thing everywhere in the
+  repository: `namespace` is always a namespace, never sometimes a cluster.
+  Where an [OpenTelemetry semantic convention][semconv] names the value, use
+  that key.
+- Add attributes that every message of a request or reconciliation needs once,
+  with `logger.With(...)`, not on every call.
+- Never log secrets, tokens or full request bodies.
 
-_, err = r.g8sClient.ApplicationV1alpha1().Apps(appCR.Namespace).Update(appCR)
-if err != nil {
-	return microerror.Mask(err)
-}
+## Levels
 
-r.logger.LogCtx(ctx, "level", "debug", "message", fmt.Sprintf("updated App CR %#q in namespace %#q", appCR.Name, appCR.Namespace))
-```
+- **Error**: something failed and nobody else will report it. See
+  [Errors](#errors).
+- **Info**: a change the program made, or a decision a person reading the logs
+  needs: created, deleted, skipped because.
+- **Debug**: the steps in between: what it found, what it is about to do.
 
+A controller logs a change it made, not every reconciliation that changed
+nothing.
 
+## Errors
 
-## Resource Reconciliation
-
-When doing resource reconciliation action we often have to find out the current
-state, and apply changes to bring it towards desired state. This often means
-calling some API and then emitting debug logs about that. We should try to align
-these logs to become more comfortable when reading them so we can find problems faster.
-Also we should aim for them to be understandable not only by developers but also
-by SREs, SEs and any other people who look at them and not necessarily
-contribute to the codebase.
-
-
-
-### Control Flow
-
-We use `*context` packages for control flow of the reconciliation loop. Here are
-log messages associated with specific actions.
+An error is either returned or logged, not both. The code that decides not to
+return it logs it once, with the error as an attribute:
 
 ```go
-r.logger.LogCtx(ctx, "level", "debug", "message", "keeping finalizers")
-finalizerskeptcontext.SetKept(ctx)
-
-r.logger.LogCtx(ctx, "level", "debug", "message", "canceling reconciliation")
-reconciliationcanceledcontext.SetCanceled(ctx)
-
-r.logger.LogCtx(ctx, "level", "debug", "message", "canceling resource")
-resourcecanceledcontext.SetCanceled(ctx)
-```
-
-
-
-### Resource Intercommunication
-
-We use the `controllercontext` package to pass information between resources.
-Because of the asynchronous nature of resources the information is not available
-immediately. If not, the resource should log that and cancel itself.
-
-```go
-controllerCtx, err := controllercontext.FromContext(ctx)
-if err != nil {
-	return microerror.Mask(err)
-}
-
-workerASGName := controllerCtx.Status.Drainer.WorkerASGName
-if workerASGName == "" {
-	r.logger.LogCtx(ctx, "level", "debug", "message", "worker ASG name is not available yet")
-	r.logger.LogCtx(ctx, "level", "debug", "message", "canceling resource")
-	return nil
-}
-```
-
-
-
-### Error Handling
-
-At the root of error handling code when there is no error to be returned to the
-original caller, errors have to be logged. We try to format such logs in the way
-as described in the example below.
-
-```go
-s.logger.LogCtx(ctx, "level", "error", "message", "failed to collect metrics", "stack", microerror.Stack(microerror.Mask(err)))
-```
-
-The fact gathering statement expresses what happens and in case the action fails
-`failed` is prepended to it in the error log message. The additional `stack`
-field is added to get some tracing information from the carried error.
-
-```go
-s.logger.Log("level", "debug", "message", "collecting metrics")
-
-for _, c := range s.collectors {
-	err := c.Collect(ch)
-	if err != nil {
-		s.logger.LogCtx(ctx, "level", "error", "message", "failed to collect metrics", "stack", microerror.Stack(microerror.Mask(err)))
+for _, c := range collectors {
+	if err := c.Collect(ch); err != nil {
+		logger.Error("collect metrics", "collector", c.Name(), "error", err)
 	}
 }
-
-s.logger.LogCtx(ctx, "level", "debug", "message", "collected metrics")
 ```
 
+With `logr`, the error is the first argument:
+`logger.Error(err, "collect metrics", "collector", c.Name())`.
 
+## Reconciliation
 
-### Fact Gathering
-
-Usually the reconciling code discovers some facts about the system in order to
-figure out what actions it needs to take in order to push the current state
-towards the desired state. Those discovering blocks should look like this
-whenever possible (the additional comments should be omitted they serve
-informational purpose only):
+Logs of a reconciliation are read by SREs during incidents, so they say what the
+controller found and what it did, in plain words:
 
 ```go
-var err error
-
-// Note all messages contain "system fact" which is human readable name for the
-// system fact being discovered. Exception is "cancelling resource" message.
-var systemFact string
-{
-	// Start message. Note "finding out" here.
-	r.logger.LogCtx(ctx, "level", "debug", "message", "finding out system fact")
-
-	systemFact, err = pkg.FindSystemFact(ctx)
-	if IsNotFound(err) {
-		// Not found log. Note "did not find" here.
-		r.logger.LogCtx(ctx, "level", "debug", "message", "did not find system fact")
-		// Reason log should be separate free form log explaining why
-		// the system fact can't be found.
-		r.logger.LogCtx(ctx, "level", "debug", "message", "waiting for system fact to be created")
-		// Canceling resource log should be separate.
-		r.logger.LogCtx(ctx, "level", "debug", "message", "canceling resource")
-		return nil
-	} else if err != nil {
-		return microerror.Mask(err)
-	}
-
-	// End message. Note "found" here.
-	r.logger.LogCtx(ctx, "level", "debug", "message", "found system fact")
-}
+logger.Info("deleting app", "reason", "cluster is being deleted")
+// ...
+logger.Info("deleted app")
 ```
 
-
-
-### Ensuring State
-
-After all the facts are gathered there is usually a reconciliation action which
-is ensuring the resource is created and up to date or deleted depending on the
-observed object event type. This block should look like this whenever possible
-(the additional comments should be omitted they serve informational purpose
-only):
+When a reconciliation waits for something, log what it waits for and requeue,
+rather than returning an error:
 
 ```go
-var err error
-
-// Note all messages contain "managed resource" which is human readable name
-// for the resource being ensured.
-{
-	// Start message. Note "ensured" here. "deletion of" should be present
-	// in case of delete event.
-	r.logger.LogCtx(ctx, "level", "debug", "message", "ensuring [deletion of] managed resource")
-
-	err = pkg.APICall(ctx, systemFact)
-	if IsDeletionInProgress(err) {
-		// Did not ensure log. Note "did not ensure" here. "deletion of"
-		// should be present in case of delete event.
-		r.logger.LogCtx(ctx, "level", "debug", "message", "did not ensure [deletion of] managed resource")
-		// Reason log should be separate free form log explaining why
-                // the managed resource can't be ensured.
-		r.logger.LogCtx(ctx, "level", "debug", "message", "waiting for the API call to finish")
-		// Canceling resource log should be separate.
-		r.logger.LogCtx(ctx, "level", "debug", "message", "canceling resource")
-		return nil
-	} else if err != nil {
-		return microerror.Mask(err)
-	}
-
-	err = pkg.OtherAPICall(ctx, systemFact)
-	if IsDeletionInProgress(err) {
-		// Fall trough.
-	} else if err != nil {
-		return microerror.Mask(err)
-	}
-
-	// End message. Note "ensured" here. "deletion of" should be present in
-	// case of delete event.
-	r.logger.LogCtx(ctx, "level", "debug", "message", "ensured [deletion of] managed resource is created")
-}
+logger.Info("waiting for worker node pool", "nodePool", name)
+return ctrl.Result{RequeueAfter: 30 * time.Second}, nil
 ```
+
+[logr]: https://pkg.go.dev/github.com/go-logr/logr
+[semconv]: https://opentelemetry.io/docs/specs/semconv/
+[slog]: https://pkg.go.dev/log/slog

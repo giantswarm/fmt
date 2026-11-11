@@ -20,7 +20,7 @@ engineers already expect.
 | Prometheus metrics and rules | [Prometheus naming][prom-naming] | [Prometheus](../README.md#prometheus) |
 | Traces, logs and OpenTelemetry metrics | [OpenTelemetry semantic conventions][semconv] | |
 | HTTP APIs | [HTTP semantics (RFC 9110)][rfc-9110] | [HTTP APIs](http_apis.md) |
-| MCP servers and clients | [Model Context Protocol][mcp], the revision the repository pins | |
+| MCP servers and clients | [Model Context Protocol][mcp], the latest revision the SDK supports; the repository names the revision it implements | |
 | A2A servers and clients | [Agent2Agent protocol][a2a] | |
 | Authorization and sign-in | OAuth 2.1, OpenID Connect | [OAuth and OIDC](../security/oauth.md) |
 | A fork, or a contribution to another project | That project's own conventions | |

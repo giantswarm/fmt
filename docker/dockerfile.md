@@ -16,7 +16,7 @@ practice.
 - Here is an example Dockerfile for [app-operator] in this case. 
 
 ```Dockerfile
-FROM alpine:3.9
+FROM alpine:3.24
 
 RUN apk add --no-cache ca-certificates
 

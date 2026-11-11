@@ -3,16 +3,11 @@
 Structs implementing business logic should be initialized via a corresponding
 constructor which expects a `Config` parameter. The `Config` parameter is a pure
 data structure. The `Config` parameter and its fields should be validated inside
-the constructor. In case of being invalid an `invalidConfigError` error should
-be returned as defined below in an `error.go` file.
+the constructor. In case of being invalid, the constructor returns an error wrapping
+`ErrInvalidConfig`, which callers match with `errors.Is`. See [Errors](errors.md).
 
 ```go
-var invalidConfigError = microerror.New("invalid config")
-
-// IsInvalidConfig asserts invalidConfigError.
-func IsInvalidConfig(err error) bool {
-	return microerror.Cause(err) == invalidConfigError
-}
+var ErrInvalidConfig = errors.New("invalid config")
 ```
 
 Our example struct below with its `Config` parameter and constructor which is
@@ -57,25 +52,23 @@ type Struct struct {
 func New(config Config) (*Struct, error) {
 	// Dependencies.
 	if config.Logger == nil {
-		return nil, microerror.Maskf(invalidConfigError, "%T.Logger must not be empty", config)
+		return nil, fmt.Errorf("%T.Logger must not be empty: %w", config, ErrInvalidConfig)
 	}
 
 	// Settings.
 	if config.Name == "" {
-		return nil, microerror.Maskf(invalidConfigError, "%T.Name must not be empty", config)
+		return nil, fmt.Errorf("%T.Name must not be empty: %w", config, ErrInvalidConfig)
 	}
 	if config.Timeout < 0 {
-		return nil, microerror.Maskf(invalidConfigError, "%T.Timeout must be bigger than or equal to 0", config)
+		return nil, fmt.Errorf("%T.Timeout must be bigger than or equal to 0: %w", config, ErrInvalidConfig)
 	}
 	if config.Order <= 0 {
-		return nil, microerror.Maskf(invalidConfigError, "%T.Order must not be less than 1", config)
+		return nil, fmt.Errorf("%T.Order must not be less than 1: %w", config, ErrInvalidConfig)
 	}
 
-	timeout := 0
-	{
-		if timeout == 0 {
-			timeout = 10
-		}
+	timeout := config.Timeout
+	if timeout == 0 {
+		timeout = 10
 	}
 
 	s := &Struct{
@@ -112,7 +105,7 @@ func run() error {
 
 		s, err = New(c)
 		if err != nil {
-			return microerror.Mask(err)
+			return fmt.Errorf("create struct: %w", err)
 		}
 	}
 }

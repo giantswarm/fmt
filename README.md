@@ -22,7 +22,7 @@
 
 ## Github
 
-- [Dependabot (automatic dependency updates)](github/dependabot.md)
+- [Renovate (automatic dependency updates)](github/renovate.md)
 - [Pull Requests](github/pull_requests.md)
 - [Readmes](github/readmes.md)
 - [Requesting Review](github/requesting_review.md)
@@ -42,7 +42,6 @@
 - [Struct Initialization](go/struct_initialization.md)
 - [TODO Comments](go/todo_comments.md)
 - [Unit Tests](go/unit_tests.md)
-- [Variable Names](go/variable_names.md)
 - [YAML Marshalling](go/yaml_marshalling.md)
 
 ## Helm Charts

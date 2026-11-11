@@ -4,7 +4,7 @@ We use `context.Context` ([godoc][context]) as a first argument in our APIs.
 
 This allows us to:
 
-- Use `micrologger.Logger.LogCtx`.
+- Get the request's logger and trace from it.
 - Make sure we pass the `context.Context` down the stack if we happen to
   distribute information in it.
 - Allows us to handle cancellation and deadlines without changing the API.
@@ -13,8 +13,7 @@ This allows us to:
 
 - Don't pass `context.Context` to `New*` functions (except `NewContext` functions).
 - Don't pass `context.Context` to getter and setter functions.
-- Don't use `context.TODO()` in tests. It is not TODO. We are not going to
-  change that.
+- In tests, use `t.Context()`. It is canceled when the test ends.
 - Otherwise always make `ctx context.Context` a first argument to the exported
   function or method.
 
@@ -44,4 +43,4 @@ func FromContext(ctx context.Context) (*CustomType, bool) {
 }
 ```
 
-[context]: https://golang.org/pkg/context/
+[context]: https://pkg.go.dev/context

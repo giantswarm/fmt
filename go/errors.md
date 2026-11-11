@@ -1,267 +1,103 @@
 # Errors
 
-- [Wrapped Errors](#wrapped-errors)
-- [Custom Errors](#custom-errors)
-- [Matching Errors](#matching-errors)
-- [Handling Third Party Library Errors](#handling-third-party-library-errors)
-- [Zero Values when returning Errors](#zero-values-when-returning-errors)
+We use the standard library's [`errors`][errors] package and `fmt.Errorf`.
+Existing code that uses `github.com/giantswarm/microerror` keeps it until it is
+changed for another reason; new code does not use it.
 
-## Wrapped Errors
+- [Wrapping](#wrapping)
+- [Errors callers match](#errors-callers-match)
+- [Package boundaries](#package-boundaries)
+- [Zero values](#zero-values)
 
-We use [microkit] to enrich **all** errors with stack traces.
+## Wrapping
 
-```go
-import "github.com/giantswarm/microerror"
-```
-
-While creating new error, then error from the same package (i.e. from error.go
-file) should be wrapped with `Maskf` with additional information. The
-additional information should be lowercased:
+Add what the caller does not know, and wrap with `%w`:
 
 ```go
-return microerror.Maskf(executionFailedError, "failed to request %#q", url)
-````
-
-Errors returned by function calls should be simply wrapped with `Mask`:
-
-```go
-return microerror.Mask(err)
-```
-
-**Pros:**
-
-- We always get stack traces when debugging and know immediately where errors
-  have been going through.
-
-**Cons:**
-
-- We have to be very consistent with this. The human effort we have to put into
-  it is notable but neglectible once familiar with the concept.
-
-
-## Custom Errors
-
-We only use typed errors. **Don't do this**:
-
-```go
-return microerror.New("something bad happened")
-```
-
-When creating a new error create a separate file called `error.go` and put
-error definition in the file along with *matcher function*.
-
-- error variables are private
-- matcher functions are public
-- error variables' names end with *Error*
-- matcher functions' names are errors' names prefixed with *Is* and with
-  *Error* suffix stripped
-- error messages are lowercased
-- error messages are generic use `microerror.MaskAnyf` to add details
-- error messages should follow variable name without *error*
-
-Example:
-
-```go
-var invalidConfigError = &microerror.Error{
-	Kind: "invalidConfigError",
-}
-
-// IsInvalidConfig asserts invalidConfigError.
-func IsInvalidConfig(err error) bool {
-	return microerror.Cause(err) == invalidConfigError
-}
-
-var initializationTimeoutError = &microerror.Error{
-	Kind: "initializationTimeoutError",
-}
-
-// IsInitializationTimeout asserts initializationTimeoutError.
-func IsInitializationTimeout(err error) bool {
-	return microerror.Cause(err) == initializationTimeoutError
+if err != nil {
+	return fmt.Errorf("get repository file %q: %w", path, err)
 }
 ```
 
-Then in code returning error:
+- The message is lowercase, has no trailing punctuation, and does not start
+  with "failed to" or "error": the chain already says it failed.
+- Use `%w` when callers may match the wrapped error, `%v` when the wrapped
+  error is an implementation detail they must not depend on.
+- Return `err` unchanged when there is nothing to add.
+
+## Errors callers match
+
+When callers need to tell one error from another, the package exports it:
 
 ```go
-return microerror.Maskf(invalidConfigError, "name must not be empty")
+var ErrNotFound = errors.New("not found")
 ```
 
-**Pros:**
-
-- we can test functions returning
-- we can read base error message from variable name
-- external packages can assert error types
-- consistency
-
-**Cons:**
-
-- Doesn't lean nicely to a `switch`/`case` notation
-
-[microkit]: https://github.com/giantswarm/microkit
-
-## Matching Errors
-
-When code flows through a chain of multiple packages a best practise is to work
-against the package interfaces. Keeping communication between packages simple
-keeps the code simple and makes it easier to understand. Lets assume we have
-three packages: A, B and C. A calls B. B calls C. A real life example can be
-found in our microservices where the server package calls the endpoint package
-and the endpoint package calls the service package. Error handling here should
-be done from package to package without skipping a neighbour. When an error is
-thrown in C and propagated back to B, B should handle that error and act
-accordingly. In some cases B wants to mask its own error depending on the error
-it received from C. Then B returns its own error to A, where A can match against
-B's error. A should never match against an error of C. As soon as A imports C
-for error handling this code smells and we should think about what we are doing
-and why.
-
-There are some rules for defining errors we match against:
-
-- `executionFailedError` should never be matched against. I.e.
-  `IsExecutionFailed` matcher should never be used. You can think of it as
-  a softer version of `panic`.
-- All other errors must be matched in at least one place. Be it in the same
-  codebase or another (in a library case).
-
-Those rules are established to reduce risk of returning an error which is
-handled in an unexpected way. When an error should not be handled or the way of
-handling it is yet unclear `executionFailedError` should be returned. This
-allows developer to not check whether and how its handled and makes the whole
-system simpler overall.
-
-Example:
+For an error that carries data, export a type:
 
 ```go
-// pkg.F may return pkg.timeoutError.
-err := pkg.F()
+type ValidationError struct {
+	Field string
+}
 
-// When pkg.F returns pkg.timeoutError, do not mask it blindly but return
-// timeoutError from current package instead, if the receiving caller is
-// interested in matching a timeout error explicity.
-if pkg.IsTimeout(err) {
-	return microerror.Maskf(timeoutError, "calling pkg.F")
-} else if err != nil {
-	return microerror.Mask(err)
+func (e *ValidationError) Error() string {
+	return fmt.Sprintf("invalid %s", e.Field)
 }
 ```
 
-**Pros:**
-
-- Straight and simple design.
-- Error handling of complex projects is easy to understand.
-
-**Cons:**
-
-- There is a notable overhead of repeated errors to keep the contract up.
-
-## Handling Third Party Library Errors
-
-When creating libraries using third party libraries under the hood errors
-returned by them must be handled as well. Often times those third party
-libraries do not support any error handling or the provided error handling is
-not sufficient. Our way of dealing with that problem is creating internal error
-matchers which are not exposed to the library users and then using them
-transform third party errors into [custom errors](#custom-errors) which [can be
-matched](#matching-errors). Custom matchers are written in the
-`error_internal.go` file and **they are private**. The rest stays as usual.
-
-**NOTE:** When it is necessary to handle internally matched error it can be
-converted into one of package errors in `error.go` file. The example below
-shows how it can be done.
-
-Example of real world `error_internal.go` file in `githubclient` package:
+Callers match with `errors.Is` and `errors.As`, never by comparing the message:
 
 ```go
-package githubclient
+if errors.Is(err, githubclient.ErrNotFound) {
+	// ...
+}
 
-import "github.com/google/go-github/github"
+var validationErr *config.ValidationError
+if errors.As(err, &validationErr) {
+	// ...
+}
+```
 
-func isGitHub404(err error) bool {
-	if err == nil {
-		return false
+Export an error only when some caller matches it. Everything else is a wrapped
+error without a name.
+
+## Package boundaries
+
+A package matches the errors of the packages it calls, not of the packages
+those call. When A calls B and B calls C, A does not import C to inspect an
+error. B translates what A needs to know into its own error.
+
+The same applies to third-party libraries. A package that wraps one translates
+the library's errors at that boundary:
+
+```go
+_, _, _, err := client.Repositories.GetContents(ctx, owner, repo, path, opts)
+var responseErr *github.ErrorResponse
+if errors.As(err, &responseErr) && responseErr.Response.StatusCode == http.StatusNotFound {
+	return RepositoryFile{}, fmt.Errorf("repository file %q in %s/%s: %w", path, owner, repo, ErrNotFound)
+}
+if err != nil {
+	return RepositoryFile{}, fmt.Errorf("get repository file %q: %w", path, err)
+}
+```
+
+For Kubernetes API errors, use the matchers of
+`k8s.io/apimachinery/pkg/api/errors` (`IsNotFound`, `IsConflict`, …) or
+`client.IgnoreNotFound` from controller-runtime.
+
+## Zero values
+
+A function that returns a non-nil error returns the zero value for everything
+else, and callers do not use the other values when the error is not nil.
+
+```go
+func Load(path string) (Config, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return Config{}, fmt.Errorf("read config: %w", err)
 	}
-
-	errResponse, ok := err.(*github.ErrorResponse)
-	if !ok {
-		return false
-	}
-
-	if errResponse.Response == nil {
-		return false
-	}
-
-	return errResponse.Response.StatusCode == 404
+	// ...
 }
 ```
 
-Example usage of `isGitHub404` internal error matcher:
-
-```go
-fileContent, directoryContent, _, err := underlyingClient.Repositories.GetContents(ctx, owner, repo, path, opt)
-if isGitHub404(err) {
-	return RepositoryFile{}, microerror.Maskf(notFoundError, "repository file %#q for owner %#q in repository %#q", path, owner, repo)
-} else if err != nil {
-	return RepositoryFile{}, microerror.Mask(err)
-}
-```
-
-In the example above GitHub 404 response error is converted to `notFoundError`
-matched by `IsNotFound`. Note that this way we are able to include some
-operation specific information in the error annotation instead of having what
-is provided by the third party library implementor. This makes the debug
-process easier in case of error occurrence.
-
-This is also possible that third party error is handled without returning an
-error. In this case the error matcher is not exposed and `error.go` file stays
-clean. E.g.:
-
-```go
-err := thirdParty.Create(obj)
-if isAlreadyExists(err) {
-	// The thing is already created.
-} else if err != nil {
-	return microerror.Mask(err)
-}
-```
-
-In the example above `obj` is created with third party library. When the object
-already exists no error is returned even though the third party library returns
-one handled with `isAlreadyExists` internal matcher. The benefit here is that
-there is no `IsAlreadyExists` matcher exposed to the wrapping library user.
-
-
-
-# Zero Values when returning Errors
-
-A general best practise is to return the zero value of any return value in case
-a non nil error is returned. APIs should follow this always and no code should
-ever expect any other value in case an error is returned. Not complying with
-this makes code potentially more fragile, confusing and dangerous.
-
-```go
-func Foo() ([]string, error) {
-  err := thirdParty.Create(obj)
-  if err != nil {
-    return nil, microerror.Mask(err)
-  }
-}
-```
-
-```go
-func Foo() (string, error) {
-  err := thirdParty.Create(obj)
-  if err != nil {
-    return "", microerror.Mask(err)
-  }
-}
-```
-
-```go
-func Foo() (RepositoryFile, error) {
-  err := thirdParty.Create(obj)
-  if err != nil {
-    return RepositoryFile{}, microerror.Mask(err)
-  }
-}
-```
+[errors]: https://pkg.go.dev/errors

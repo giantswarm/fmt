@@ -25,6 +25,9 @@ engineers already expect.
 | Authorization and sign-in | OAuth 2.1, OpenID Connect | [OAuth and OIDC](../security/oauth.md) |
 | A fork, or a contribution to another project | That project's own conventions | |
 
+In a custom resource, a true or false observation about the resource is a
+`metav1.Condition` in `status.conditions`, not a `bool` field.
+
 Names are part of the specification. See [Names](names.md).
 
 ## When two conventions meet
@@ -57,17 +60,27 @@ is quicker than paging, and mention it nowhere.
 ## How the rules are checked
 
 A rule that a tool checks is worth more than one that is only written down.
-Where a check exists, the repository runs it in CI:
+Each repository runs its checks through `make lint` and its tests, so that
+pre-commit, agent hooks and CI run the same thing. Not every repository runs
+every check yet.
 
-- Linters that already check a specification: `golangci-lint`, `helm lint`,
-  `promtool check rules`, [kube-api-linter][kal] for Kubernetes API types.
-- The [MCP conformance suite][mcp-conformance] for MCP servers and clients,
-  with its version pinned and the expected failures listed in the repository.
-- Tests in the repository for behaviour no linter sees: pagination, error
-  responses, the tokens an API accepts and refuses.
+| Rule | Guide | Check |
+|---|---|---|
+| Kubernetes API types follow the API conventions | this guide | [kube-api-linter][kal] |
+| No new `bool` status fields; observations are conditions | this guide | kube-api-linter `nobools`, then review |
+| Helm charts | [Helm](../README.md#helm-charts) | `helm lint`, the values schema |
+| Prometheus rules | [Prometheus](../README.md#prometheus) | `promtool check rules` |
+| OpenTelemetry metric and span names | this guide | [Weaver][weaver] live check, where the repository runs it |
+| MCP protocol and authorization | this guide | [MCP conformance suite][mcp-conformance], version pinned, expected failures listed in the repository |
+| Lists are paginated, no `truncated` flag | [HTTP APIs](http_apis.md) | a test in the repository; an OpenAPI linter for HTTP APIs |
+| HTTP errors are RFC 9457 problem details | [HTTP APIs](http_apis.md) | an OpenAPI linter rule |
+| Tokens refused for the wrong audience, issuer or expiry; no passthrough; token exchange | [OAuth and OIDC](../security/oauth.md) | tests in the repository, MCP conformance authorization scenarios |
+| Names come from the specification, one meaning per word | [Names](names.md) | review |
+| Which specification applies, an existing API's style, deviations stated | this guide | review |
+| Reuse before new code | [Go Style Guide](../go/general_style_guide.md#reuse-before-new-code) | review |
 
-Everything else is checked in review, by a person or by the `review-pr` skill
-of the `giantswarm/claude-code` plugins.
+Review is done by a person or by the `review-pr` skill of the
+`giantswarm/claude-code` plugins.
 
 [a2a]: https://a2a-protocol.org/latest/specification/
 [capi-contracts]: https://cluster-api.sigs.k8s.io/developer/providers/contracts/overview
@@ -79,3 +92,4 @@ of the `giantswarm/claude-code` plugins.
 [prom-naming]: https://prometheus.io/docs/practices/naming/
 [rfc-9110]: https://www.rfc-editor.org/rfc/rfc9110
 [semconv]: https://opentelemetry.io/docs/specs/semconv/
+[weaver]: https://github.com/open-telemetry/weaver

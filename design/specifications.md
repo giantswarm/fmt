@@ -75,6 +75,11 @@ every check yet.
 | Lists are paginated, no `truncated` flag | [HTTP APIs](http_apis.md) | a test in the repository; an OpenAPI linter for HTTP APIs |
 | HTTP errors are RFC 9457 problem details | [HTTP APIs](http_apis.md) | an OpenAPI linter rule |
 | Tokens refused for the wrong audience, issuer or expiry; no passthrough; token exchange | [OAuth and OIDC](../security/oauth.md) | tests in the repository, MCP conformance authorization scenarios |
+| Errors wrapped with `%w`, matched with `errors.Is` and `errors.As` | [Errors](../go/errors.md) | `errorlint` |
+| Structured logs: attribute keys, static lowercase messages | [Log Messages](../go/log_messages.md) | `sloglint` |
+| `t.Context()` in tests | [Context](../go/context.md) | `usetesting` |
+| No microerror, micrologger or operatorkit in new code | [Errors](../go/errors.md), [Log Messages](../go/log_messages.md), [Operator](../go/project_structure/operator.md) | `depguard` |
+| testify used as intended | [Unit Tests](../go/unit_tests.md) | `testifylint` |
 | Names come from the specification, one meaning per word | [Names](names.md) | review |
 | Which specification applies, an existing API's style, deviations stated | this guide | review |
 | Reuse before new code | [Go Style Guide](../go/general_style_guide.md#reuse-before-new-code) | review |
